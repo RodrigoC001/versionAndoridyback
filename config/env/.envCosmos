@@ -1,0 +1,2 @@
+ENVIROMENT='COSMO'
+CMD=npm run cosmo

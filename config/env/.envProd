@@ -1,0 +1,2 @@
+ENVIROMENT='PRODUCTION'
+CMD=npm start

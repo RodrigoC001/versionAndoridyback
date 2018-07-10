@@ -1,0 +1,13 @@
+version: '2'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./config/app/Dockerfile
+    command: npm run cosmos
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./app/src:/usr/app/src
+    ports:
+      - "${APP_DEV_PORT}:${APP_DEV_PORT}"
