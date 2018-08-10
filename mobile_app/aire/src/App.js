@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import { createBottomTabNavigator } from 'react-navigation';
 
-export default class App extends Component{
+import Config from './views/config/'
+import AboutUs from './components/AboutUs/AboutUs.js'
+
+/*export default class App extends Component{
   render() {
     return (
       <View style={s.container}>
@@ -14,24 +18,50 @@ export default class App extends Component{
     );
   }
 }
-
+*/
 const s = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    color: 'black',
-    margin: 10,
-    fontFamily: 'HouschkaRoundedAltExtraBold'
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  }
 });
+
+/*export default createBottomTabNavigator({
+  AboutUs: AboutUs,
+  Config: Config,
+});
+*/
+
+const icon = {
+  AboutUs: require('./assets/aire_blanco/aire.png'),
+  Config: require('./assets/configuracion_blanco/configuracion.png')
+}
+
+export default createBottomTabNavigator(
+  {
+    AboutUs: AboutUs,
+    Config: Config,
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ focused, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName;
+        if (routeName === 'AboutUs') {
+          // iconName = `ios-information-circle${focused ? '' : '-outline'}`;
+          iconName = icon.AboutUs
+        } else if (routeName === 'Config') {
+          // iconName = `ios-options${focused ? '' : '-outline'}`;
+          iconName = icon.Config
+        }
+
+        // You can return any component that you like here! We usually use an
+        // icon component from react-native-vector-icons
+        return <View style={{flex: 1}}><Image source={iconName} /></View>;
+      },
+    }),
+    tabBarOptions: {
+      // activeTintColor: 'tomato',
+      // inactiveTintColor: 'gray',
+    },
+  }
+);
