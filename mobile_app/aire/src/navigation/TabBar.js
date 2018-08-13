@@ -5,13 +5,15 @@ import { StyleSheet, View } from 'react-native'
 const icon = {
   AboutUs: require('../assets/aire_blanco/aire.png'),
   Config: require('../assets/configuracion_blanco/configuracion.png'),
-  Map: require('../assets/mapa_blanco/mapa.png'), 
+  Map: require('../assets/mapa_blanco/mapa.png'),
+  Nubes: require('../assets/nubes_blanco/nubes.png'),
 }
 
 const focusIcon = {
   AboutUs: require('../assets/aire/aire.png'),
   Config: require('../assets/configuracion/configuracion.png'),
   Map: require('../assets/mapa/mapa.png'), 
+  Nubes: require('../assets/nubes/nubes.png'),  
 }
 
 const renderIcon = (routeName) => {

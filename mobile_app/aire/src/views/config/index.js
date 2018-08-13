@@ -20,7 +20,7 @@ Términos y condiciones`,
   onPress: ()=> console.log('navigate')
 }]
 
-export default class App extends Component{
+export default class Config extends Component{
   render() {
     return (
       <View style={s.container}>
