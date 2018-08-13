@@ -4,6 +4,10 @@ import { createBottomTabNavigator } from 'react-navigation';
 
 import Config from './views/config/'
 import AboutUs from './components/AboutUs/AboutUs.js'
+import TabBar from './navigation/TabBar.js'
+import TestMap from './components/TestMap.js'
+
+
 
 /*export default class App extends Component{
   render() {
@@ -25,43 +29,15 @@ const s = StyleSheet.create({
   }
 });
 
-/*export default createBottomTabNavigator({
-  AboutUs: AboutUs,
-  Config: Config,
-});
-*/
-
-const icon = {
-  AboutUs: require('./assets/aire_blanco/aire.png'),
-  Config: require('./assets/configuracion_blanco/configuracion.png')
-}
 
 export default createBottomTabNavigator(
-  {
+  { 
     AboutUs: AboutUs,
+    Map: TestMap,
     Config: Config,
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) => {
-        const { routeName } = navigation.state;
-        let iconName;
-        if (routeName === 'AboutUs') {
-          // iconName = `ios-information-circle${focused ? '' : '-outline'}`;
-          iconName = icon.AboutUs
-        } else if (routeName === 'Config') {
-          // iconName = `ios-options${focused ? '' : '-outline'}`;
-          iconName = icon.Config
-        }
-
-        // You can return any component that you like here! We usually use an
-        // icon component from react-native-vector-icons
-        return <View style={{flex: 1}}><Image source={iconName} /></View>;
-      },
-    }),
-    tabBarOptions: {
-      // activeTintColor: 'tomato',
-      // inactiveTintColor: 'gray',
-    },
+    initialRouteName: 'Map',
+    tabBarComponent: (props) => <TabBar {...props}/>
   }
 );
