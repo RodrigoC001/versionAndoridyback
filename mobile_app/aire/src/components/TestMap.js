@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   Platform,
@@ -102,3 +96,10 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.6 }],
   }
 });
+
+
+// info
+
+// https://github.com/mapbox/react-native-mapbox-gl/blob/master/docs/ShapeSource.md
+
+// https://github.com/mapbox/react-native-mapbox-gl/tree/master/example/src/components

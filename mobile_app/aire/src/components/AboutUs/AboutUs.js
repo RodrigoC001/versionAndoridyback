@@ -2,10 +2,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
-
-export default class AboutUs extends Component{
-  render() {
-    return (
+export default (props) => (
       <View style={s.container}>
         <LinearGradient colors={['rgb(64,76,155)', 'rgb(63,74,152)', 'rgb(32,38,78)']} style={{flex: 1}}>
           <View style={s.titleContainer}>
@@ -46,9 +43,8 @@ export default class AboutUs extends Component{
 
         </LinearGradient>
       </View>
-    );
-  }
-}
+  )
+
 
 const s = StyleSheet.create({
   container: {

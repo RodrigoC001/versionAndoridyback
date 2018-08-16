@@ -22,7 +22,6 @@ const s = StyleSheet.create({
   },
   cloudCardText: {
     fontSize: 20,
-    // color: 'rgb(212,220,241)',
     fontFamily: 'HouschkaRoundedAltDemiBold',
     zIndex: 3,
   },
@@ -33,7 +32,6 @@ const s = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    // backgroundColor: 'rgb(64,76,155)',
     opacity: 0.58
   }
 });

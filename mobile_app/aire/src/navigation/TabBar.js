@@ -25,7 +25,6 @@ const renderFocusIcon = (routeName) => {
 }
 
 export default (props) => {
-  console.log('props del tabbar', props)
   const { routes } = props.navigation.state
   return ( 
   <View style={s.tabBarMockUp}>
@@ -51,9 +50,6 @@ const s = StyleSheet.create({
   tabBarMockUp: {
     height: 55,
     backgroundColor:'rgb(64,76,155)',
-    flexDirection: 'row',
-    // alignItems: 'flex-end',
-    // borderTopWidth: 2,
-    // borderColor: '#e6e6e6'
+    flexDirection: 'row'
   },
 });

@@ -20,25 +20,22 @@ Términos y condiciones`,
   onPress: ()=> console.log('navigate')
 }]
 
-export default class Config extends Component{
-  render() {
-    return (
-      <View style={s.container}>
-        <ImageBackground source={require('../../assets/aire_1242x2436.jpg')} style={{width: '100%', height: '100%'}}>
-          <View style={s.titleContainer}>
-            <Text style={s.titleText}>
-              CONFIGURACIÓN
-            </Text>
-          </View>
-          {configData.map(option=> <ConfigOption onPress={option.onPress} key={option.id} icon={option.icon} title={option.title} />)}
-          <View style={s.logoContainer}>
-            <Image source={require('../../assets/logoaire/logoaire.png')} />
-          </View>
-        </ImageBackground>
+export default (props) => (
+  <View style={s.container}>
+    <ImageBackground source={require('../../assets/aire_1242x2436.jpg')} style={{width: '100%', height: '100%'}}>
+      <View style={s.titleContainer}>
+        <Text style={s.titleText}>
+          CONFIGURACIÓN
+        </Text>
       </View>
-    );
-  }
-}
+      {configData.map(option=> <ConfigOption onPress={option.onPress} key={option.id} icon={option.icon} title={option.title} />)}
+      <View style={s.logoContainer}>
+        <Image source={require('../../assets/logoaire/logoaire.png')} />
+      </View>
+    </ImageBackground>
+  </View>
+)
+
 
 const s = StyleSheet.create({
   container: {
@@ -60,7 +57,7 @@ const s = StyleSheet.create({
     backgroundColor: 'transparent',
     alignItems: 'flex-end',
     justifyContent: 'flex-end',
-    paddingBottom: 66.3,
+    paddingBottom: 31,
     paddingRight: 18.2
   }
 });
