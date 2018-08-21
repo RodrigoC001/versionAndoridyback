@@ -1,4 +1,4 @@
-const sequelize = require('./conn.js');
+const db = require('db.js');
 const crypto = require('crypto');
 const S = require('sequelize');
 
@@ -6,7 +6,7 @@ function createSalt() {
   return crypto.randomBytes(20).toString('hex');
 }
 
-const User = sequelize.define('users', {
+const User = db.define('users', {
   id: {
     type: S.INTEGER,
     allowNull: false,

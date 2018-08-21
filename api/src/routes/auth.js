@@ -43,6 +43,18 @@ server.post('/register', (req, res, next) => {
     .catch(next);
 });
 
+server.post('/directregister', (req, res, next) => {
+  User.create({
+    email: req.body.email,
+    password: req.body.password
+  })
+    .then(newUser => {
+      newUser.createToken();
+      res.send(ok(expose.token(newUser)));
+    })
+    .catch(next);
+});
+
 server.get('/me', auth.validateCookie, (req, res) => res.send(ok(expose.info(req.user))));
 
 

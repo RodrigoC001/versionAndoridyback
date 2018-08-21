@@ -21,11 +21,16 @@
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 const server = require('./src/app.js');
-const { setup } = require('./src/models/index.js')
+const db = require('./src/db.js');
+const setUp = require('./src/seed.js');
+
 const port = process.env.API_PORT || 3000;
-// Syncing all the models at once.
-setup.then(() => {
-  server.listen(port, () => {
-    console.log('%s listening at %s', server.name, server.url); // eslint-disable-line no-console
-  });
-});
+// Syncing all the models at once
+  // db.sync({ force: true })
+  setUp
+  .then(() => {
+    console.log("DB synced");
+    server.listen(port, () => {
+     console.log("%s listening at %s", server.name, server.url); // eslint-disable-line no-console
+    });
+}).catch(console.err);
