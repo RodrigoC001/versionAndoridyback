@@ -8,7 +8,21 @@ import {
 } from 'react-native';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 
+import smileyFaceGeoJSON from './smiley_face.json';
+
 Mapbox.setAccessToken('pk.eyJ1IjoibGF1dGFyb2dyYW5kZSIsImEiOiJjamtrNjFqMW8xbnVhM3BwYjdmZjczcXkyIn0._Gz0SnZDQIGeosDSbwFwMA');
+
+const layerStyles = Mapbox.StyleSheet.create({
+  background: {
+    // backgroundPattern: gridPattern,
+  },
+  smileyFace: {
+    fillAntialias: true,
+    fillColor: 'white',
+    fillOutlineColor: 'rgba(255, 255, 255, 0.84)',
+  },
+});
+
 
 const icono = {
   selected: require('../assets/skyspotseleccionado/skyspotseleccionado.png'),
@@ -69,6 +83,19 @@ export default class TestMap extends Component<{}> {
           // zoomLevel={15}
           // centerCoordinate={[11.256, 43.770]}
           style={styles.container}>
+          {/*<Mapbox.VectorSource>
+            <Mapbox.BackgroundLayer
+              id="background"
+              style={layerStyles.background}
+            />
+          </Mapbox.VectorSource>
+*/}
+          <Mapbox.ShapeSource id="smileyFaceSource" shape={smileyFaceGeoJSON}>
+            <Mapbox.FillLayer
+              id="smileyFaceFill"
+              style={layerStyles.smileyFace}
+            />
+          </Mapbox.ShapeSource>
           {this.renderAnnotations()}
         </Mapbox.MapView>
       </View>
