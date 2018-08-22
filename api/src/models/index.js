@@ -14,7 +14,6 @@ Skyspot.belongsToMany(Trip, {through: 'SkyspotTrip'});
 // Trips & Origin / Destination
 Origin.hasMany(Trip, {as: 'routes_origin', foreignKey: 'originId'})
 Destination.hasMany(Trip, {as: 'routes_destination', foreignKey: 'destinationId'})
-
 Trip.belongsTo(Origin, {foreignKey: 'originId'})
 Trip.belongsTo(Destination, {foreignKey: 'destinationId'})
 

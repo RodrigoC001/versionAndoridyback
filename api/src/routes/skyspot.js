@@ -1,11 +1,15 @@
 const { ok, error, created, deleted, badRequest } = require('utils/').responses;
 const { expose } = require('utils/').scopes.module;
 const server = require('express').Router();
-const { Skyspot } = require('models/');
+const { Skyspot, Trip } = require('models/');
 
 server.param('id', (req, res, next, id) => {
   Skyspot.find({
-    where: { id }})
+    where: { id },
+    include: [
+    {
+      model: Trip
+    }]})
     .then(skyspot => {
       req.skyspot = skyspot;
       next();

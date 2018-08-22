@@ -52,8 +52,23 @@ const setUp = init.then(() => Trip.create(aTrip))
   .then(()=> Trip.create({
     name: 'Test',
     originId: 1,
-    destinationId: 1
-  }))
+    destinationId: 1,
+    skyspots: [
+    {
+      name: 'Represa Salto Grande',
+      data: 'https://aireapp.org/2018/07/19/represa-salto-grande/',
+      latitude: -67.6205063,
+      longitude: -45.8204256
+    }, 
+    {
+      name: '423 Salto Grande',
+      data: 'https://aireapp.org/2018/07/19/represa-salto-grande/',
+      latitude: -67.6205063,
+      longitude: -45.8204256}]
+    }, 
+    {
+      include: Skyspot
+    }))
 
 /*const transactionSeed = setUp.then(() => agent.post('/transaction').send(aScan))
   .then(() => agent.post('/transaction/prizePurchase').send(aPurchase))
