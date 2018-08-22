@@ -1,11 +1,15 @@
 const { ok, error, created, deleted, badRequest } = require('utils/').responses;
 const { expose } = require('utils/').scopes.module;
 const server = require('express').Router();
-const { Origin } = require('models/');
+const { Origin, Trip } = require('models/');
 
 server.param('id', (req, res, next, id) => {
   Origin.find({
-    where: { id }})
+    where: { id },
+    include: [
+    {
+      model: Trip, as: 'routes_origin'
+    }]})
     .then(origin => {
       req.origin = origin;
       next();

@@ -9,6 +9,12 @@ server.param('id', (req, res, next, id) => {
     include: [
     {
       model: Skyspot
+    },
+    {
+      model: Origin
+    },
+    {
+      model: Destination
     }
     ]
   })
