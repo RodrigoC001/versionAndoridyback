@@ -27,18 +27,32 @@ server.param('id', (req, res, next, id) => {
 
 server.get('/test', (req, res) => res.send(ok()));
 
+// get only the skyspots of certain trip
+server.get('/:id/skyspots', (req, res, next) => {
+  Trip.find({where: { id: req.params.id}})
+  .then(trip => {
+    if(!trip) return res.sendStatus(404)
+    return trip.getSkyspots()
+  })
+  .then(tripSkyspots => res.send(ok(tripSkyspots)))
+  .catch(next);
+});
+
+// get a Trip with its origin, destination and skyspots array
 server.get('/:id', (req, res) => {
   if (!req.trip) return res.sendStatus(404);
   return res.send(ok(req.trip));
 });
-
+ 
+// get all trips with their origin and destination
 server.get('/', (req, res, next) => {
-  Trip.findAll()
+  Trip.findAll({include: [{model: Origin}, {model: Destination}]})
     .then(trips => {
       res.send(ok(trips));
     })
     .catch(next);
 });
+
 
 server.post('/', (req, res, next) => {
   Trip.create(req.body)

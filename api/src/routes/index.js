@@ -5,6 +5,7 @@ const skyspotRouter = require('./skyspot.js');
 const tripRouter = require('./trip.js');
 const originRouter = require('./origin.js');
 const destinationRouter = require('./destination.js');
+const terminosRouter = require('./terminos.js');
 
 
 const router = Router();
@@ -16,5 +17,6 @@ router.use('/skyspot', skyspotRouter);
 router.use('/trip', tripRouter);
 router.use('/origin', originRouter);
 router.use('/destination', destinationRouter);
+router.use('/terminos', terminosRouter);
 
 module.exports = router;
