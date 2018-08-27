@@ -1,5 +1,21 @@
-import { render } from 'react-dom';
-import React from 'react';
-import MainContainer from 'Containers/MainContainer.jsx';
+import React from "react";
+import ReactDOM from "react-dom";
+import { createBrowserHistory } from "history";
+import { Router, Route, Switch } from "react-router-dom";
 
-render(<MainContainer />, document.getElementById('app'));
+import "Assets/css/material-dashboard-react.css?v=1.4.1";
+
+import indexRoutes from "./routes/index.jsx";
+
+const hist = createBrowserHistory();
+
+ReactDOM.render(
+  <Router history={hist}>
+    <Switch>
+      {indexRoutes.map((prop, key) => {
+        return <Route path={prop.path} component={prop.component} key={key} />;
+      })}
+    </Switch>
+  </Router>,
+  document.getElementById("app")
+);
