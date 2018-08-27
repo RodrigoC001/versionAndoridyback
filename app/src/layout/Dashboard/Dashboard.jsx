@@ -9,7 +9,7 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import withStyles from "@material-ui/core/styles/withStyles";
 // core Components
 import Header from "Components/Header/Header.jsx";
-import Footer from "Components/Footer/Footer.jsx";
+// import Footer from "Components/Footer/Footer.jsx";
 import Sidebar from "Components/Sidebar/Sidebar.jsx";
 
 import dashboardRoutes from "../../routes/dashboard.jsx";
@@ -93,7 +93,7 @@ class App extends React.Component {
           ) : (
             <div className={classes.map}>{switchRoutes}</div>
           )}
-          {this.getRoute() ? <Footer /> : null}
+        {/*  {this.getRoute() ? <Footer /> : null}*/}
         </div>
       </div>
     );
