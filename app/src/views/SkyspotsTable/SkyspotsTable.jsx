@@ -9,6 +9,20 @@ import Card from "Components/Card/Card.jsx";
 import CardHeader from "Components/Card/CardHeader.jsx";
 import CardBody from "Components/Card/CardBody.jsx";
 
+// redux
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as skyspotActions from "../../redux/actions/skyspots";
+
+const mapStateToProps = state => ({
+  skyspots: state.skyspots.skyspots,
+  skyspotsOrderedToTable: state.skyspots.skyspotsOrderedToTable
+});
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(skyspotActions, dispatch);
+}
+
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -39,36 +53,37 @@ const styles = {
   }
 };
 
-function SkyspotsTable(props) {
-  const { classes } = props;
-  return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Skyspots</h4>
-            <p className={classes.cardCategoryWhite}>
-              Tabla de Skyspots
-            </p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "Nombre", "Latitud", "Longitud", "Link"]}
-              tableData={[
-                ["1", "Niger", "Oud-Turnhout", "$36,738", "https://aireapp.org/2018/07/19/represa-yacireta/"],
-                ["1", "Curaçao", "Sinaai-Waas", "$23,789", "https://aireapp.org/2018/07/19/represa-yacireta/"],
-                ["1", "Netherlands", "Baileux", "$56,142", "https://aireapp.org/2018/07/19/represa-yacireta/"],
-                ["1", "Korea, South", "Overland Park", "$38,735", "https://aireapp.org/2018/07/19/represa-yacireta/"],
-                ["1", "Malawi", "Feldkirchen in Kärnten", "$63,542", "https://aireapp.org/2018/07/19/represa-yacireta/"],
-                ["1", "Chile", "Gloucester", "$78,615", "https://aireapp.org/2018/07/19/represa-yacireta/"],
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-  );
+class SkyspotsTable extends React.Component {
+  componentDidMount() {
+    this.props.getSkyspotsRequest()
+      .then(data => console.log('this.props.skyspotsOrderedToTable', this.props.skyspotsOrderedToTable))
+  }
+  render() {
+    const { classes, skyspotsOrderedToTable } = this.props;
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Skyspots</h4>
+              <p className={classes.cardCategoryWhite}>
+                Tabla de Skyspots
+              </p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["ID", "Nombre", "Latitud", "Longitud", "Link"]}
+                tableData={skyspotsOrderedToTable}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    )
+  }
 }
 
-export default withStyles(styles)(SkyspotsTable);
+const styledComponent = withStyles(styles)(SkyspotsTable);
+
+export default connect(mapStateToProps, mapDispatchToProps)(styledComponent);

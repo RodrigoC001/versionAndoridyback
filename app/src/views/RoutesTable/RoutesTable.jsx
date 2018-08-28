@@ -9,6 +9,20 @@ import Card from "Components/Card/Card.jsx";
 import CardHeader from "Components/Card/CardHeader.jsx";
 import CardBody from "Components/Card/CardBody.jsx";
 
+// redux
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as tripActions from "../../redux/actions/trips";
+
+const mapStateToProps = state => ({
+  trips: state.trips.trips,
+  tripsOrderedToTable: state.trips.tripsOrderedToTable
+});
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(tripActions, dispatch);
+}
+
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -39,10 +53,14 @@ const styles = {
   }
 };
 
-function RoutesTable(props) {
-  const { classes } = props;
-  return (
-    <GridContainer>
+class RoutesTable extends React.Component {
+  componentDidMount() {
+    this.props.getTripsRequest()
+  }
+  render() {
+    const { classes, tripsOrderedToTable } = this.props;
+    return (
+      <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="primary">
@@ -55,20 +73,16 @@ function RoutesTable(props) {
             <Table
               tableHeaderColor="primary"
               tableHead={["ID", "Nombre", "Origen", "Destino", "Skyspots"]}
-              tableData={[
-                ["1", "Niger", "Oud-Turnhout", "$36,738", "A"],
-                ["1", "Curaçao", "Sinaai-Waas", "$23,789", "B"],
-                ["1", "Netherlands", "Baileux", "$56,142", "C"],
-                ["1", "Korea, South", "Overland Park", "$38,735", "D"],
-                ["1", "Malawi", "Feldkirchen in Kärnten", "$63,542", "E"],
-                ["1", "Chile", "Gloucester", "$78,615", "F"],
-              ]}
+              tableData={tripsOrderedToTable}
             />
           </CardBody>
         </Card>
       </GridItem>
     </GridContainer>
-  );
+    );
+  }
 }
 
-export default withStyles(styles)(RoutesTable);
+const styledComponent = withStyles(styles)(RoutesTable);
+
+export default connect(mapStateToProps, mapDispatchToProps)(styledComponent);
