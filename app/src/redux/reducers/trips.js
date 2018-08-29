@@ -2,7 +2,8 @@ const defaultStartState = {
   trips: [],
   fetching: false,
   error: null,
-  tripsOrderedToTable: []
+  tripsOrderedToTable: [],
+  createdTrip: null
 };
 
 export default function trips(state = defaultStartState, action) {
@@ -29,6 +30,20 @@ export default function trips(state = defaultStartState, action) {
         fetching: false,
         error: action.payload.error
       });
+    case "POST_TRIP_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "POST_TRIP_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        createdTrip: action.payload.response
+      });
+    case "POST_TRIP_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });      
     default:
       return state;
   }

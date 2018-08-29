@@ -2,8 +2,12 @@ import { combineReducers } from "redux";
 
 import trips from './trips';
 import skyspots from './skyspots';
+import origins from './origins';
+import destinations from './destinations';
 
 export default combineReducers({
   trips,
-  skyspots
+  skyspots,
+  origins,
+  destinations
 });

@@ -57,7 +57,7 @@ class AgregarSkyspot extends React.Component {
     openFailure: false
   }
   handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value }, ()=> console.log(this.state));
+    this.setState({ [event.target.name]: event.target.value });
   }
   handleSubmit = (event) => {
     this.props.postSkyspot({
@@ -76,9 +76,9 @@ class AgregarSkyspot extends React.Component {
       latitude: '', 
       longitude: ''
     });
-    setTimeout(()=> {
-        this.setState({openSuccess: false});
-    }.bind(this),6000);
+    setTimeout(function(){
+            this.setState({openSuccess: false});
+        }.bind(this),6000);
   }
   showNotificationFailure = () => {
     this.setState({
@@ -88,9 +88,9 @@ class AgregarSkyspot extends React.Component {
       latitude: '', 
       longitude: ''
     });
-    setTimeout(()=> {
-        this.setState({openFailure: false});
-    }.bind(this),6000);
+    setTimeout(function(){
+            this.setState({openFailure: false});
+        }.bind(this),6000);
   }
   render() {
   const { classes } = this.props;

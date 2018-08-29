@@ -36,3 +36,44 @@ export function getTripsRequest() {
       });
   };
 }
+
+export function postTripAttempt() {
+  return {
+    type: "POST_TRIP_ATTEMPT"
+  };
+}
+
+export function postTripSuccess(response) {
+  return {
+    type: "POST_TRIP_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function postTripFailure(error) {
+  return {
+    type: "POST_TRIP_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function postTrip(body, success, failure) {
+  return dispatch => {
+    dispatch(postTripAttempt());
+    return axios
+      .post('/api/trip/', body)
+      .then(response => {
+        // success()
+        return dispatch(postTripSuccess(response));
+      })
+      .catch(error => {
+        console.log('error', error)
+        // failure()
+        return dispatch(postTripFailure(error))
+      });
+  };
+}
