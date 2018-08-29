@@ -2,7 +2,8 @@ const defaultStartState = {
   skyspots: [],
   fetching: false,
   error: null,
-  skyspotsOrderedToTable: []
+  skyspotsOrderedToTable: [],
+  createdSkyspot: null
 };
 
 export default function skyspots(state = defaultStartState, action) {
@@ -19,13 +20,27 @@ export default function skyspots(state = defaultStartState, action) {
           const array = [];
           array.push(skyspot.id.toString());
           array.push(skyspot.name);
-          array.push(skyspot.latitude.toString());
-          array.push(skyspot.longitude.toString());
+          skyspot.latitude ? array.push(skyspot.latitude.toString()) : ' ';
+          skyspot.longitude ? array.push(skyspot.longitude.toString()) : ' ';
           array.push(skyspot.data);
           return array
         })
       });
     case "GET_SKYSPOTS_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
+    case "POST_SKYSPOT_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "POST_SKYSPOT_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        createdSkyspot: action.payload.response
+      });
+    case "POST_SKYSPOT_FAILURE":
       return Object.assign({}, state, {
         fetching: false,
         error: action.payload.error
