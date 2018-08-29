@@ -20,6 +20,11 @@ import * as originActions from "../../redux/actions/origins";
 import * as destinationActions from "../../redux/actions/destinations";
 import * as tripActions from "../../redux/actions/trips";
 
+// Alert components
+import AddAlert from "@material-ui/icons/AddAlert";
+import Snackbar from "Components/Snackbar/Snackbar.jsx"
+
+
 const mapStateToProps = state => ({
   createdOrigin: state.origins.createdOrigin,
   createdDestination: state.origins.createdDestination,
@@ -61,18 +66,21 @@ class AgregarRuta extends React.Component {
   state = {
     name: '',
     originAddress: '',
-    destinationAddress: ''
+    destinationAddress: '',
+    openSuccess: false,
+    openFailure: false
   }
   handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value }, ()=> console.log(this.state));
+    this.setState({ [event.target.name]: event.target.value });
   }
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log('entra aca')
+
     const createOriginAndDestination = [
       this.props.postOrigin({address: this.state.originAddress}),
       this.props.postDestination({address: this.state.destinationAddress})
     ]
+
     Promise.all(createOriginAndDestination)
       .then(data => {
         const originId = data[0].payload.response.data.id
@@ -81,10 +89,34 @@ class AgregarRuta extends React.Component {
           name: this.state.name,
           originId,
           destinationId
-        })
-          .then(trip => console.log('trip', trip))
+        }, this.showNotificationSuccess, this.showNotificationFailure)
       })
-      .catch(err => console.log('err en el PromiseAll', err))
+      .catch(err => {
+        this.showNotificationFailure()
+        console.log('err en el PromiseAll', err)
+      })
+  }
+  showNotificationSuccess = () => {
+    this.setState({
+      openSuccess: true, 
+      name: '',
+      originAddress: '',
+      destinationAddress: ''
+    });
+    setTimeout(function(){
+            this.setState({openSuccess: false});
+        }.bind(this),6000);
+  }
+  showNotificationFailure = () => {
+    this.setState({
+      openFailure: true, 
+      name: '',
+      originAddress: '',
+      destinationAddress: ''
+    });
+    setTimeout(function(){
+            this.setState({openFailure: false});
+        }.bind(this),6000);
   }
   render() {
   const { classes } = this.props
@@ -156,6 +188,28 @@ class AgregarRuta extends React.Component {
             </Card>
           </GridItem>
         </GridContainer>
+        <div>
+          <Snackbar
+            place="bc"
+            color="success"
+            icon={AddAlert}
+            message="Skyspot creado!"
+            open={this.state.openSuccess}
+            closeNotification={() => this.setState({openSuccess:false})}
+            close
+          />
+        </div>
+        <div>
+          <Snackbar
+            place="bc"
+            color="danger"
+            icon={AddAlert}
+            message="Hubo un error al crear este Skyspot"
+            open={this.state.openFailure}
+            closeNotification={() => this.setState({openFailure:false})}
+            close
+          />
+        </div>
       </div>
     );
   }
