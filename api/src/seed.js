@@ -69,6 +69,12 @@ const setUp = init.then(() => Trip.create(aTrip))
     {
       include: Skyspot
     }))
+  .then(()=> Trip.create({
+    name: 'Test solo con ids',
+    originId: 1,
+    destinationId: 1,
+    skyspots:[1,2,3,4]}))
+  // .then(trip => trip.setSkyspots([1,2,3,4]))
 
 /*const transactionSeed = setUp.then(() => agent.post('/transaction').send(aScan))
   .then(() => agent.post('/transaction/prizePurchase').send(aPurchase))

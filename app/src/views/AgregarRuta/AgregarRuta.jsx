@@ -1,6 +1,12 @@
 import React from "react";
 // @material-ui/core components
 import withStyles from "@material-ui/core/styles/withStyles";
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Checkbox from '@material-ui/core/Checkbox';
 // core components
 import GridItem from "Components/Grid/GridItem.jsx";
 import GridContainer from "Components/Grid/GridContainer.jsx";
@@ -19,6 +25,8 @@ import { bindActionCreators } from "redux";
 import * as originActions from "../../redux/actions/origins";
 import * as destinationActions from "../../redux/actions/destinations";
 import * as tripActions from "../../redux/actions/trips";
+import * as skyspotActions from "../../redux/actions/skyspots";
+
 
 // Alert components
 import AddAlert from "@material-ui/icons/AddAlert";
@@ -28,7 +36,9 @@ import Snackbar from "Components/Snackbar/Snackbar.jsx"
 const mapStateToProps = state => ({
   createdOrigin: state.origins.createdOrigin,
   createdDestination: state.origins.createdDestination,
-  createdTrip: state.trips.createdTrip
+  createdTrip: state.trips.createdTrip,
+  trips: state.trips.trips,
+  skyspots: state.skyspots.skyspots
 });
 
 function mapDispatchToProps(dispatch) {
@@ -38,6 +48,7 @@ function mapDispatchToProps(dispatch) {
       originActions,
       destinationActions,
       tripActions,
+      skyspotActions
     ),
     dispatch
   );
@@ -59,7 +70,13 @@ const styles = {
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
     textDecoration: "none"
-  }
+  },
+  root: {
+    display: 'flex',
+  },
+  formControl: {
+    // margin: theme.spacing.unit * 3,
+  },
 };
 
 class AgregarRuta extends React.Component {
@@ -68,10 +85,16 @@ class AgregarRuta extends React.Component {
     originAddress: '',
     destinationAddress: '',
     openSuccess: false,
-    openFailure: false
+    openFailure: false,
+  }
+  componentDidMount() {
+    this.props.getSkyspotsRequest()
   }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
+  }
+  checkBox = name => event => {
+    this.setState({ [name]: event.target.checked});
   }
   handleSubmit = (event) => {
     event.preventDefault();
@@ -85,10 +108,20 @@ class AgregarRuta extends React.Component {
       .then(data => {
         const originId = data[0].payload.response.data.id
         const destinationId = data[0].payload.response.data.id
+        // filtro todas las keys del estado que no sean id's de skyspots y las pongo en un arreglo
+        let skyspotsObject = Object.assign({}, this.state);
+        delete skyspotsObject.name
+        delete skyspotsObject.originAddress
+        delete skyspotsObject.destinationAddress
+        delete skyspotsObject.openSuccess
+        delete skyspotsObject.openFailure
+        const skyspotsArray = Object.keys(skyspotsObject)
+
         this.props.postTrip({
           name: this.state.name,
           originId,
-          destinationId
+          destinationId,
+          skyspotsArray
         }, this.showNotificationSuccess, this.showNotificationFailure)
       })
       .catch(err => {
@@ -97,12 +130,24 @@ class AgregarRuta extends React.Component {
       })
   }
   showNotificationSuccess = () => {
-    this.setState({
-      openSuccess: true, 
+    // filtro todas las keys del estado que no sean id's de skyspots y las pongo en false para resetear
+    let skyspotsObject = Object.assign({}, this.state);
+    delete skyspotsObject.name
+    delete skyspotsObject.originAddress
+    delete skyspotsObject.destinationAddress
+    delete skyspotsObject.openSuccess
+    delete skyspotsObject.openFailure
+    Object.keys(skyspotsObject).forEach(key => skyspotsObject[key] = false)
+
+    const newState = Object.assign({}, {
+      openSuccess: true,
       name: '',
       originAddress: '',
       destinationAddress: ''
-    });
+    }, skyspotsObject )
+
+    this.setState(newState)
+
     setTimeout(function(){
             this.setState({openSuccess: false});
         }.bind(this),6000);
@@ -119,7 +164,7 @@ class AgregarRuta extends React.Component {
         }.bind(this),6000);
   }
   render() {
-  const { classes } = this.props
+  const { classes, skyspots } = this.props
     return (
       <div>
         <GridContainer>
@@ -178,6 +223,30 @@ class AgregarRuta extends React.Component {
                           name: 'destinationAddress'
                         }}
                       />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <FormControl component="fieldset" className={classes.formControl}>
+                      <FormLabel focused={false}>Agregar Skyspots</FormLabel>
+                        <FormGroup row>
+                        {skyspots.data && skyspots.data.map(skyspot => {
+                          return (
+                            <FormControlLabel
+                            key={skyspot.id}
+                            control={
+                              <Checkbox 
+                                // defaultChecked={false}
+                                checked={this.state[skyspot.id] || false} 
+                                onChange={this.checkBox(skyspot.id)} 
+                                value={skyspot.id.toString()}
+                                color="primary" 
+                              />
+                            }
+                            label={skyspot.name}
+                          />
+                          )
+                        })}
+                        </FormGroup>
+                      </FormControl>
                     </GridItem>
                   </GridContainer>
                 </CardBody>

@@ -77,3 +77,44 @@ export function postTrip(body, success, failure) {
       });
   };
 }
+
+export function putTripAttempt() {
+  return {
+    type: "PUT_TRIP_ATTEMPT"
+  };
+}
+
+export function putTripSuccess(response) {
+  return {
+    type: "PUT_TRIP_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function putTripFailure(error) {
+  return {
+    type: "PUT_TRIP_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function putTrip(id, body) {
+  return dispatch => {
+    dispatch(putTripAttempt());
+    return axios
+      .post(`/api/trip/${id}`, body)
+      .then(response => {
+        // success()
+        return dispatch(putTripSuccess(response));
+      })
+      .catch(error => {
+        console.log('error', error)
+        // failure()
+        return dispatch(putTripFailure(error))
+      });
+  };
+}
