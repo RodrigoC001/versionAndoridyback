@@ -7,7 +7,7 @@ import AboutUs from './components/AboutUs/AboutUs.js'
 import TabBar from './navigation/TabBar.js'
 import TestMap from './components/TestMap.js'
 import Nubes from './views/nubes/'
-
+import Hills from './views/hills/'
 
 
 /*export default class App extends Component{
@@ -34,6 +34,7 @@ const s = StyleSheet.create({
 export default createBottomTabNavigator(
   { 
     AboutUs: AboutUs,
+    Hills: Hills,
     Map: TestMap,
     Nubes: Nubes,
     Config: Config,

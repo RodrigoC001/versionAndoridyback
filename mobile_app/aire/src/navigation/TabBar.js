@@ -7,13 +7,15 @@ const icon = {
   Config: require('../assets/configuracion_blanco/configuracion.png'),
   Map: require('../assets/mapa_blanco/mapa.png'),
   Nubes: require('../assets/nubes_blanco/nubes.png'),
+  Hills: require('../assets/paisajes_blanco/paisajes.png'), 
 }
 
 const focusIcon = {
   AboutUs: require('../assets/aire/aire.png'),
   Config: require('../assets/configuracion/configuracion.png'),
   Map: require('../assets/mapa/mapa.png'), 
-  Nubes: require('../assets/nubes/nubes.png'),  
+  Nubes: require('../assets/nubes/nubes.png'),
+  Hills: require('../assets/paisajes/paisajes.png'),   
 }
 
 const renderIcon = (routeName) => {
