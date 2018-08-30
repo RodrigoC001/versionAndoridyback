@@ -71,12 +71,15 @@ const styles = {
     marginBottom: "3px",
     textDecoration: "none"
   },
-  root: {
-    display: 'flex',
+  formLabel: {
+    fontSize: '14px'
   },
   formControl: {
+    marginTop: 20,
+    marginBottom: 20
     // margin: theme.spacing.unit * 3,
   },
+
 };
 
 class AgregarRuta extends React.Component {
@@ -226,7 +229,7 @@ class AgregarRuta extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12}>
                       <FormControl component="fieldset" className={classes.formControl}>
-                      <FormLabel focused={false}>Agregar Skyspots</FormLabel>
+                        <FormLabel focused={false} className={classes.formLabel}>Agregar Skyspots</FormLabel>
                         <FormGroup row>
                         {skyspots.data && skyspots.data.map(skyspot => {
                           return (
