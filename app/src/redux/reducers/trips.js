@@ -3,7 +3,8 @@ const defaultStartState = {
   fetching: false,
   error: null,
   tripsOrderedToTable: [],
-  createdTrip: null
+  createdTrip: null,
+  addedSkyspots: []
 };
 
 export default function trips(state = defaultStartState, action) {
@@ -43,7 +44,21 @@ export default function trips(state = defaultStartState, action) {
       return Object.assign({}, state, {
         fetching: false,
         error: action.payload.error
-      });      
+      });
+    case "PUT_TRIP_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "PUT_TRIP_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        addedSkyspots: action.payload.response
+      });
+    case "PUT_TRIP_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
     default:
       return state;
   }

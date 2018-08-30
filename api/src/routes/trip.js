@@ -38,6 +38,18 @@ server.get('/:id/skyspots', (req, res, next) => {
   .catch(next);
 });
 
+// add skyspots to an existing trip
+
+server.put('/:id', (req, res, next) => {
+  Trip.find({where: { id: req.params.id}})
+  .then(trip => {
+    if(!trip) return res.sendStatus(404)
+    return trip.setSkyspots(req.body.skyspotsArray)
+  })
+  .then(tripWithSkyspots => res.send(ok(tripWithSkyspots)))
+  .catch(next);
+});
+
 // get a Trip with its origin, destination and skyspots array
 server.get('/:id', (req, res) => {
   if (!req.trip) return res.sendStatus(404);
@@ -55,7 +67,11 @@ server.get('/', (req, res, next) => {
 
 
 server.post('/', (req, res, next) => {
-  Trip.create(req.body)
+  Trip.create({name: req.body.name, originId: req.body.originId, destinationId: req.body.destinationId})
+    .then(trip => {
+      trip.setSkyspots(req.body.skyspotsArray)
+      return trip
+    })
     .then(resource => res.status(201).send(created(resource)))
     .catch(next);
 });
