@@ -77,7 +77,6 @@ const styles = {
   formControl: {
     marginTop: 20,
     marginBottom: 20
-    // margin: theme.spacing.unit * 3,
   },
 
 };

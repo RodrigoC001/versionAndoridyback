@@ -23,6 +23,8 @@ export default function trips(state = defaultStartState, action) {
           array.push(trip.name);
           trip.origin ? array.push(trip.origin.address) : array.push(' ')
           trip.destination ? array.push(trip.destination.address) : array.push(' ')
+          // push string of skyspots id separated by a comma
+          array.push(trip.skyspots.map(skyspot => skyspot.id).join(', '))
           return array
         })
       });

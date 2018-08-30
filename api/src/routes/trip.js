@@ -58,7 +58,7 @@ server.get('/:id', (req, res) => {
  
 // get all trips with their origin and destination
 server.get('/', (req, res, next) => {
-  Trip.findAll({include: [{model: Origin}, {model: Destination}]})
+  Trip.findAll({include: [{model: Origin}, {model: Destination}, {model: Skyspot }]})
     .then(trips => {
       res.send(ok(trips));
     })
