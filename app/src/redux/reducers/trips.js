@@ -4,7 +4,8 @@ const defaultStartState = {
   error: null,
   tripsOrderedToTable: [],
   createdTrip: null,
-  addedSkyspots: []
+  addedSkyspots: [],
+  deletedTrip: null
 };
 
 export default function trips(state = defaultStartState, action) {
@@ -61,6 +62,20 @@ export default function trips(state = defaultStartState, action) {
         fetching: false,
         error: action.payload.error
       });
+    case "DELETE_TRIP_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "DELETE_TRIP_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        deletedTrip: action.payload.response
+      });
+    case "DELETE_TRIP_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });    
     default:
       return state;
   }

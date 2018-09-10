@@ -14,6 +14,16 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as tripActions from "../../redux/actions/trips";
 
+// dialog
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
 const mapStateToProps = state => ({
   trips: state.trips.trips,
   tripsOrderedToTable: state.trips.tripsOrderedToTable
@@ -21,6 +31,10 @@ const mapStateToProps = state => ({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(tripActions, dispatch);
+}
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
 }
 
 const styles = {
@@ -54,12 +68,35 @@ const styles = {
 };
 
 class RoutesTable extends React.Component {
+  state = {
+    openDelete: false,
+    tripId: null
+  }
   componentDidMount() {
     this.props.getTripsRequest()
+  }
+  handleDelete = (tripId) => {
+    this.props.deleteTrip(tripId)
+      .then(deleted => console.log('deleted', deleted))
+      .then(()=> this.props.getTripsRequest())
+  }
+  handleEdit = (tripId) => {
+    console.log(tripId)
+  }
+  openDeleteModal = (tripId) => {
+    this.setState({ openDelete: true, tripId: tripId});
+  }
+  handleDeleteModalOk = () => {
+    this.setState({ openDelete: false })
+    this.state.tripId && this.handleDelete(this.state.tripId)
+  }
+  handleDeleteModalCancel = () => {
+    this.setState({openDelete: false})
   }
   render() {
     const { classes, tripsOrderedToTable } = this.props;
     return (
+      <div>
       <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
         <Card>
@@ -72,13 +109,40 @@ class RoutesTable extends React.Component {
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Nombre", "Origen", "Destino", "Skyspots"]}
+              tableHead={["ID", "Nombre", "Origen", "Destino", "Skyspots", "", ""]}
               tableData={tripsOrderedToTable}
+              handleDelete={tripId => this.openDeleteModal(tripId)}
+              handleEdit={this.handleEdit}
             />
           </CardBody>
         </Card>
       </GridItem>
     </GridContainer>
+    <div>
+      <Dialog
+        open={this.state.openDelete}
+        TransitionComponent={Transition}
+        keepMounted
+        // onClose={this.handleClose}
+        aria-labelledby="alert-dialog-slide-title"
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            ¿Desea borrar esta Ruta?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleDeleteModalOk} color="primary">
+            Aceptar
+          </Button>
+          <Button onClick={this.handleDeleteModalCancel} color="primary">
+            Cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+    </div>
     );
   }
 }
@@ -86,3 +150,4 @@ class RoutesTable extends React.Component {
 const styledComponent = withStyles(styles)(RoutesTable);
 
 export default connect(mapStateToProps, mapDispatchToProps)(styledComponent);
+ 

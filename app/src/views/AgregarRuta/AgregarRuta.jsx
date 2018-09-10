@@ -7,6 +7,13 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 // core components
 import GridItem from "Components/Grid/GridItem.jsx";
 import GridContainer from "Components/Grid/GridContainer.jsx";
@@ -72,14 +79,23 @@ const styles = {
     textDecoration: "none"
   },
   formLabel: {
-    fontSize: '14px'
+    fontSize: '14px',
+    color: 'rgba(0, 0, 0, 0.54)'
   },
   formControl: {
     marginTop: 20,
     marginBottom: 20
   },
-
+  expansion: {
+    marginTop: 20
+  },
+  scroll: {
+    height: 110,
+    width: 400,
+    overflow: 'scroll'
+  }
 };
+
 
 class AgregarRuta extends React.Component {
   state = {
@@ -89,8 +105,8 @@ class AgregarRuta extends React.Component {
     openSuccess: false,
     openFailure: false,
   }
-  componentDidMount() {
-    this.props.getSkyspotsRequest()
+  showSkyspots = (event, expanded) => {
+    expanded && this.props.getSkyspotsRequest()
   }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
@@ -227,28 +243,36 @@ class AgregarRuta extends React.Component {
                       />
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12}>
-                      <FormControl component="fieldset" className={classes.formControl}>
-                        <FormLabel focused={false} className={classes.formLabel}>Agregar Skyspots</FormLabel>
-                        <FormGroup row>
-                        {skyspots.data && skyspots.data.map(skyspot => {
-                          return (
-                            <FormControlLabel
-                            key={skyspot.id}
-                            control={
-                              <Checkbox 
-                                // defaultChecked={false}
-                                checked={this.state[skyspot.id] || false} 
-                                onChange={this.checkBox(skyspot.id)} 
-                                value={skyspot.id.toString()}
-                                color="primary" 
+                      <ExpansionPanel className={classes.expansion} onChange={(event, expanded)=> this.showSkyspots(event, expanded)}>
+                        <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+                          <Typography className={classes.formLabel}>Agregar Skyspots</Typography>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <FormControl component="fieldset" className={classes.formControl}>
+                            {/*<div className={classes.scroll}>*/}
+                            <FormGroup >
+                            {skyspots && skyspots.map(skyspot => {
+                              return (
+                                <FormControlLabel
+                                key={skyspot.id}
+                                control={
+                                  <Checkbox 
+                                    // defaultChecked={false}
+                                    checked={this.state[skyspot.id] || false} 
+                                    onChange={this.checkBox(skyspot.id)} 
+                                    value={skyspot.id.toString()}
+                                    color="primary" 
+                                  />
+                                }
+                                label={skyspot.name}
                               />
-                            }
-                            label={skyspot.name}
-                          />
-                          )
-                        })}
-                        </FormGroup>
-                      </FormControl>
+                              )
+                            })}
+                            </FormGroup>
+                            {/*</div>*/}
+                          </FormControl>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
                     </GridItem>
                   </GridContainer>
                 </CardBody>

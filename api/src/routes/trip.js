@@ -25,6 +25,8 @@ server.param('id', (req, res, next, id) => {
     .catch(next);
 });
 
+
+
 server.get('/test', (req, res) => res.send(ok()));
 
 // get only the skyspots of certain trip
@@ -77,9 +79,9 @@ server.post('/', (req, res, next) => {
 });
 
 server.delete('/:id', (req, res, next) => {
-  req.skyspot
+  req.trip
     .destroy()
-    .then(trip => res.status(204).send(deleted(trip)))
+    .then(trip => res.send(ok(req.trip)))
     .catch(next);
 });
 

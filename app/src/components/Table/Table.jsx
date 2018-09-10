@@ -9,9 +9,13 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 // core components
 import tableStyle from "Assets/jss/material-dashboard-react/components/tableStyle";
+// icons
+import DeleteForever from "@material-ui/icons/DeleteForever";
+import Edit from "@material-ui/icons/Edit";
+
 
 function CustomTable({ ...props }) {
-  const { classes, tableHead, tableData, tableHeaderColor } = props;
+  const { classes, tableHead, tableData, tableHeaderColor, handleDelete, handleEdit } = props;
   return (
     <div className={classes.tableResponsive}>
       <Table className={classes.table}>
@@ -42,6 +46,12 @@ function CustomTable({ ...props }) {
                     </TableCell>
                   );
                 })}
+                <TableCell className={classes.tableCell}>
+                 <DeleteForever onClick={() => handleDelete(prop[0])} />
+                </TableCell>
+                <TableCell className={classes.tableCell}>
+                 <Edit onClick={() => handleEdit(prop[0])} />
+                </TableCell>
               </TableRow>
             );
           })}

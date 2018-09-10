@@ -106,7 +106,7 @@ export function putTrip(id, body) {
   return dispatch => {
     dispatch(putTripAttempt());
     return axios
-      .post(`/api/trip/${id}`, body)
+      .put(`/api/trip/${id}`, body)
       .then(response => {
         // success()
         return dispatch(putTripSuccess(response));
@@ -115,6 +115,48 @@ export function putTrip(id, body) {
         console.log('error', error)
         // failure()
         return dispatch(putTripFailure(error))
+      });
+  };
+}
+
+
+export function deleteTripAttempt() {
+  return {
+    type: "DELETE_TRIP_ATTEMPT"
+  };
+}
+
+export function deleteTripSuccess(response) {
+  return {
+    type: "DELETE_TRIP_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function deleteTripFailure(error) {
+  return {
+    type: "DELETE_TRIP_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function deleteTrip(id) {
+  return dispatch => {
+    dispatch(deleteTripAttempt());
+    return axios
+      .delete(`/api/trip/${id}`)
+      .then(response => {
+        // success()
+        return dispatch(deleteTripSuccess(response));
+      })
+      .catch(error => {
+        console.log('error', error)
+        // failure()
+        return dispatch(deleteTripFailure(error))
       });
   };
 }

@@ -3,7 +3,7 @@ const defaultStartState = {
   fetching: false,
   error: null,
   skyspotsOrderedToTable: [],
-  createdSkyspot: null
+  createdSkyspot: null,
 };
 
 export default function skyspots(state = defaultStartState, action) {
@@ -13,9 +13,15 @@ export default function skyspots(state = defaultStartState, action) {
         fetching: true
       });
     case "GET_SKYSPOTS_SUCCESS":
+      let skyspots = action.payload.response.data.sort((a, b) => {
+          let textA = a.name.toUpperCase();
+          let textB = b.name.toUpperCase();
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
+        })
       return Object.assign({}, state, {
+        // order the skyspots alphabetically
         fetching: false,
-        skyspots: action.payload.response,
+        skyspots,
         skyspotsOrderedToTable: action.payload.response.data.map(skyspot => {
           const array = [];
           array.push(skyspot.id.toString());
