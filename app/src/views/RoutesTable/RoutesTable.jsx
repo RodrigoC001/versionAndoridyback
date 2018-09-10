@@ -77,8 +77,7 @@ class RoutesTable extends React.Component {
   }
   handleDelete = (tripId) => {
     this.props.deleteTrip(tripId)
-      .then(deleted => console.log('deleted', deleted))
-      .then(()=> this.props.getTripsRequest())
+      .then(deletedTrip => this.props.getTripsRequest())
   }
   handleEdit = (tripId) => {
     console.log(tripId)
@@ -97,51 +96,51 @@ class RoutesTable extends React.Component {
     const { classes, tripsOrderedToTable } = this.props;
     return (
       <div>
-      <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Rutas</h4>
-            <p className={classes.cardCategoryWhite}>
-              Tabla de Rutas
-            </p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "Nombre", "Origen", "Destino", "Skyspots", "", ""]}
-              tableData={tripsOrderedToTable}
-              handleDelete={tripId => this.openDeleteModal(tripId)}
-              handleEdit={this.handleEdit}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-    <div>
-      <Dialog
-        open={this.state.openDelete}
-        TransitionComponent={Transition}
-        keepMounted
-        // onClose={this.handleClose}
-        aria-labelledby="alert-dialog-slide-title"
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            ¿Desea borrar esta Ruta?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={this.handleDeleteModalOk} color="primary">
-            Aceptar
-          </Button>
-          <Button onClick={this.handleDeleteModalCancel} color="primary">
-            Cancelar
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+        <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Rutas</h4>
+              <p className={classes.cardCategoryWhite}>
+                Tabla de Rutas
+              </p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["ID", "Nombre", "Origen", "Destino", "Skyspots", "", ""]}
+                tableData={tripsOrderedToTable}
+                handleDelete={tripId => this.openDeleteModal(tripId)}
+                handleEdit={this.handleEdit}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+      <div>
+        <Dialog
+          open={this.state.openDelete}
+          TransitionComponent={Transition}
+          keepMounted
+          // onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              ¿Desea borrar esta Ruta?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleDeleteModalOk} color="primary">
+              Aceptar
+            </Button>
+            <Button onClick={this.handleDeleteModalCancel} color="primary">
+              Cancelar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
     );
   }

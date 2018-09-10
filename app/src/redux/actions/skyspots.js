@@ -76,3 +76,44 @@ export function postSkyspot(body, success, failure) {
       });
   };
 }
+
+export function deleteSkyspotAttempt() {
+  return {
+    type: "DELETE_SKYSPOT_ATTEMPT"
+  };
+}
+
+export function deleteSkyspotSuccess(response) {
+  return {
+    type: "DELETE_SKYSPOT_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function deleteSkyspotFailure(error) {
+  return {
+    type: "DELETE_SKYSPOT_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function deleteSkyspot(id) {
+  return dispatch => {
+    dispatch(deleteSkyspotAttempt());
+    return axios
+      .delete(`/api/skyspot/${id}`)
+      .then(response => {
+        // success()
+        return dispatch(deleteSkyspotSuccess(response));
+      })
+      .catch(error => {
+        console.log('error', error)
+        // failure()
+        return dispatch(deleteSkyspotFailure(error))
+      });
+  };
+}

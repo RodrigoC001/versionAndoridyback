@@ -41,7 +41,7 @@ server.post('/', (req, res, next) => {
 server.delete('/:id', (req, res, next) => {
   req.skyspot
     .destroy()
-    .then(skyspot => res.status(204).send(deleted(skyspot)))
+    .then(skyspot => res.send(ok(req.skyspot)))
     .catch(next);
 });
 

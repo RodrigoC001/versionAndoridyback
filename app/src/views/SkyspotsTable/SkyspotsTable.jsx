@@ -14,6 +14,16 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as skyspotActions from "../../redux/actions/skyspots";
 
+// dialog
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
+
 const mapStateToProps = state => ({
   skyspots: state.skyspots.skyspots,
   skyspotsOrderedToTable: state.skyspots.skyspotsOrderedToTable
@@ -21,6 +31,10 @@ const mapStateToProps = state => ({
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(skyspotActions, dispatch);
+}
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
 }
 
 const styles = {
@@ -54,32 +68,85 @@ const styles = {
 };
 
 class SkyspotsTable extends React.Component {
+  state = {
+    openDelete: false,
+    skyspotId: null
+  }
   componentDidMount() {
+    console.log('this.props', this.props)
+
     this.props.getSkyspotsRequest()
-      .then(data => console.log('this.props.skyspotsOrderedToTable', this.props.skyspotsOrderedToTable))
+  }
+  handleDelete = (skyspotId) => {
+    this.props.deleteSkyspot(skyspotId)
+      .then(deletedSkyspot => {
+        console.log('deletedSkyspot', deletedSkyspot)
+        this.props.getSkyspotsRequest()
+      })
+  }
+  handleEdit = (skyspotId) => {
+    console.log(skyspotId)
+  }
+  openDeleteModal = (skyspotId) => {
+    this.setState({ openDelete: true, skyspotId: skyspotId});
+  }
+  handleDeleteModalOk = () => {
+    this.setState({ openDelete: false })
+    this.state.skyspotId && this.handleDelete(this.state.skyspotId)
+  }
+  handleDeleteModalCancel = () => {
+    this.setState({openDelete: false})
   }
   render() {
     const { classes, skyspotsOrderedToTable } = this.props;
     return (
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Skyspots</h4>
-              <p className={classes.cardCategoryWhite}>
-                Tabla de Skyspots
-              </p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["ID", "Nombre", "Latitud", "Longitud", "Link"]}
-                tableData={skyspotsOrderedToTable}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
+      <div>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Skyspots</h4>
+                <p className={classes.cardCategoryWhite}>
+                  Tabla de Skyspots
+                </p>
+              </CardHeader>
+              <CardBody>
+                <Table
+                  tableHeaderColor="primary"
+                  tableHead={["ID", "Nombre", "Latitud", "Longitud", "Link", "", ""]}
+                  tableData={skyspotsOrderedToTable}
+                  handleDelete={skyspotId => this.openDeleteModal(skyspotId)}
+                  handleEdit={this.handleEdit}
+                />
+              </CardBody>
+            </Card>
+          </GridItem>
+        </GridContainer>
+        <div>
+          <Dialog
+            open={this.state.openDelete}
+            TransitionComponent={Transition}
+            keepMounted
+            // onClose={this.handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                ¿Desea borrar este Skyspot?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleDeleteModalOk} color="primary">
+                Aceptar
+              </Button>
+              <Button onClick={this.handleDeleteModalCancel} color="primary">
+                Cancelar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+      </div>
     )
   }
 }

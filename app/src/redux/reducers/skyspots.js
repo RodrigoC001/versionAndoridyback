@@ -4,6 +4,7 @@ const defaultStartState = {
   error: null,
   skyspotsOrderedToTable: [],
   createdSkyspot: null,
+  deletedSkyspot: null
 };
 
 export default function skyspots(state = defaultStartState, action) {
@@ -13,13 +14,13 @@ export default function skyspots(state = defaultStartState, action) {
         fetching: true
       });
     case "GET_SKYSPOTS_SUCCESS":
+        // order the skyspots alphabetically
       let skyspots = action.payload.response.data.sort((a, b) => {
           let textA = a.name.toUpperCase();
           let textB = b.name.toUpperCase();
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0
         })
       return Object.assign({}, state, {
-        // order the skyspots alphabetically
         fetching: false,
         skyspots,
         skyspotsOrderedToTable: action.payload.response.data.map(skyspot => {
@@ -51,6 +52,20 @@ export default function skyspots(state = defaultStartState, action) {
         fetching: false,
         error: action.payload.error
       });
+    case "DELETE_SKYSPOT_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "DELETE_SKYSPOT_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        deletedSkyspot: action.payload.response
+      });
+    case "DELETE_SKYSPOT_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });   
     default:
       return state;
   }
