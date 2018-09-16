@@ -37,6 +37,43 @@ export function getTripsRequest() {
   };
 }
 
+export function getTripAttempt() {
+  return {
+    type: "GET_TRIP_ATTEMPT"
+  };
+}
+
+export function getTripSuccess(response) {
+  return {
+    type: "GET_TRIP_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function getTripFailure(error) {
+  return {
+    type: "GET_TRIP_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function getTripRequest(id) {
+  return dispatch => {
+    dispatch(getTripAttempt());
+    return axios
+      .get(`/api/trip/${id}`)
+      .then(response => dispatch(getTripSuccess(response)))
+      .catch(error => {
+        console.log('eror en el trips request', error)
+        return dispatch(getTripFailure(error))
+      });
+  };
+}
+
 export function postTripAttempt() {
   return {
     type: "POST_TRIP_ATTEMPT"
@@ -102,18 +139,18 @@ export function putTripFailure(error) {
   };
 }
 
-export function putTrip(id, body) {
+export function putTrip(id, body, success, failure) {
   return dispatch => {
     dispatch(putTripAttempt());
     return axios
       .put(`/api/trip/${id}`, body)
       .then(response => {
-        // success()
+        success()
         return dispatch(putTripSuccess(response));
       })
       .catch(error => {
         console.log('error', error)
-        // failure()
+        failure()
         return dispatch(putTripFailure(error))
       });
   };

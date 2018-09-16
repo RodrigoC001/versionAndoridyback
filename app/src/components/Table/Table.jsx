@@ -10,8 +10,9 @@ import TableCell from "@material-ui/core/TableCell";
 // core components
 import tableStyle from "Assets/jss/material-dashboard-react/components/tableStyle";
 // icons
-import DeleteForever from "@material-ui/icons/DeleteForever";
-import Edit from "@material-ui/icons/Edit";
+import DeleteForever from "@material-ui/icons/DeleteForeverRounded";
+import Edit from "@material-ui/icons/EditRounded";
+
 
 
 function CustomTable({ ...props }) {
@@ -47,10 +48,10 @@ function CustomTable({ ...props }) {
                   );
                 })}
                 <TableCell className={classes.tableCell}>
-                 <DeleteForever onClick={() => handleDelete(prop[0])} />
+                 <DeleteForever className={classes.mouseOver} color="primary" onClick={() => handleDelete(prop[0])} />
                 </TableCell>
                 <TableCell className={classes.tableCell}>
-                 <Edit onClick={() => handleEdit(prop[0])} />
+                 <Edit className={classes.mouseOver} color="primary" onClick={() => handleEdit(prop[0])} />
                 </TableCell>
               </TableRow>
             );

@@ -40,16 +40,31 @@ server.get('/:id/skyspots', (req, res, next) => {
   .catch(next);
 });
 
-// add skyspots to an existing trip
 
+// first I update with name, originId and destinationId, then set the skyspots
 server.put('/:id', (req, res, next) => {
-  Trip.find({where: { id: req.params.id}})
-  .then(trip => {
-    if(!trip) return res.sendStatus(404)
-    return trip.setSkyspots(req.body.skyspotsArray)
-  })
-  .then(tripWithSkyspots => res.send(ok(tripWithSkyspots)))
-  .catch(next);
+  if (!req.trip) return res.sendStatus(404);
+  req.trip
+    .update({name: req.body.name, originId: req.body.originId, destinationId: req.body.destinationId})
+    .then(trip => trip.setSkyspots(req.body.skyspotsArray))
+    .then(()=> {
+      return Trip.find({
+        where: { id: req.params.id }, 
+        include: [
+        {
+          model: Skyspot
+        },
+        {
+          model: Origin
+        },
+        {
+          model: Destination
+        }
+        ]
+      })
+    })
+    .then(trip => res.send(ok(trip)))
+    .catch(next);
 });
 
 // get a Trip with its origin, destination and skyspots array

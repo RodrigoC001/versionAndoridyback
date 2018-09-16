@@ -1,10 +1,12 @@
 const defaultStartState = {
+  skyspot: {},
   skyspots: [],
   fetching: false,
   error: null,
   skyspotsOrderedToTable: [],
   createdSkyspot: null,
-  deletedSkyspot: null
+  deletedSkyspot: null,
+  modifiedSkyspot: {}
 };
 
 export default function skyspots(state = defaultStartState, action) {
@@ -38,6 +40,20 @@ export default function skyspots(state = defaultStartState, action) {
         fetching: false,
         error: action.payload.error
       });
+    case "GET_SKYSPOT_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "GET_SKYSPOT_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        skyspot: action.payload.response,
+      });
+    case "GET_SKYSPOT_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
     case "POST_SKYSPOT_ATTEMPT":
       return Object.assign({}, state, {
         fetching: true
@@ -48,6 +64,20 @@ export default function skyspots(state = defaultStartState, action) {
         createdSkyspot: action.payload.response
       });
     case "POST_SKYSPOT_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
+    case "PUT_SKYSPOT_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "PUT_SKYSPOT_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        modifiedSkyspot: action.payload.response
+      });
+    case "PUT_SKYSPOT_FAILURE":
       return Object.assign({}, state, {
         fetching: false,
         error: action.payload.error

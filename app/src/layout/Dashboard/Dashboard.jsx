@@ -19,8 +19,14 @@ import dashboardStyle from "Assets/jss/material-dashboard-react/layouts/dashboar
 import image from "Assets/img/aire_1242x2436.png";
 import logo from "Assets/img/aire@2x.png";
 
+import ModificarRuta from "../../views/ModificarRuta/ModificarRuta.jsx";
+import ModificarSkyspot from "../../views/ModificarSkyspot/ModificarSkyspot.jsx";
+
+
 const switchRoutes = (
   <Switch>
+    <Route  path="/trips/:id" component={ModificarRuta} />
+    <Route  path="/skyspots/:id" component={ModificarSkyspot} />
     {dashboardRoutes.map((prop, key) => {
       if (prop.redirect)
         return <Redirect from={prop.path} to={prop.to} key={key} />;
@@ -71,7 +77,7 @@ class App extends React.Component {
       <div className={classes.wrapper}>
         <Sidebar
           routes={dashboardRoutes}
-          logoText={"Creative Tim"}
+          logoText={"AI.RE"}
           logo={logo}
           image={image}
           handleDrawerToggle={this.handleDrawerToggle}

@@ -79,10 +79,7 @@ class SkyspotsTable extends React.Component {
   }
   handleDelete = (skyspotId) => {
     this.props.deleteSkyspot(skyspotId)
-      .then(deletedSkyspot => {
-        console.log('deletedSkyspot', deletedSkyspot)
-        this.props.getSkyspotsRequest()
-      })
+      .then(deletedSkyspot => this.props.getSkyspotsRequest())
   }
   handleEdit = (skyspotId) => {
     console.log(skyspotId)

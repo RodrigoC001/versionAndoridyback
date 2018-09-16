@@ -38,6 +38,14 @@ server.post('/', (req, res, next) => {
     .catch(next);
 });
 
+server.put('/:id', (req, res, next) => {
+  if (!req.skyspot) return res.sendStatus(404);
+  req.skyspot
+    .update(req.body)
+    .then(skyspot => res.send(ok(skyspot)))
+    .catch(next)
+})
+
 server.delete('/:id', (req, res, next) => {
   req.skyspot
     .destroy()

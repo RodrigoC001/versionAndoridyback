@@ -54,6 +54,9 @@ const tableStyle = theme => ({
     width: "100%",
     marginTop: theme.spacing.unit * 3,
     overflowX: "auto"
+  },
+  mouseOver: {
+    cursor: "pointer"
   }
 });
 

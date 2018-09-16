@@ -24,7 +24,7 @@ import CardHeader from "Components/Card/CardHeader.jsx";
 import CardBody from "Components/Card/CardBody.jsx";
 import CardFooter from "Components/Card/CardFooter.jsx";
 
-// 
+// BlueBird Promise
 import Promise from 'bluebird';
 // redux
 import { connect } from "react-redux";
@@ -39,12 +39,13 @@ import * as skyspotActions from "../../redux/actions/skyspots";
 import AddAlert from "@material-ui/icons/AddAlert";
 import Snackbar from "Components/Snackbar/Snackbar.jsx"
 
+// Spinner
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+
 
 const mapStateToProps = state => ({
-  createdOrigin: state.origins.createdOrigin,
-  createdDestination: state.origins.createdDestination,
-  createdTrip: state.trips.createdTrip,
-  trips: state.trips.trips,
+  trip: state.trips.trip,
   skyspots: state.skyspots.skyspots
 });
 
@@ -93,17 +94,52 @@ const styles = {
     height: 110,
     width: 400,
     overflow: 'scroll'
+  },
+  spinnerContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 };
 
 
-class AgregarRuta extends React.Component {
+class ModificarRuta extends React.Component {
   state = {
     name: '',
     originAddress: '',
     destinationAddress: '',
     openSuccess: false,
     openFailure: false,
+    fetching: true
+  }
+  componentDidMount() {
+    const { id } = this.props.match.params
+
+    this.props.getTripRequest(id)
+      .then(trip => {
+        let skyspotsArray = this.props.trip.data.skyspots
+        let originAddress = this.props.trip.data.origin ? this.props.trip.data.origin.address : ''
+        let destinationAddress = this.props.trip.data.destination ? this.props.trip.data.destination.address : ''
+        
+        let checkedSkyspotsObject = {}
+
+        skyspotsArray.forEach((element) => {
+          checkedSkyspotsObject[element.id] = true
+        });
+
+        const newState = Object.assign({}, {
+          name: this.props.trip.data.name,
+          originAddress,
+          destinationAddress,
+          fetching: false
+        }, checkedSkyspotsObject)
+
+        // creo un nuevo estado con la data del trip, checkeo en true los skyspots que contiene el trip, y con todo eso construyo un objeto y lo pongo en el estado con object.assign
+
+        this.setState(newState)
+
+        console.log('this.props.trip', this.props.trip)
+      })
   }
   showSkyspots = (event, expanded) => {
     expanded && this.props.getSkyspotsRequest()
@@ -115,37 +151,29 @@ class AgregarRuta extends React.Component {
     this.setState({ [name]: event.target.checked});
   }
   handleSubmit = (event) => {
+    const { id } = this.props.match.params
+    
     event.preventDefault();
+    
+    // filtro todas las keys del estado que no sean id's de skyspots y las pongo en un arreglo
 
-    const createOriginAndDestination = [
-      this.props.postOrigin({address: this.state.originAddress}),
-      this.props.postDestination({address: this.state.destinationAddress})
-    ]
+    let skyspotsObject = Object.assign({}, this.state);
+    delete skyspotsObject.name
+    delete skyspotsObject.originAddress
+    delete skyspotsObject.destinationAddress
+    delete skyspotsObject.openSuccess
+    delete skyspotsObject.openFailure
+    delete skyspotsObject.fetching
 
-    Promise.all(createOriginAndDestination)
-      .then(data => {
-        const originId = data[0].payload.response.data.id
-        const destinationId = data[0].payload.response.data.id
-        // filtro todas las keys del estado que no sean id's de skyspots y las pongo en un arreglo
-        let skyspotsObject = Object.assign({}, this.state);
-        delete skyspotsObject.name
-        delete skyspotsObject.originAddress
-        delete skyspotsObject.destinationAddress
-        delete skyspotsObject.openSuccess
-        delete skyspotsObject.openFailure
-        const skyspotsArray = Object.keys(skyspotsObject)
+    const skyspotsArray = Object.keys(skyspotsObject)
 
-        this.props.postTrip({
-          name: this.state.name,
-          originId,
-          destinationId,
-          skyspotsArray
-        }, this.showNotificationSuccess, this.showNotificationFailure)
-      })
-      .catch(err => {
-        this.showNotificationFailure()
-        console.log('err en el PromiseAll', err)
-      })
+    this.props.putTrip(id, {
+      name: this.state.name,
+      // originId,
+      // destinationId,
+      skyspotsArray
+    }, this.showNotificationSuccess, this.showNotificationFailure)
+    
   }
   showNotificationSuccess = () => {
     // filtro todas las keys del estado que no sean id's de skyspots y las pongo en false para resetear
@@ -167,8 +195,8 @@ class AgregarRuta extends React.Component {
     this.setState(newState)
 
     setTimeout(function(){
-            this.setState({openSuccess: false});
-        }.bind(this),6000);
+            this.setState({openSuccess: false}, ()=> this.props.history.push('/tablarutas'));
+        }.bind(this),1000);
   }
   showNotificationFailure = () => {
     this.setState({
@@ -183,6 +211,7 @@ class AgregarRuta extends React.Component {
   }
   render() {
   const { classes, skyspots } = this.props
+    if(this.state.fetching || !this.props.trip) return (<div className={classes.spinnerContainer}><CircularProgress className={classes.progress}/></div>)
     return (
       <div>
         <GridContainer>
@@ -190,8 +219,8 @@ class AgregarRuta extends React.Component {
             <Card>
               <form onSubmit={this.handleSubmit}>
                 <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Ruta</h4>
-                  <p className={classes.cardCategoryWhite}>Agregar ruta</p>
+                  <h4 className={classes.cardTitleWhite}>{this.props.trip && this.props.trip.data.name}</h4>
+                  <p className={classes.cardCategoryWhite}>Modificar Ruta</p>
                 </CardHeader>
                 <CardBody>
                   <GridContainer>
@@ -245,7 +274,7 @@ class AgregarRuta extends React.Component {
                     <GridItem xs={12} sm={12} md={12}>
                       <ExpansionPanel className={classes.expansion} onChange={(event, expanded)=> this.showSkyspots(event, expanded)}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                          <Typography className={classes.formLabel}>Agregar Skyspots</Typography>
+                          <Typography className={classes.formLabel}>Modificar Skyspots</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                           <FormControl component="fieldset" className={classes.formControl}>
@@ -277,7 +306,7 @@ class AgregarRuta extends React.Component {
                   </GridContainer>
                 </CardBody>
                 <CardFooter>
-                  <Button type="submit" color="primary">Enviar</Button>
+                  <Button type="submit" color="primary">Modificar</Button>
                 </CardFooter>
               </form>
             </Card>
@@ -288,7 +317,7 @@ class AgregarRuta extends React.Component {
             place="bc"
             color="success"
             icon={AddAlert}
-            message="Ruta creada!"
+            message="Ruta modificada!"
             open={this.state.openSuccess}
             closeNotification={() => this.setState({openSuccess:false})}
             close
@@ -299,7 +328,7 @@ class AgregarRuta extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al crear esta Ruta"
+            message="Hubo un error al intentar modificar esta Ruta"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close
@@ -310,6 +339,6 @@ class AgregarRuta extends React.Component {
   }
 }
 
-const styledComponent = withStyles(styles)(AgregarRuta);
+const styledComponent = withStyles(styles)(ModificarRuta);
 
 export default connect(mapStateToProps, mapDispatchToProps)(styledComponent);

@@ -85,7 +85,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: false,
       template: require('html-webpack-template'),
-      title: 'ShopApp',
+      title: 'AireApp',
       appMountId: 'app',
       baseHref: '/',
       mobile: true,
