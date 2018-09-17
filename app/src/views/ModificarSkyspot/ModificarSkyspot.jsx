@@ -109,7 +109,7 @@ class ModificarSkyspot extends React.Component {
       longitude: ''
     });
     setTimeout(function(){
-            this.setState({openSuccess: false},()=> this.props.history.push('/tablaskyspots'));
+            this.setState({openSuccess: false}, ()=> this.props.history.push('/tablaskyspots'));
         }.bind(this),1000);
   }
   showNotificationFailure = () => {

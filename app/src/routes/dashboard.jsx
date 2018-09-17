@@ -21,7 +21,7 @@ const dashboardRoutes = [
     component: DashboardPage
   },*/
   {
-    path: "/ruta",
+    path: "/crearruta",
     sidebarName: "Agregar Ruta",
     navbarName: "Agregar Ruta",
     icon: FlightTakeoff,
@@ -35,7 +35,7 @@ const dashboardRoutes = [
     component: RoutesTable
   },
   {
-    path: "/skyspot",
+    path: "/crearskyspot",
     sidebarName: "Agregar Skyspot",
     navbarName: "Agregar Skyspot",
     icon: AddLocation,

@@ -70,11 +70,10 @@ const styles = {
 class SkyspotsTable extends React.Component {
   state = {
     openDelete: false,
+    openEdit: false,
     skyspotId: null
   }
   componentDidMount() {
-    console.log('this.props', this.props)
-
     this.props.getSkyspotsRequest()
   }
   handleDelete = (skyspotId) => {
@@ -82,7 +81,7 @@ class SkyspotsTable extends React.Component {
       .then(deletedSkyspot => this.props.getSkyspotsRequest())
   }
   handleEdit = (skyspotId) => {
-    console.log(skyspotId)
+    this.props.history.push(`/skyspots/${skyspotId}`)
   }
   openDeleteModal = (skyspotId) => {
     this.setState({ openDelete: true, skyspotId: skyspotId});
@@ -92,7 +91,17 @@ class SkyspotsTable extends React.Component {
     this.state.skyspotId && this.handleDelete(this.state.skyspotId)
   }
   handleDeleteModalCancel = () => {
-    this.setState({openDelete: false})
+    this.setState({openDelete: false, skyspotId: null})
+  }
+  openEditModal = (skyspotId) => {
+    this.setState({ openEdit: true, skyspotId: skyspotId});
+  }
+  handleEditModalOk = () => {
+    this.setState({ openEdit: false })
+    this.state.skyspotId && this.handleEdit(this.state.skyspotId)
+  }
+  handleEditModalCancel = () => {
+    this.setState({openEdit: false, skyspotId: null})
   }
   render() {
     const { classes, skyspotsOrderedToTable } = this.props;
@@ -113,7 +122,7 @@ class SkyspotsTable extends React.Component {
                   tableHead={["ID", "Nombre", "Latitud", "Longitud", "Link", "", ""]}
                   tableData={skyspotsOrderedToTable}
                   handleDelete={skyspotId => this.openDeleteModal(skyspotId)}
-                  handleEdit={this.handleEdit}
+                  handleEdit={skyspotId => this.openEditModal(skyspotId)}
                 />
               </CardBody>
             </Card>
@@ -138,6 +147,30 @@ class SkyspotsTable extends React.Component {
                 Aceptar
               </Button>
               <Button onClick={this.handleDeleteModalCancel} color="primary">
+                Cancelar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        <div>
+          <Dialog
+            open={this.state.openEdit}
+            TransitionComponent={Transition}
+            keepMounted
+            // onClose={this.handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                ¿Desea editar este Skyspot?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleEditModalOk} color="primary">
+                Aceptar
+              </Button>
+              <Button onClick={this.handleEditModalCancel} color="primary">
                 Cancelar
               </Button>
             </DialogActions>

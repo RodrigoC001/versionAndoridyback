@@ -70,6 +70,7 @@ const styles = {
 class RoutesTable extends React.Component {
   state = {
     openDelete: false,
+    openEdit: false,
     tripId: null
   }
   componentDidMount() {
@@ -80,7 +81,7 @@ class RoutesTable extends React.Component {
       .then(deletedTrip => this.props.getTripsRequest())
   }
   handleEdit = (tripId) => {
-    console.log(tripId)
+    this.props.history.push(`/trips/${tripId}`)
   }
   openDeleteModal = (tripId) => {
     this.setState({ openDelete: true, tripId: tripId});
@@ -90,7 +91,17 @@ class RoutesTable extends React.Component {
     this.state.tripId && this.handleDelete(this.state.tripId)
   }
   handleDeleteModalCancel = () => {
-    this.setState({openDelete: false})
+    this.setState({openDelete: false, tripId: null})
+  }
+  openEditModal = (tripId) => {
+    this.setState({ openEdit: true, tripId: tripId});
+  }
+  handleEditModalOk = () => {
+    this.setState({ openEdit: false })
+    this.state.tripId && this.handleEdit(this.state.tripId)
+  }
+  handleEditModalCancel = () => {
+    this.setState({openEdit: false, tripId: null})
   }
   render() {
     const { classes, tripsOrderedToTable } = this.props;
@@ -111,7 +122,7 @@ class RoutesTable extends React.Component {
                 tableHead={["ID", "Nombre", "Origen", "Destino", "Skyspots", "", ""]}
                 tableData={tripsOrderedToTable}
                 handleDelete={tripId => this.openDeleteModal(tripId)}
-                handleEdit={this.handleEdit}
+                handleEdit={tripId => this.openEditModal(tripId)}
               />
             </CardBody>
           </Card>
@@ -136,6 +147,30 @@ class RoutesTable extends React.Component {
               Aceptar
             </Button>
             <Button onClick={this.handleDeleteModalCancel} color="primary">
+              Cancelar
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+      <div>
+        <Dialog
+          open={this.state.openEdit}
+          TransitionComponent={Transition}
+          keepMounted
+          // onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              ¿Desea editar esta Ruta?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleEditModalOk} color="primary">
+              Aceptar
+            </Button>
+            <Button onClick={this.handleEditModalCancel} color="primary">
               Cancelar
             </Button>
           </DialogActions>
