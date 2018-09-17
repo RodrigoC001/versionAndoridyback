@@ -3,14 +3,17 @@ import Dashboard from "@material-ui/icons/Dashboard";
 import FlightTakeoff from "@material-ui/icons/FlightTakeoff";
 import AddLocation from "@material-ui/icons/AddLocation";
 import Description from "@material-ui/icons/Description";
+import MyLocation from "@material-ui/icons/MyLocation";
 
 // core components/views
 import DashboardPage from "../views/Dashboard/Dashboard.jsx";
 import AgregarRuta from "../views/AgregarRuta/AgregarRuta.jsx";
 import AgregarSkyspot from "../views/AgregarSkyspot/AgregarSkyspot.jsx";
+import AgregarOrigenDestino from "../views/AgregarOrigenDestino/AgregarOrigenDestino.jsx";
 
 import RoutesTable from "../views/RoutesTable/RoutesTable.jsx";
 import SkyspotsTable from "../views/SkyspotsTable/SkyspotsTable.jsx";
+
 
 const dashboardRoutes = [
 /*  {
@@ -47,6 +50,13 @@ const dashboardRoutes = [
     navbarName: "Ver Skyspots",
     icon: Description,
     component: SkyspotsTable
+  },
+  {
+    path: "/crearorigendestino",
+    sidebarName: "Agregar Origen & Destino",
+    navbarName: "Agregar Origen & Destino",
+    icon: MyLocation,
+    component: AgregarOrigenDestino
   },
   { redirect: true, path: "/", to: "/ruta", navbarName: "Redirect" }
 ];
