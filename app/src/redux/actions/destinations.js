@@ -152,3 +152,45 @@ export function deleteDestination(id) {
       });
   };
 }
+
+export function putDestinationAttempt() {
+  return {
+    type: "PUT_DESTINATION_ATTEMPT"
+  };
+}
+
+export function putDestinationSuccess(response) {
+  return {
+    type: "PUT_DESTINATION_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function putDestinationFailure(error) {
+  return {
+    type: "PUT_DESTINATION_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function putDestination(id, body, success, failure) {
+  return dispatch => {
+    dispatch(putDestinationAttempt());
+    return axios
+      .put(`/api/destination/${id}`, body)
+      .then(response => {
+        // success()
+        return dispatch(putDestinationSuccess(response));
+      })
+      .catch(error => {
+        console.log('error', error)
+        // failure()
+        return dispatch(putDestinationFailure(error))
+      });
+  };
+}
+

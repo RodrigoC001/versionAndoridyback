@@ -21,12 +21,14 @@ import logo from "Assets/img/aire@2x.png";
 
 import ModificarRuta from "../../views/ModificarRuta/ModificarRuta.jsx";
 import ModificarSkyspot from "../../views/ModificarSkyspot/ModificarSkyspot.jsx";
+import ModificarOrigenDestino from "../../views/ModificarOrigenDestino/ModificarOrigenDestino.jsx";
 
 
 const switchRoutes = (
   <Switch>
     <Route  path="/trips/:id" component={ModificarRuta} />
     <Route  path="/skyspots/:id" component={ModificarSkyspot} />
+    <Route  path="/origendestino/:id" component={ModificarOrigenDestino} />
     {dashboardRoutes.map((prop, key) => {
       if (prop.redirect)
         return <Redirect from={prop.path} to={prop.to} key={key} />;

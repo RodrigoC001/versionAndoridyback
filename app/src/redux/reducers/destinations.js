@@ -4,6 +4,7 @@ const defaultStartState = {
   destinationsOrderedToTable: [],
   destination: null,
   deletedDestination: null,
+  modifiedDestination: {}
 };
 
 export default function destinations(state = defaultStartState, action) {
@@ -72,6 +73,20 @@ export default function destinations(state = defaultStartState, action) {
         deletedDestination: action.payload.response
       });
     case "DELETE_DESTINATION_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
+    case "PUT_DESTINATION_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "PUT_DESTINATION_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        modifiedDestination: action.payload.response
+      });
+    case "PUT_DESTINATION_FAILURE":
       return Object.assign({}, state, {
         fetching: false,
         error: action.payload.error

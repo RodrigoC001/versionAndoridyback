@@ -152,3 +152,45 @@ export function deleteOrigin(id) {
       });
   };
 }
+
+export function putOriginAttempt() {
+  return {
+    type: "PUT_ORIGIN_ATTEMPT"
+  };
+}
+
+export function putOriginSuccess(response) {
+  return {
+    type: "PUT_ORIGIN_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function putOriginFailure(error) {
+  return {
+    type: "PUT_ORIGIN_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function putOrigin(id, body, success, failure) {
+  return dispatch => {
+    dispatch(putOriginAttempt());
+    return axios
+      .put(`/api/origin/${id}`, body)
+      .then(response => {
+        // success()
+        return dispatch(putOriginSuccess(response));
+      })
+      .catch(error => {
+        console.log('error', error)
+        // failure()
+        return dispatch(putOriginFailure(error))
+      });
+  };
+}
+

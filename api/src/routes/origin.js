@@ -38,6 +38,14 @@ server.post('/', (req, res, next) => {
     .catch(next);
 });
 
+server.put('/:id', (req, res, next) => {
+  if (!req.origin) return res.sendStatus(404);
+  req.origin
+    .update(req.body)
+    .then(origin => res.send(ok(origin)))
+    .catch(next)
+})
+
 server.delete('/:id', (req, res, next) => {
   req.origin
     .destroy()

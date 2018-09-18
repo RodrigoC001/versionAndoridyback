@@ -4,6 +4,7 @@ const defaultStartState = {
   originsOrderedToTable: [],
   origin: null,
   deletedOrigin: null,
+  modifiedOrigin: {}
 };
 
 export default function origins(state = defaultStartState, action) {
@@ -72,6 +73,20 @@ export default function origins(state = defaultStartState, action) {
         deletedOrigin: action.payload.response
       });
     case "DELETE_ORIGIN_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
+    case "PUT_ORIGIN_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "PUT_ORIGIN_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        modifiedOrigin: action.payload.response
+      });
+    case "PUT_ORIGIN_FAILURE":
       return Object.assign({}, state, {
         fetching: false,
         error: action.payload.error

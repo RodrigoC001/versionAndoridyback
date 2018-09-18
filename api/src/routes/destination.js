@@ -39,6 +39,14 @@ server.post('/', (req, res, next) => {
     .catch(next);
 });
 
+server.put('/:id', (req, res, next) => {
+  if (!req.destination) return res.sendStatus(404);
+  req.destination
+    .update(req.body)
+    .then(destination => res.send(ok(destination)))
+    .catch(next)
+})
+
 server.delete('/:id', (req, res, next) => {
   req.destination
     .destroy()
