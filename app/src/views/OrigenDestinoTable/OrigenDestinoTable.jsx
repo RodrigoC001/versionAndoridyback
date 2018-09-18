@@ -157,14 +157,14 @@ class OrigenDestinoTable extends React.Component {
     // this.props.history.push(`/skyspots/${skyspotId}`)
   }
   openDeleteModalDestination = (destinationId) => {
-    this.setState({ openDelete: true, destinationId: destinationId});
+    this.setState({ openDeleteDestination: true, destinationId: destinationId});
   }
   handleDeleteModalOkDestination = () => {
-    this.setState({ openDelete: false })
+    this.setState({ openDeleteDestination: false })
     this.state.destinationId && this.handleDeleteDestination(this.state.destinationId)
   }
   handleDeleteModalCancelDestination = () => {
-    this.setState({openDelete: false, destinationId: null})
+    this.setState({openDeleteDestination: false, destinationId: null})
   }
   openEditModalDestination = (destinationId) => {
     this.setState({ openEdit: true, destinationId: destinationId});
@@ -267,6 +267,55 @@ class OrigenDestinoTable extends React.Component {
                 Aceptar
               </Button>
               <Button onClick={this.handleEditModalCancel} color="primary">
+                Cancelar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+
+        <div>
+          <Dialog
+            open={this.state.openDeleteDestination}
+            TransitionComponent={Transition}
+            keepMounted
+            // onClose={this.handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                ¿Desea borrar este Origen & Destino?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleDeleteModalOkDestination} color="primary">
+                Aceptar
+              </Button>
+              <Button onClick={this.handleDeleteModalCancelDestination} color="primary">
+                Cancelar
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        <div>
+          <Dialog
+            open={this.state.openEditDestination}
+            TransitionComponent={Transition}
+            keepMounted
+            // onClose={this.handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                ¿Desea editar este Origen & Destino?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={this.handleEditModalOkDestination} color="primary">
+                Aceptar
+              </Button>
+              <Button onClick={this.handleEditModalCancelDestination} color="primary">
                 Cancelar
               </Button>
             </DialogActions>
