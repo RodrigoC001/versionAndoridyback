@@ -41,7 +41,7 @@ server.post('/', (req, res, next) => {
 server.delete('/:id', (req, res, next) => {
   req.origin
     .destroy()
-    .then(origin => res.status(204).send(deleted(origin)))
+    .then(origin => res.send(ok(req.origin)))
     .catch(next);
 });
 

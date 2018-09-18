@@ -13,6 +13,8 @@ import AgregarOrigenDestino from "../views/AgregarOrigenDestino/AgregarOrigenDes
 
 import RoutesTable from "../views/RoutesTable/RoutesTable.jsx";
 import SkyspotsTable from "../views/SkyspotsTable/SkyspotsTable.jsx";
+import OrigenDestinoTable from "../views/OrigenDestinoTable/OrigenDestinoTable.jsx";
+
 
 
 const dashboardRoutes = [
@@ -58,7 +60,14 @@ const dashboardRoutes = [
     icon: MyLocation,
     component: AgregarOrigenDestino
   },
-  { redirect: true, path: "/", to: "/ruta", navbarName: "Redirect" }
+  {
+    path: "/tablaorigendestino",
+    sidebarName: "Ver Origenes & Destinos",
+    navbarName: "Ver Origenes & Destinos",
+    icon: Description,
+    component: OrigenDestinoTable
+  },
+  { redirect: true, path: "/", to: "/crearruta", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;

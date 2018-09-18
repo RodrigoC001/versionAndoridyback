@@ -34,7 +34,6 @@ import * as destinationActions from "../../redux/actions/destinations";
 import * as tripActions from "../../redux/actions/trips";
 import * as skyspotActions from "../../redux/actions/skyspots";
 
-
 // Alert components
 import AddAlert from "@material-ui/icons/AddAlert";
 import Snackbar from "Components/Snackbar/Snackbar.jsx"
