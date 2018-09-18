@@ -113,7 +113,7 @@ class OrigenDestinoTable extends React.Component {
 
   }
   handleEdit = (originId) => {
-    // this.props.history.push(`/skyspots/${skyspotId}`)
+    this.props.history.push(`/origendestino/${originId}`)
   }
   openDeleteModal = (originId) => {
     this.setState({ openDelete: true, originId: originId});
@@ -154,7 +154,7 @@ class OrigenDestinoTable extends React.Component {
       });
   }
   handleEditDestination = (destinationId) => {
-    // this.props.history.push(`/skyspots/${skyspotId}`)
+    this.props.history.push(`/origendestino/${destinationId}`)
   }
   openDeleteModalDestination = (destinationId) => {
     this.setState({ openDeleteDestination: true, destinationId: destinationId});
@@ -167,7 +167,7 @@ class OrigenDestinoTable extends React.Component {
     this.setState({openDeleteDestination: false, destinationId: null})
   }
   openEditModalDestination = (destinationId) => {
-    this.setState({ openEdit: true, destinationId: destinationId});
+    this.setState({ openEditDestination: true, destinationId: destinationId});
   }
   handleEditModalOkDestination = () => {
     this.setState({ openEdit: false });
