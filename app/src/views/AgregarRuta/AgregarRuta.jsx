@@ -7,6 +7,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -44,7 +46,9 @@ const mapStateToProps = state => ({
   createdDestination: state.origins.createdDestination,
   createdTrip: state.trips.createdTrip,
   trips: state.trips.trips,
-  skyspots: state.skyspots.skyspots
+  skyspots: state.skyspots.skyspots,
+  origins: state.origins.origins,
+  destinations: state.destinations.destinations
 });
 
 function mapDispatchToProps(dispatch) {
@@ -92,9 +96,14 @@ const styles = {
     height: 110,
     width: 400,
     overflow: 'scroll'
+  },
+  menu: {
+    width: 300,
+  },
+  textField: {
+    width: 300,
   }
 };
-
 
 class AgregarRuta extends React.Component {
   state = {
@@ -104,11 +113,22 @@ class AgregarRuta extends React.Component {
     openSuccess: false,
     openFailure: false,
   }
+  componentDidMount() {
+    this.props.getOriginsRequest()
+      .then(()=> console.log('origins?,', this.props.origins));
+    this.props.getDestinationsRequest()
+      .then(()=> console.log('destinations?,', this.props.destinations));
+  }
   showSkyspots = (event, expanded) => {
     expanded && this.props.getSkyspotsRequest()
   }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
+  }
+  handleChangeSelector = name => event => {
+    this.setState({
+      [name]: event.target.value,
+    });
   }
   checkBox = name => event => {
     this.setState({ [name]: event.target.checked});
@@ -146,6 +166,28 @@ class AgregarRuta extends React.Component {
         console.log('err en el PromiseAll', err)
       })
   }
+  handleSubmit = (event) => {
+    const originId = this.state.originAddress
+    const destinationId = this.state.destinationAddress
+    // filtro todas las keys del estado que no sean id's de skyspots y las pongo en un arreglo
+    let skyspotsObject = Object.assign({}, this.state);
+    delete skyspotsObject.name
+    delete skyspotsObject.originAddress
+    delete skyspotsObject.destinationAddress
+    delete skyspotsObject.openSuccess
+    delete skyspotsObject.openFailure
+    const skyspotsArray = Object.keys(skyspotsObject)
+
+    event.preventDefault();
+
+    this.props.postTrip({
+      name: this.state.name,
+      originId,
+      destinationId,
+      skyspotsArray
+    }, this.showNotificationSuccess, this.showNotificationFailure)
+      
+  }
   showNotificationSuccess = () => {
     // filtro todas las keys del estado que no sean id's de skyspots y las pongo en false para resetear
     let skyspotsObject = Object.assign({}, this.state);
@@ -181,7 +223,7 @@ class AgregarRuta extends React.Component {
         }.bind(this),6000);
   }
   render() {
-  const { classes, skyspots } = this.props
+  const { classes, skyspots, origins, destinations } = this.props
     return (
       <div>
         <GridContainer>
@@ -212,34 +254,50 @@ class AgregarRuta extends React.Component {
                   </GridContainer>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Origen"
-                        id="first-name"
-                        formControlProps={{
-                          fullWidth: true,
-                          onChange: this.handleChange
+                      <TextField
+                        id="origin-id"
+                        select
+                        label="Origen"
+                        className={classes.textField}
+                        value={this.state.originAddress}
+                        onChange={this.handleChangeSelector('originAddress')}
+                        SelectProps={{
+                          MenuProps: {
+                            className: classes.menu,
+                          },
                         }}
-                        inputProps={{
-                          placeholder: 'Ej.: Buenos Aires, Argentina',
-                          value: this.state.originAddress,
-                          name: 'originAddress'
-                        }}
-                      />
+                        helperText="Ej.: Buenos Aires, Argentina"
+                        margin="normal"
+                      >
+                        {origins && origins.map(origin => (
+                          <MenuItem key={origin.id} value={origin.id}>
+                            {origin.address}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     </GridItem>
                     <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Destino"
-                        id="last-name"
-                        formControlProps={{
-                          fullWidth: true,
-                          onChange: this.handleChange
+                      <TextField
+                        id="destination-id"
+                        select
+                        label="Destino"
+                        className={classes.textField}
+                        value={this.state.destinationAddress}
+                        onChange={this.handleChangeSelector('destinationAddress')}
+                        SelectProps={{
+                          MenuProps: {
+                            className: classes.menu,
+                          },
                         }}
-                        inputProps={{
-                          placeholder: 'Ej.: El Calafate, Argentina',
-                          value: this.state.destinationAddress,
-                          name: 'destinationAddress'
-                        }}
-                      />
+                        helperText="Ej.: El Calafate, Argentina"
+                        margin="normal"
+                      >
+                        {destinations && destinations.map(destination => (
+                          <MenuItem key={destination.id} value={destination.id}>
+                            {destination.address}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12}>
                       <ExpansionPanel className={classes.expansion} onChange={(event, expanded)=> this.showSkyspots(event, expanded)}>

@@ -30,7 +30,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 
 const mapStateToProps = state => ({
-  origins: state.origins.origins,
+  origins: state.origins,
   originsOrderedToTable: state.origins.originsOrderedToTable,
   destinations: state.destinations.destinations,
   destinationsOrderedToTable: state.destinations.destinationsOrderedToTable,

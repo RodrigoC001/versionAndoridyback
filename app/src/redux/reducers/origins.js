@@ -22,7 +22,7 @@ export default function origins(state = defaultStartState, action) {
         })
       return Object.assign({}, state, {
         fetching: false,
-        origins,
+        origins: origins,
         originsOrderedToTable: action.payload.response.data.map(origin => {
           const array = [];
           array.push(origin.id.toString());
