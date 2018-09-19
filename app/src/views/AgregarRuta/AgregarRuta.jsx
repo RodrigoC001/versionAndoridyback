@@ -98,10 +98,10 @@ const styles = {
     overflow: 'scroll'
   },
   menu: {
-    width: 300,
+    width: 250,
   },
   textField: {
-    width: 300,
+    width: 250,
   }
 };
 
@@ -114,10 +114,8 @@ class AgregarRuta extends React.Component {
     openFailure: false,
   }
   componentDidMount() {
-    this.props.getOriginsRequest()
-      .then(()=> console.log('origins?,', this.props.origins));
-    this.props.getDestinationsRequest()
-      .then(()=> console.log('destinations?,', this.props.destinations));
+    this.props.getOriginsRequest();
+    this.props.getDestinationsRequest();
   }
   showSkyspots = (event, expanded) => {
     expanded && this.props.getSkyspotsRequest()

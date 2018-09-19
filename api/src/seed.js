@@ -2,24 +2,10 @@ const session = require('supertest-session');
 const app = require('app.js');
 const db = require('db.js');
 const { User, Trip, Skyspot, Origin, Destination } = require('models/index.js');
-
+const skyspotsArrayFinal = require('./utils/geoJsonToSeed.js');
 
 const aTrip = {
   name: 'AEP-FTE'
-}
-
-const skyspot1 = {
-  name: 'Represa Salto Grande',
-  data: 'https://aireapp.org/2018/07/19/represa-salto-grande/',
-  latitude: -67.6205063,
-  longitude: -45.8204256
-}
-
-const skyspot2 = {
-  name: 'Esteros del Iberá',
-  data: 'https://aireapp.org/2018/07/12/esteros-del-ibera/',
-  latitude: -61.7483139,
-  longitude: -45.8204256
 }
 
 const anOrigin = {
@@ -27,7 +13,7 @@ const anOrigin = {
 }
 
 const aDestination = {
-  address: 'Calafate'
+  address: 'Buenos Aires'
 }
 
 const agent = session(app);
@@ -45,42 +31,13 @@ const init = db.sync({ force: true })
   });
 
 const setUp = init.then(() => Trip.create(aTrip))
-  .then(() => Skyspot.create(skyspot1))
-  .then(() => Skyspot.create(skyspot2))
+  .then(()=> skyspotsArrayFinal.map(skyspot => Skyspot.create(skyspot)))
   .then(() => Origin.create(anOrigin))
   .then(() => Destination.create(aDestination))
   .then(()=> Trip.create({
-    name: 'Test',
-    originId: 1,
-    destinationId: 1,
-    skyspots: [
-    {
-      name: 'Represa Salto Grande',
-      data: 'https://aireapp.org/2018/07/19/represa-salto-grande/',
-      latitude: -67.6205063,
-      longitude: -45.8204256
-    }, 
-    {
-      name: '423 Salto Grande',
-      data: 'https://aireapp.org/2018/07/19/represa-salto-grande/',
-      latitude: -67.6205063,
-      longitude: -45.8204256}]
-    }, 
-    {
-      include: Skyspot
-    }))
-  .then(()=> Trip.create({
     name: 'Test solo con ids',
     originId: 1,
-    destinationId: 1,
-    skyspots:[1,2,3,4]}))
-  // .then(trip => trip.setSkyspots([1,2,3,4]))
-
-/*const transactionSeed = setUp.then(() => agent.post('/transaction').send(aScan))
-  .then(() => agent.post('/transaction/prizePurchase').send(aPurchase))
-  .then(() => agent.post('/transaction').send(anEnter))
-  .then(() => agent.post('/survey/product/1').send(aSurvey))
-  .then(() => agent.post('/transaction/survey').send(aSurveyResponse));
-*/
+    destinationId: 1}))
+  .then(trip => trip.setSkyspots([1,2,3,4]))
 
 module.exports = setUp;
