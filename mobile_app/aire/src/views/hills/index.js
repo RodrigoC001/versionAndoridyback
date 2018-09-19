@@ -60,4 +60,3 @@ const s = StyleSheet.create({
     fontFamily: 'HouschkaRoundedAltExtraBold',
   }
 });
-

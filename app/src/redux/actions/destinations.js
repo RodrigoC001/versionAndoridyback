@@ -193,4 +193,3 @@ export function putDestination(id, body, success, failure) {
       });
   };
 }
-

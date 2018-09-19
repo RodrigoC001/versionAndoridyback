@@ -184,4 +184,3 @@ class RoutesTable extends React.Component {
 const styledComponent = withStyles(styles)(RoutesTable);
 
 export default connect(mapStateToProps, mapDispatchToProps)(styledComponent);
- 

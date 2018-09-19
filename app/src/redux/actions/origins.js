@@ -193,4 +193,3 @@ export function putOrigin(id, body, success, failure) {
       });
   };
 }
-
