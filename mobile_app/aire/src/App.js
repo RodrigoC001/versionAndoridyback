@@ -1,46 +1,29 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, StatusBar} from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
+import { BottomTabs } from "./navigation/index";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
-import Config from './views/config/'
-import AboutUs from './components/AboutUs/AboutUs.js'
-import TabBar from './navigation/TabBar.js'
-import TestMap from './components/TestMap.js'
-import Nubes from './views/nubes/'
-import Hills from './views/hills/'
-
-
-/*export default class App extends Component{
+export default class App extends Component{
   render() {
     return (
-      <View style={s.container}>
-        <Text style={s.welcome}>Welcome!</Text>
-        <Image
-          style={{width: 300, height: 300}}
-          source={{uri: 'https://scontent.faep8-2.fna.fbcdn.net/v/t1.0-9/20882552_511468385856826_2094245809844683982_n.jpg?_nc_cat=0&oh=744c77094d7f8e2f361c1b8d78ddfdad&oe=5BD78E7B'}}
-        />
-      </View>
+      <Provider store={store}>
+        <View style={s.container}>
+          <StatusBar
+            backgroundColor="rgb(64,76,155)"
+            barStyle="default" 
+            hidden={false}
+          />
+          <BottomTabs />
+        </View>
+      </Provider>
     );
   }
 }
-*/
+
 const s = StyleSheet.create({
   container: {
     flex: 1,
   }
 });
-
-
-export default createBottomTabNavigator(
-  { 
-    AboutUs: AboutUs,
-    Hills: Hills,
-    Map: TestMap,
-    Nubes: Nubes,
-    Config: Config,
-  },
-  {
-    initialRouteName: 'Map',
-    tabBarComponent: (props) => <TabBar {...props}/>
-  }
-);

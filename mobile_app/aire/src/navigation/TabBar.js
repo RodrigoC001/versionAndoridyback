@@ -51,7 +51,7 @@ export default (props) => {
 const s = StyleSheet.create({
   tabBarMockUp: {
     height: 55,
-    backgroundColor:'rgb(64,76,155)',
+    backgroundColor: 'rgb(64,76,155)',
     flexDirection: 'row'
   },
 });
