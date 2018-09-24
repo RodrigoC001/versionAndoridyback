@@ -8,12 +8,14 @@ import TabBar from '../navigation/TabBar.js'
 import TestMap from '../components/TestMap.js'
 import Nubes from '../views/nubes/'
 import Hills from '../views/hills/'
+import Search from '../views/search/'
+
 
 export const BottomTabs = createBottomTabNavigator(
   { 
     AboutUs: AboutUs,
     Hills: Hills,
-    Map: TestMap,
+    Map: Search,
     Nubes: Nubes,
     Config: Config,
   },
