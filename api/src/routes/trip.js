@@ -29,6 +29,15 @@ server.param('id', (req, res, next, id) => {
 
 server.get('/test', (req, res) => res.send(ok()));
 
+// get trips with origin... DUH
+server.get('/gettripswithorigin/:originId', (req, res, next) => {
+  Trip.findAll({ where: { originId: req.params.originId }, include: [{model: Destination}] })
+  .then(trips => {
+    res.send(ok(trips));
+  })
+  .catch(next)
+})
+
 // get only the skyspots of certain trip
 server.get('/:id/skyspots', (req, res, next) => {
   Trip.find({where: { id: req.params.id}})
@@ -81,7 +90,6 @@ server.get('/', (req, res, next) => {
     })
     .catch(next);
 });
-
 
 server.post('/', (req, res, next) => {
   Trip.create({name: req.body.name, originId: req.body.originId, destinationId: req.body.destinationId})

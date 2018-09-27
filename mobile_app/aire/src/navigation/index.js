@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
-import { createBottomTabNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 
 import Config from '../views/config/'
 import AboutUs from '../components/AboutUs/AboutUs.js'
@@ -11,11 +11,11 @@ import Hills from '../views/hills/'
 import Search from '../views/search/'
 
 
-export const BottomTabs = createBottomTabNavigator(
+const BottomTabs = createBottomTabNavigator(
   { 
     AboutUs: AboutUs,
     Hills: Hills,
-    Map: Search,
+    Map: TestMap,
     Nubes: Nubes,
     Config: Config,
   },
@@ -24,3 +24,18 @@ export const BottomTabs = createBottomTabNavigator(
     tabBarComponent: (props) => <TabBar {...props}/>
   }
 );
+
+export const StackNavigation = createStackNavigator(
+  {
+    Search: {
+      screen: Search,
+    },
+    BottomTabs: {
+      screen: BottomTabs
+    }
+  },
+  {
+    initialRouteName: 'Search',
+    headerMode: 'none'
+  }
+)

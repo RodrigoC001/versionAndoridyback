@@ -8,12 +8,36 @@ const aTrip = {
   name: 'AEP-FTE'
 }
 
-const anOrigin = {
+const originOne = {
   address: 'Buenos Aires'
 }
 
-const aDestination = {
+const destinationOne = {
   address: 'Buenos Aires'
+}
+
+const originTwo = {
+  address: 'El Calafate, Argentina'
+}
+
+const destinationTwo = {
+  address: 'El Calafate, Argentina'
+}
+
+const originThree = {
+  address: 'Paraná, Entre Rios'
+}
+
+const destinationThree = {
+  address: 'Paraná, Entre Rios'
+}
+
+const originFour = {
+  address: 'San Miguel de Tucuman, Tucuman'
+}
+
+const destinationFour = {
+  address: 'San Miguel de Tucuman, Tucuman'
 }
 
 const agent = session(app);
@@ -32,12 +56,23 @@ const init = db.sync({ force: true })
 
 const setUp = init.then(() => Trip.create(aTrip))
   .then(()=> skyspotsArrayFinal.map(skyspot => Skyspot.create(skyspot)))
-  .then(() => Origin.create(anOrigin))
-  .then(() => Destination.create(aDestination))
+  .then(() => Origin.create(originOne))
+  .then(() => Destination.create(destinationOne))
+  .then(() => Origin.create(originTwo))
+  .then(() => Destination.create(destinationTwo))
+  .then(() => Origin.create(originThree))
+  .then(() => Destination.create(destinationThree))
+  .then(() => Origin.create(originFour))
+  .then(() => Destination.create(destinationFour))   
   .then(()=> Trip.create({
     name: 'Test solo con ids',
     originId: 1,
-    destinationId: 1}))
+    destinationId: 2}))
+  .then(trip => trip.setSkyspots([1,2,3,4]))
+  .then(()=> Trip.create({
+    name: 'Test trip 2',
+    originId: 1,
+    destinationId: 4}))
   .then(trip => trip.setSkyspots([1,2,3,4]))
 
 module.exports = setUp;
