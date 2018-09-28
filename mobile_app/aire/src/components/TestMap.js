@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  TouchableOpacity
 } from 'react-native';
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 
@@ -56,7 +57,24 @@ class TestMap extends Component<{}> {
     };
   }
   componentDidMount() {
-    console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+    // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+
+  }
+  test = (id) => {
+    let skyspotsArrayForMap = this.props.skyspotsArrayForMap
+
+    // this[id].props.onSelected()
+    // this['4'].props.onDeselected()
+    
+    var that = this
+    
+    for (var i = 0; i < skyspotsArrayForMap.length; i++) {
+      // if(skyspotsArrayForMap[i].id.toString() === id) return
+      // console.log('that', that[skyspotsArrayForMap[i].id.toString()])
+      that[skyspotsArrayForMap[i].id.toString()].props.onDeselected()
+    }
+
+    return this[id].props.onSelected()
 
   }
   renderAnnotation (id, coords) {
@@ -69,6 +87,7 @@ class TestMap extends Component<{}> {
     
     return (
       <Mapbox.PointAnnotation
+        ref={(point) => {this[id] = point}}
         key={id}
         id={id}
         anchor={{ x: 0.9, y: 0.9 }}
@@ -77,16 +96,18 @@ class TestMap extends Component<{}> {
           console.log('entra al selected')
           let newObj = {}
           newObj[id] = true
-          this.setState(newObj, ()=> console.log('selected state', this.state))
+          this.setState(newObj)
         }}
         onDeselected ={()=> {
           console.log('entra al deselected')
           let newObj = {}
           newObj[id] = false
-          this.setState(newObj, ()=> console.log('deselected state', this.state))
+          this.setState(newObj)
         }}
         >
+        <TouchableOpacity onPress={() => this.test(id)}>
           <Image source={!this.state[id] ? icono.deselected : icono.selected} />
+        </TouchableOpacity>
         <Mapbox.Callout title='Test!' />
       </Mapbox.PointAnnotation>
     )
@@ -107,7 +128,6 @@ class TestMap extends Component<{}> {
       return this.renderAnnotation(skyspot.id.toString(), skyspot.coords)
     })
 
-    console.log('items', items)
     return items
 
   }
