@@ -38,3 +38,41 @@ export function getTripsWithOriginRequest(originId) {
       });
   };
 }
+
+
+export function getTripAttempt() {
+  return {
+    type: "GET_TRIP_ATTEMPT"
+  };
+}
+
+export function getTripSuccess(response) {
+  return {
+    type: "GET_TRIP_SUCCESS",
+    payload: {
+      response: response.data
+    }
+  };
+}
+
+export function getTripFailure(error) {
+  return {
+    type: "GET_TRIP_FAILURE",
+    payload: {
+      error
+    }
+  };
+}
+
+export function getTripRequest(id) {
+  return dispatch => {
+    dispatch(getTripAttempt());
+    return axios
+      .get(`${ip}/trip/${id}`)
+      .then(response => dispatch(getTripSuccess(response)))
+      .catch(error => {
+        console.log('eror en el trips request', error)
+        return dispatch(getTripFailure(error))
+      });
+  };
+}

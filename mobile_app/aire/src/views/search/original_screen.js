@@ -15,8 +15,7 @@ const mapStateToProps = state => ({
   origins: state.origins.origins,
   possibleDestinations: state.trips.possibleDestinations,
   originsFetching: state.origins.fetching,
-  tripsFetching: state.trips.fetching,
-  selectedTrip: state.trips.selectedTrip
+  tripsFetching: state.trips.fetching
 });
 
 function mapDispatchToProps(dispatch) {
@@ -34,7 +33,6 @@ class Search extends React.Component {
     query2: ''
   }
   componentDidMount() {
-    console.log(this.props)
     this.addKeyboardEventListener()
 
     this.props.getOriginsRequest()
@@ -76,15 +74,11 @@ class Search extends React.Component {
   getSelectedTripWithOriginAndDestination = (address) => {
     // cuando hago la busqueda, scrolleo arriba de todo
     this.scroll.props.scrollToPosition(0, 0)
+    
     // una vez que tengo el origen y el destino que quiere, filtro para conseguir el trip al cual voy a navegar
     let finalTripObject = this.state.destinations.find(trip => trip.destination.address.toLowerCase().trim() === address.toLowerCase().trim());
 
-    // una vez que tengo el trip seleccionado y puesto en el store, navego a la pantalla principal
-    finalTripObject && this.props.getTripRequest(finalTripObject.id)
-      .then(()=> {
-        console.log('this.props.selectedTrip', this.props.selectedTrip )
-        this.props.navigation.navigate('BottomTabs')
-      })
+    finalTripObject && console.log('finalTripObject', finalTripObject);
   }
   findOrigin(query) {
     if (query === '') {
@@ -113,12 +107,12 @@ class Search extends React.Component {
     return (
               <KeyboardAwareScrollView 
                 extraScrollHeight={450} 
-                contentContainerStyle={{flex: 1, backgroundColor: "rgb(64,76,155)"}}
+                contentContainerStyle={{flex: 1}} 
                 enableOnAndroid={true}
                 innerRef={ref => {this.scroll = ref}}
               >
-     <View style={s.containerBig}>
-    
+      <View style={s.containerBig}>
+        <ImageBackground source={require('../../assets/aire_1242x2436.jpg')} style={{width: '100%', height: '100%'}}>
 
 
         <View style={s.titleContainer}>
@@ -148,7 +142,7 @@ class Search extends React.Component {
             autoCapitalize="none"
             autoCorrect={false}
             containerStyle={{}}
-            listStyle={{backgroundColor: "rgb(64,76,155)", borderWidth: 0}}
+            listStyle={{backgroundColor: 'transparent', borderWidth: 0}}
             inputContainerStyle={{borderWidth: 0}}
             data={origins.length === 1 && comp(query, origins[0].address) ? [] : origins}
             defaultValue={query}
@@ -186,7 +180,7 @@ class Search extends React.Component {
             />
         </View>
         
-        {this.props.tripsFetching ? <View><ActivityIndicator size="large" color='rgb(188,224,253)' /></View> : 
+        {this.props.tripsFetching ? <View><ActivityIndicator size="large" color="rgb(64,76,155)" /></View> : 
        <View style={s.autocompleteContainerDestino}>
           <Autocomplete
             autoCapitalize="none"
@@ -230,7 +224,7 @@ class Search extends React.Component {
        </View>
        }
 
-       
+        </ImageBackground>
       </View>
 </KeyboardAwareScrollView>
     );

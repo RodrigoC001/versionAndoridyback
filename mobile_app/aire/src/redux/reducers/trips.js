@@ -1,7 +1,8 @@
 const defaultStartState = {
   possibleDestinations: [],
   fetching: false,
-  error: null
+  error: null,
+  selectedTrip: null
 };
 
 export default function trips(state = defaultStartState, action) {
@@ -16,6 +17,20 @@ export default function trips(state = defaultStartState, action) {
         possibleDestinations: action.payload.response
       });
     case "GET_TRIPS_WITH_ORIGIN_FAILURE":
+      return Object.assign({}, state, {
+        fetching: false,
+        error: action.payload.error
+      });
+    case "GET_TRIP_ATTEMPT":
+      return Object.assign({}, state, {
+        fetching: true
+      });
+    case "GET_TRIP_SUCCESS":
+      return Object.assign({}, state, {
+        fetching: false,
+        selectedTrip: action.payload.response,
+      });
+    case "GET_TRIP_FAILURE":
       return Object.assign({}, state, {
         fetching: false,
         error: action.payload.error
