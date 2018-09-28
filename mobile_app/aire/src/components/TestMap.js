@@ -10,6 +10,23 @@ import Mapbox from '@mapbox/react-native-mapbox-gl';
 
 import smileyFaceGeoJSON from './smiley_face.json';
 
+// REDUX
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as tripActions from "../redux/actions/trips";
+
+const mapStateToProps = state => ({
+  fetching: state.trips.fetching,
+  selectedTrip: state.trips.selectedTrip,
+  skyspotsArrayForMap: state.trips.skyspotsArrayForMap
+});
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(Object.assign({}, tripActions), dispatch)
+}
+
+
+// MAPBOX CONFIG
 Mapbox.setAccessToken('pk.eyJ1IjoibGF1dGFyb2dyYW5kZSIsImEiOiJjamtrNjFqMW8xbnVhM3BwYjdmZjczcXkyIn0._Gz0SnZDQIGeosDSbwFwMA');
 
 const layerStyles = Mapbox.StyleSheet.create({
@@ -29,33 +46,41 @@ const icono = {
   deselected: require('../assets/mapa/mapa.png')
 }
 
-export default class TestMap extends Component<{}> {
+class TestMap extends Component<{}> {
   constructor (props) {
     super(props);
 
     this.state = {
+      // estan al reves de lo normal. el primero es longitud, y el segundo latitud.
       coordinates: [[-67.6205063,-45.8204256],[-61.7483139, -38.3944152]]
     };
   }
   componentDidMount() {
-    console.log('component did mount')
+    console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+
   }
-  renderAnnotation (counter) {
-    const id = `pointAnnotation${counter}`;
+  renderAnnotation (id, coords) {
+   /* const id = `pointAnnotation${counter}`;
     const coordinate = this.state.coordinates[counter];
+
+    console.log('id', id)
+    console.log('coordinate', coordinate)
+*/
     
     return (
       <Mapbox.PointAnnotation
         key={id}
         id={id}
         anchor={{ x: 0.9, y: 0.9 }}
-        coordinate={coordinate}
+        coordinate={coords}
         onSelected={()=> {
+          console.log('entra al selected')
           let newObj = {}
           newObj[id] = true
           this.setState(newObj, ()=> console.log('selected state', this.state))
         }}
         onDeselected ={()=> {
+          console.log('entra al deselected')
           let newObj = {}
           newObj[id] = false
           this.setState(newObj, ()=> console.log('deselected state', this.state))
@@ -67,13 +92,24 @@ export default class TestMap extends Component<{}> {
     )
   }
   renderAnnotations () {
-    const items = [];
+/*    const items = [];
 
     for (let i = 0; i < this.state.coordinates.length; i++) {
       items.push(this.renderAnnotation(i));
     }
 
-    return items;
+
+    return items;*/
+
+    let skyspotsArrayForMap = this.props.skyspotsArrayForMap
+
+    const items = skyspotsArrayForMap.map(skyspot => {
+      return this.renderAnnotation(skyspot.id.toString(), skyspot.coords)
+    })
+
+    console.log('items', items)
+    return items
+
   }
   render() {
     return (
@@ -123,6 +159,8 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.6 }],
   }
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(TestMap);
 
 
 // info

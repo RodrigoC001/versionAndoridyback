@@ -2,7 +2,8 @@ const defaultStartState = {
   possibleDestinations: [],
   fetching: false,
   error: null,
-  selectedTrip: null
+  selectedTrip: null,
+  skyspotsArrayForMap: []
 };
 
 export default function trips(state = defaultStartState, action) {
@@ -26,9 +27,22 @@ export default function trips(state = defaultStartState, action) {
         fetching: true
       });
     case "GET_TRIP_SUCCESS":
+      let skyspots = action.payload.response.data.skyspots
+      let skyspotsArrayForMap = skyspots.map(skyspot => {
+        let newArr = []
+        newArr.push(skyspot.longitude)
+        newArr.push(skyspot.latitude)
+        let newObj = {}
+        newObj.id = skyspot.id
+        newObj.coords = newArr
+        return newObj
+      })
+      console.log('skyspotsArrayForMap', skyspotsArrayForMap)
       return Object.assign({}, state, {
         fetching: false,
         selectedTrip: action.payload.response,
+        skyspotsArrayForMap
+        // las coordenadas de este skyspotsArrayForMap estan al reves de lo normal. el primero es longitud, y el segundo latitud.
       });
     case "GET_TRIP_FAILURE":
       return Object.assign({}, state, {
