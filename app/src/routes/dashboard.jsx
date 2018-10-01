@@ -5,6 +5,7 @@ import AddLocation from "@material-ui/icons/AddLocation";
 import Description from "@material-ui/icons/Description";
 import MyLocation from "@material-ui/icons/MyLocation";
 import InsertComment from "@material-ui/icons/InsertComment";
+import QuestionAnswer from "@material-ui/icons/QuestionAnswer";
 
 
 // core components/views
@@ -17,6 +18,7 @@ import RoutesTable from "../views/RoutesTable/RoutesTable.jsx";
 import SkyspotsTable from "../views/SkyspotsTable/SkyspotsTable.jsx";
 import OrigenDestinoTable from "../views/OrigenDestinoTable/OrigenDestinoTable.jsx";
 import PrivacyAndTerms from "../views/PrivacyAndTerms/PrivacyAndTerms.jsx";
+import Faq from "../views/Faq/Faq.jsx";
 
 
 
@@ -76,6 +78,13 @@ const dashboardRoutes = [
     navbarName: "Privacidad & Terminos",
     icon: InsertComment,
     component: PrivacyAndTerms
+  },
+  {
+    path: "/faq",
+    sidebarName: "Preguntas Frecuentes",
+    navbarName: "Preguntas Frecuentes",
+    icon: QuestionAnswer,
+    component: Faq
   },  
   { redirect: true, path: "/", to: "/crearruta", navbarName: "Redirect" }
 ];
