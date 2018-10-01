@@ -2,18 +2,14 @@ const db = require('db.js');
 const S = require('sequelize');
 
 const Terminos = db.define('terminos', {
-  terms: {
+  termsAndPrivacy: {
     type: S.TEXT,
     allowNull: true,
   },
-  privacy: {
+  faq: {
     type: S.TEXT,
     allowNull: true,
-  },
-  about: {
-    type: S.TEXT,
-    allowNull: true,
-  },
+  }
 });
 
 module.exports = Terminos;

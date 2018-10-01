@@ -17,5 +17,5 @@ Destination.hasMany(Trip, {as: 'routes_destination', foreignKey: 'destinationId'
 Trip.belongsTo(Origin, {foreignKey: 'originId'})
 Trip.belongsTo(Destination, {foreignKey: 'destinationId'})
 
-module.exports = { User, Trip, Skyspot, Origin, Destination };
+module.exports = { User, Trip, Skyspot, Origin, Destination, Terminos };
 

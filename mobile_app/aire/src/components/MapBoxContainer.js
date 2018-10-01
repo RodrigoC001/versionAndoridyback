@@ -47,7 +47,7 @@ const icono = {
   deselected: require('../assets/mapa/mapa.png')
 }
 
-class TestMap extends Component<{}> {
+class MapBoxContainer extends Component<{}> {
   constructor (props) {
     super(props);
 
@@ -57,34 +57,21 @@ class TestMap extends Component<{}> {
     };
   }
   componentDidMount() {
-    // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
 
   }
   test = (id) => {
     let skyspotsArrayForMap = this.props.skyspotsArrayForMap
 
-    // this[id].props.onSelected()
-    // this['4'].props.onDeselected()
-    
     var that = this
     
     for (var i = 0; i < skyspotsArrayForMap.length; i++) {
-      // if(skyspotsArrayForMap[i].id.toString() === id) return
-      // console.log('that', that[skyspotsArrayForMap[i].id.toString()])
       that[skyspotsArrayForMap[i].id.toString()].props.onDeselected()
     }
 
     return this[id].props.onSelected()
 
   }
-  renderAnnotation (id, coords) {
-   /* const id = `pointAnnotation${counter}`;
-    const coordinate = this.state.coordinates[counter];
-
-    console.log('id', id)
-    console.log('coordinate', coordinate)
-*/
-    
+  renderAnnotation (id, coords) {    
     return (
       <Mapbox.PointAnnotation
         ref={(point) => {this[id] = point}}
@@ -93,13 +80,13 @@ class TestMap extends Component<{}> {
         anchor={{ x: 0.9, y: 0.9 }}
         coordinate={coords}
         onSelected={()=> {
-          console.log('entra al selected')
+          // console.log('entra al selected')
           let newObj = {}
           newObj[id] = true
           this.setState(newObj)
         }}
         onDeselected ={()=> {
-          console.log('entra al deselected')
+          // console.log('entra al deselected')
           let newObj = {}
           newObj[id] = false
           this.setState(newObj)
@@ -113,15 +100,6 @@ class TestMap extends Component<{}> {
     )
   }
   renderAnnotations () {
-/*    const items = [];
-
-    for (let i = 0; i < this.state.coordinates.length; i++) {
-      items.push(this.renderAnnotation(i));
-    }
-
-
-    return items;*/
-
     let skyspotsArrayForMap = this.props.skyspotsArrayForMap
 
     const items = skyspotsArrayForMap.map(skyspot => {
@@ -129,7 +107,6 @@ class TestMap extends Component<{}> {
     })
 
     return items
-
   }
   render() {
     return (
@@ -180,7 +157,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TestMap);
+export default connect(mapStateToProps, mapDispatchToProps)(MapBoxContainer);
 
 
 // info

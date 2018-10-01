@@ -34,12 +34,11 @@ class Search extends React.Component {
     query2: ''
   }
   componentDidMount() {
-    console.log(this.props)
     this.addKeyboardEventListener()
 
     this.props.getOriginsRequest()
       .then(origins => {
-        this.setState({origins: this.props.origins.data}, ()=> console.log('origins state', this.state))
+        this.setState({origins: this.props.origins.data})
       })
   }
   addKeyboardEventListener = () => {
@@ -70,7 +69,7 @@ class Search extends React.Component {
 
    selectedTripObject && this.props.getTripsWithOriginRequest(selectedTripObject.id)
     .then(data => {
-      this.setState({destinations: this.props.possibleDestinations.data}, () => console.log('state is', this.state))
+      this.setState({destinations: this.props.possibleDestinations.data})
     })
   }
   getSelectedTripWithOriginAndDestination = (address) => {
@@ -82,7 +81,6 @@ class Search extends React.Component {
     // una vez que tengo el trip seleccionado y puesto en el store, navego a la pantalla principal
     finalTripObject && this.props.getTripRequest(finalTripObject.id)
       .then(()=> {
-        console.log('this.props.selectedTrip', this.props.selectedTrip )
         this.props.navigation.navigate('BottomTabs')
       })
   }
@@ -163,24 +161,24 @@ class Search extends React.Component {
             )}
             renderTextInput={() => (
               <View style={s.textInputContainerStyle}>
-              <TextInput
-                ref={(input) => {this.textInput = input}}
-                style={s.textInputStyle}
-                onChangeText={text => this.setState({ query: text })}
-                defaultValue={query}
-                placeholder="Ingresa tu origen acá"
-                placeholderTextColor="rgb(64,76,155)"
-                underlineColorAndroid="transparent"
-                autoCapitalize="none"
-                autoCorrect={false}
-                onSubmitEditing={()=> {
-                  this.state.query && this.getTripWithOrigin(this.state.query)
-                }}
-                onFocus={()=> this.addKeyboardEventListener()}
-              />
-              <TouchableOpacity onPress={()=> console.log('test')} style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}>
-                <Image style={{width: 16, height: 16, resizeMode: 'contain', flex: 1  }} tintColor={"#9B9B9B"} source={{uri: 'http://simpleicon.com/wp-content/uploads/magnifier-2.png'}} />
-              </TouchableOpacity>
+                <TextInput
+                  ref={(input) => {this.textInput = input}}
+                  style={s.textInputStyle}
+                  onChangeText={text => this.setState({ query: text })}
+                  defaultValue={query}
+                  placeholder="Ingresa tu origen acá"
+                  placeholderTextColor="rgb(64,76,155)"
+                  underlineColorAndroid="transparent"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  onSubmitEditing={()=> {
+                    this.state.query && this.getTripWithOrigin(this.state.query)
+                  }}
+                  onFocus={()=> this.addKeyboardEventListener()}
+                />
+                <TouchableOpacity onPress={()=> console.log('test')} style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}>
+                  <Image style={{width: 16, height: 16, resizeMode: 'contain', flex: 1  }} tintColor={"#9B9B9B"} source={{uri: 'http://simpleicon.com/wp-content/uploads/magnifier-2.png'}} />
+                </TouchableOpacity>
               </View>
             )}
             />

@@ -4,6 +4,8 @@ import FlightTakeoff from "@material-ui/icons/FlightTakeoff";
 import AddLocation from "@material-ui/icons/AddLocation";
 import Description from "@material-ui/icons/Description";
 import MyLocation from "@material-ui/icons/MyLocation";
+import InsertComment from "@material-ui/icons/InsertComment";
+
 
 // core components/views
 import DashboardPage from "../views/Dashboard/Dashboard.jsx";
@@ -14,6 +16,7 @@ import AgregarOrigenDestino from "../views/AgregarOrigenDestino/AgregarOrigenDes
 import RoutesTable from "../views/RoutesTable/RoutesTable.jsx";
 import SkyspotsTable from "../views/SkyspotsTable/SkyspotsTable.jsx";
 import OrigenDestinoTable from "../views/OrigenDestinoTable/OrigenDestinoTable.jsx";
+import PrivacyAndTerms from "../views/PrivacyAndTerms/PrivacyAndTerms.jsx";
 
 
 
@@ -67,6 +70,13 @@ const dashboardRoutes = [
     icon: Description,
     component: OrigenDestinoTable
   },
+  {
+    path: "/privacyterms",
+    sidebarName: "Privacidad & Terminos",
+    navbarName: "Privacidad & Terminos",
+    icon: InsertComment,
+    component: PrivacyAndTerms
+  },  
   { redirect: true, path: "/", to: "/crearruta", navbarName: "Redirect" }
 ];
 
