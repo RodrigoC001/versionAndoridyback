@@ -9,7 +9,26 @@ import MapBoxContainer from '../components/MapBoxContainer.js'
 import Nubes from '../views/nubes/'
 import Hills from '../views/hills/'
 import Search from '../views/search/'
+import Faq from '../components/Faq.js'
 
+
+const ConfigStack = createStackNavigator(
+  {
+    Config: {
+      screen: Config
+    },
+    Faq: {
+      screen: Faq
+    },
+    PrivacyTerms: {
+      screen: Faq
+    }
+  },
+  {
+    initialRouteName: 'Config',
+    headerMode: 'none'
+  }
+)
 
 const BottomTabs = createBottomTabNavigator(
   { 
@@ -17,7 +36,7 @@ const BottomTabs = createBottomTabNavigator(
     Hills: Hills,
     Map: MapBoxContainer,
     Nubes: Nubes,
-    Config: Config,
+    Config: ConfigStack,
   },
   {
     initialRouteName: 'Map',

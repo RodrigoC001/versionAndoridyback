@@ -11,7 +11,7 @@ const configData = [{
   id: 2,
   icon: require('../../assets/config/pregunta/pregunta.png'),
   title: 'Preguntas Frecuentes',
-  onPress: ()=> console.log('navigate')
+  onPress: (props)=> props.navigation.navigate('Faq')
 }, {
   id: 3,
   icon: require('../../assets/config/info/info.png'),
@@ -28,7 +28,7 @@ export default (props) => (
           CONFIGURACIÓN
         </Text>
       </View>
-      {configData.map(option=> <ConfigOption onPress={option.onPress} key={option.id} icon={option.icon} title={option.title} />)}
+      {configData.map(option=> <ConfigOption onPress={()=> option.onPress(props)} key={option.id} icon={option.icon} title={option.title} />)}
       <View style={s.logoContainer}>
         <Image source={require('../../assets/logoaire/logoaire.png')} />
       </View>

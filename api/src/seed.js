@@ -1,11 +1,16 @@
 const session = require('supertest-session');
 const app = require('app.js');
 const db = require('db.js');
-const { User, Trip, Skyspot, Origin, Destination } = require('models/index.js');
+const { User, Trip, Skyspot, Origin, Destination, Terminos } = require('models/index.js');
 const skyspotsArrayFinal = require('./utils/geoJsonToSeed.js');
 
 const aTrip = {
   name: 'AEP-FTE'
+}
+
+const seedTerminos = {
+  termsAndPrivacy: '<p>Seed <strong>termsAndPrivacy </strong></p>',
+  faq: '<p>Seed <strong>FAQ </strong></p>'
 }
 
 const originOne = {
@@ -74,5 +79,6 @@ const setUp = init.then(() => Trip.create(aTrip))
     originId: 1,
     destinationId: 4}))
   .then(trip => trip.setSkyspots([1,2,3,4]))
+  .then(()=> Terminos.create(seedTerminos))
 
 module.exports = setUp;
