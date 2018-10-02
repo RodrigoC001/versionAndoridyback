@@ -57,7 +57,7 @@ class MapBoxContainer extends Component<{}> {
     };
   }
   componentDidMount() {
-
+    console.log('props del mapa', this.props)
   }
   test = (id) => {
     let skyspotsArrayForMap = this.props.skyspotsArrayForMap
@@ -115,7 +115,9 @@ class MapBoxContainer extends Component<{}> {
           styleURL={'mapbox://styles/lautarogrande/cjixz2j6c7dj72so4doacsfu6'}
           // zoomLevel={15}
           // centerCoordinate={[11.256, 43.770]}
-          style={styles.container}>
+          style={styles.container}
+          showUserLocation={true}
+        >
           {/*<Mapbox.VectorSource>
             <Mapbox.BackgroundLayer
               id="background"
@@ -131,6 +133,12 @@ class MapBoxContainer extends Component<{}> {
           </Mapbox.ShapeSource>
           {this.renderAnnotations()}
         </Mapbox.MapView>
+
+        <View style={styles.goBackContainer}>
+          <TouchableOpacity onPress={()=> this.props.navigation.pop()}>
+              <Image source={require('../assets/atras/atras.png')} />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -154,7 +162,15 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'orange',
     transform: [{ scale: 0.6 }],
-  }
+  },
+  goBackContainer: {
+    flex: 1,
+    left: 22,
+    position: 'absolute',
+    right: 0,
+    top: 27,
+    zIndex: 2
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapBoxContainer);
