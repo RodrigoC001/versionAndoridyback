@@ -10,6 +10,8 @@ import Nubes from '../views/nubes/'
 import Hills from '../views/hills/'
 import Search from '../views/search/'
 import Faq from '../components/Faq.js'
+import Terms from '../components/Terms.js'
+
 
 
 const ConfigStack = createStackNavigator(
@@ -22,6 +24,9 @@ const ConfigStack = createStackNavigator(
     },
     PrivacyTerms: {
       screen: Faq
+    },
+    Terms: {
+      screen: Terms
     }
   },
   {

@@ -12,7 +12,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 const mapStateToProps = state => ({
   fetching: state.terms.fetching,
-  faq: state.terms.faq,
+  terms: state.terms.terms,
 });
 
 function mapDispatchToProps(dispatch) {
@@ -20,10 +20,10 @@ function mapDispatchToProps(dispatch) {
 }
 
 
-class Faq extends Component {
+class Terms extends Component {
   componentDidMount() {
-    this.props.getFaqRequest()
-      .then(()=> console.log('this.props.faq', this.props.faq))
+    this.props.getTermsRequest()
+      .then(()=> console.log('this.props.terms', this.props.terms))
   }
   render() {
     if(this.props.fetching) {
@@ -48,13 +48,14 @@ class Faq extends Component {
           <ScrollView>
             <View style={s.titleContainer}>
               <Text style={s.titleText}>
-                Preguntas Frecuentes
+                {`Políticas y privacidad / 
+Términos y condiciones`}
               </Text>
             </View>
 
             <View style={s.paragraphContainer}>
               <HTMLView
-                value={this.props.faq && `<div>${this.props.faq}</div>`}
+                value={this.props.terms && `<div>${this.props.terms}</div>`}
                 stylesheet={s}
               />
             </View>
@@ -131,4 +132,4 @@ const s = StyleSheet.create({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Faq);
+export default connect(mapStateToProps, mapDispatchToProps)(Terms);

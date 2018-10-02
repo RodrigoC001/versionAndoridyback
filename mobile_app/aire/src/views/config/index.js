@@ -17,7 +17,7 @@ const configData = [{
   icon: require('../../assets/config/info/info.png'),
   title: `Políticas y privacidad / 
 Términos y condiciones`,
-  onPress: ()=> console.log('navigate')
+  onPress: (props)=> props.navigation.navigate('Terms')
 }]
 
 export default (props) => (
