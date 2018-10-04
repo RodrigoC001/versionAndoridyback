@@ -1,0 +1,12 @@
+Ver hasta que punto de zoom descargar de mapbox y que zona.
+Wordpress API -> bajar texto, png/jpg/gif y videos.
+
+rcastrovolpe@gmail.com
+bersuit1987
+
+
+Casi todas las rutas van a ser ida y vuelta.
+
+Apekearlo y mandarlo.
+Ponerle icono a la app.
+Poner la statusbar de arriba azul.

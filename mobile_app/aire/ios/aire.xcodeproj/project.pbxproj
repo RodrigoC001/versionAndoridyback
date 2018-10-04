@@ -44,6 +44,8 @@
 		B0832CD55B9E44FB8FA8BB65 /* HouschkaRoundedAltExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DBD6F9458D04BD08BB4B08F /* HouschkaRoundedAltExtraBold.ttf */; };
 		3544138101904DD3BD796325 /* libRCTMGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C564A963C71485CAA428D7B /* libRCTMGL.a */; };
 		0DB13B7FD4F1466E88402B76 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA1141ADE8A465CAE1E5036 /* libBVLinearGradient.a */; };
+		2CD3F18EBC53493E9C62AF24 /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 51EF9BAD36A640FF9091694E /* libRCTMapboxGL.a */; };
+		E707EF958A664277A1BBEE9D /* RCTMapboxGLTests.xctest in Resources */ = {isa = PBXBuildFile; fileRef = BC0EF78B2319400396EA9742 /* RCTMapboxGLTests.xctest */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -358,6 +360,9 @@
 		1C564A963C71485CAA428D7B /* libRCTMGL.a */ = {isa = PBXFileReference; name = "libRCTMGL.a"; path = "libRCTMGL.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		53C85046F60F45508E5AEBB1 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; name = "BVLinearGradient.xcodeproj"; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		EFA1141ADE8A465CAE1E5036 /* libBVLinearGradient.a */ = {isa = PBXFileReference; name = "libBVLinearGradient.a"; path = "libBVLinearGradient.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		AEBE2F2EE0C24B319ECC8945 /* RCTMapboxGL.xcodeproj */ = {isa = PBXFileReference; name = "RCTMapboxGL.xcodeproj"; path = "../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		51EF9BAD36A640FF9091694E /* libRCTMapboxGL.a */ = {isa = PBXFileReference; name = "libRCTMapboxGL.a"; path = "libRCTMapboxGL.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		BC0EF78B2319400396EA9742 /* RCTMapboxGLTests.xctest */ = {isa = PBXFileReference; name = "RCTMapboxGLTests.xctest"; path = "RCTMapboxGLTests.xctest"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.cfbundle; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -388,6 +393,8 @@
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				3544138101904DD3BD796325 /* libRCTMGL.a in Frameworks */,
 				0DB13B7FD4F1466E88402B76 /* libBVLinearGradient.a in Frameworks */,
+				2CD3F18EBC53493E9C62AF24 /* libRCTMapboxGL.a in Frameworks */,
+				E707EF958A664277A1BBEE9D /* RCTMapboxGLTests.xctest in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,6 +583,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				922F04425333492ABD10B982 /* RCTMGL.xcodeproj */,
 				53C85046F60F45508E5AEBB1 /* BVLinearGradient.xcodeproj */,
+				AEBE2F2EE0C24B319ECC8945 /* RCTMapboxGL.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1223,11 +1231,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Debug;
@@ -1250,11 +1261,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Release;
@@ -1278,6 +1292,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Debug;
@@ -1300,6 +1315,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Release;
@@ -1331,11 +1347,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Debug;
@@ -1367,11 +1386,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Release;
@@ -1402,11 +1424,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Debug;
@@ -1437,11 +1462,14 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/@mapbox/react-native-mapbox-gl/ios/RCTMGL/**",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
+					"$(SRCROOT)/../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL",
 				);
 			};
 			name = Release;
