@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 30,
+    borderRadius: 20,
     position: 'absolute',
     bottom: 16,
     left: 48,
@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(64,76,155)',
   },
 });
 

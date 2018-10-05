@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     minHeight: 60,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: 'rgb(64,76,155)',  
   },
 });
 

@@ -7,7 +7,8 @@ import {
   Image,
   TouchableOpacity,
   PermissionsAndroid,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native';
 
 import Mapbox from '@mapbox/react-native-mapbox-gl';
@@ -253,17 +254,16 @@ class MapBoxContainer extends Component<{}> {
         return null;
       }
       return (
-        <View style={sheet.matchParent}>
-          <Text style={styles.noPermissionsText}>
-            You need to accept location permissions in order to use this example
-            applications
+        <View style={{backgroundColor: 'rgb(64,76,155)', flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20}}>
+          <Text style={[styles.downloadTitleText, {textAlign: 'center'}]}>
+            Necesitamos poder acceder a tu ubicación para continuar con la aplicación
           </Text>
         </View>
       );
     }
 
-    if(!this.state.longitude) return (<View style={{}}><Text>You need to accept location permissions in order to use this example
-            applications</Text></View>)
+ /*   if(!this.state.longitude) return (<View style={{}}><Text>You need to accept location permissions in order to use this example
+            applications</Text></View>)*/
 
     return (
       <View style={styles.container}>
@@ -291,19 +291,23 @@ class MapBoxContainer extends Component<{}> {
           {this.renderAnnotations()}
         </Mapbox.MapView>
 
-        {offlineRegionStatus !== null ? (
+        {offlineRegionStatus !== null && offlineRegionStatus.percentage !== 100 ? (
                   <Bubble>
-                    <View style={{ flex: 1 }}>
+                    <View style={styles.bubleContainer}>
                     <View style={styles.downloadTitleContainer}>
                       <Text style={styles.downloadTitleText}>
                         Descargando mapa
                       </Text>
                     </View>
-                    <View style={{}}>
-                      <Text>Porcentaje de la Descarga: {offlineRegionStatus.percentage}</Text>
+                    <View>
+                      <ActivityIndicator size="large" color='rgb(188,224,253)' />
+                    </View>
+{/*
+                    <View>
+                      <Text style={styles.downloadTitleText}>Porcentaje de la Descarga: {offlineRegionStatus.percentage}</Text>
                     </View>
 
-                    {/*
+                    
                       <View style={styles.buttonCnt}>
                         <TouchableOpacity onPress={this.onResume}>
                           <View style={styles.button}>
@@ -382,6 +386,22 @@ const styles = StyleSheet.create({
   buttonTxt: {
     color: 'white',
   },
+  bubleContainer: {
+    backgroundColor: 'rgb(64,76,155)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  downloadTitleContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 5
+  },
+  downloadTitleText: {
+    fontSize: 19,
+    fontFamily: 'HouschkaRoundedAltDemiBold',
+    color: 'rgb(255,255,255)',
+    letterSpacing: 1.9
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapBoxContainer);
