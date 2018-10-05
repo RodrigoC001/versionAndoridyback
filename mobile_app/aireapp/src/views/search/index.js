@@ -65,7 +65,7 @@ class Search extends React.Component {
     this.removeKeyboardEventListener()
 
     // con la string de la address, busco el id de esa address en el arreglo de origins
-    let selectedTripObject = this.state.origins.find(origin => origin.address.toLowerCase().trim() === address.toLowerCase().trim());
+    let selectedTripObject = this.state.origins && this.state.origins.find(origin => origin.address.toLowerCase().trim() === address.toLowerCase().trim());
 
    selectedTripObject && this.props.getTripsWithOriginRequest(selectedTripObject.id)
     .then(data => {
@@ -76,13 +76,11 @@ class Search extends React.Component {
     // cuando hago la busqueda, scrolleo arriba de todo
     this.scroll.props.scrollToPosition(0, 0)
     // una vez que tengo el origen y el destino que quiere, filtro para conseguir el trip al cual voy a navegar
-    let finalTripObject = this.state.destinations.find(trip => trip.destination.address.toLowerCase().trim() === address.toLowerCase().trim());
+    let finalTripObject = this.state.destinations && this.state.destinations.find(trip => trip.destination.address.toLowerCase().trim() === address.toLowerCase().trim());
 
     // una vez que tengo el trip seleccionado y puesto en el store, navego a la pantalla principal
     finalTripObject && this.props.getTripRequest(finalTripObject.id)
-      .then(()=> {
-        this.props.navigation.navigate('BottomTabs')
-      })
+      .then((data)=> this.props.navigation.navigate('BottomTabs'))
   }
   findOrigin(query) {
     if (query === '') {
@@ -91,7 +89,7 @@ class Search extends React.Component {
 
     const { origins } = this.state;
     const regex = new RegExp(`${query.trim()}`, 'i');
-    return origins.filter(origin => origin.address.search(regex) >= 0);
+    return origins && origins.filter(origin => origin.address.search(regex) >= 0);
   }
   findDestination(query2) {
     if (query2 === '') {
@@ -148,7 +146,7 @@ class Search extends React.Component {
             containerStyle={{}}
             listStyle={{backgroundColor: "rgb(64,76,155)", borderWidth: 0}}
             inputContainerStyle={{borderWidth: 0}}
-            data={origins.length === 1 && comp(query, origins[0].address) ? [] : origins}
+            data={origins && origins.length === 1 && comp(query, origins[0].address) ? [] : origins}
             defaultValue={query}
             onChangeText={text => this.setState({ query: text })}
             placeholder="Ingresa tu origen acá"
@@ -192,7 +190,7 @@ class Search extends React.Component {
             containerStyle={{}}
             listStyle={{backgroundColor: 'transparent', borderWidth: 0}}
             inputContainerStyle={{borderWidth: 0}}
-            data={destinations.length === 1 && comp(query2, destinations[0].destination.address) ? [] : destinations}
+            data={destinations && destinations.length === 1 && comp(query2, destinations[0].destination.address) ? [] : destinations}
             defaultValue={query2}
             onChangeText={text => this.setState({ query2: text })}
             placeholder="Ingresa tu destino acá"
@@ -219,7 +217,11 @@ class Search extends React.Component {
                   this.state.query2 && this.getSelectedTripWithOriginAndDestination(this.state.query2)
                 }}
               />
-              <TouchableOpacity onPress={()=> this.props.navigation.navigate('BottomTabs')} style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}>
+              <TouchableOpacity onPress={()=> {
+                  this.state.query2 && this.getSelectedTripWithOriginAndDestination(this.state.query2)
+                }} 
+                style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}
+              >
                 <Image style={{width: 16, height: 16, resizeMode: 'contain', flex: 1  }} tintColor={"#9B9B9B"} source={{uri: 'http://simpleicon.com/wp-content/uploads/magnifier-2.png'}} />
               </TouchableOpacity>
               </View>

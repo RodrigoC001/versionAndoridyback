@@ -7,7 +7,8 @@ import {
   Image,
   TouchableOpacity,
   PermissionsAndroid,
-  Dimensions
+  Dimensions,
+  Alert
 } from 'react-native';
 
 import Mapbox from '@mapbox/react-native-mapbox-gl';
@@ -20,7 +21,7 @@ import Bubble from './Bubble';
 // REDUX
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as tripActions from "../redux/actions/trips";
+import * as tripActions from "../../redux/actions/trips";
 
 const mapStateToProps = state => ({
   fetching: state.trips.fetching,
@@ -37,7 +38,8 @@ const MAPBOX_VECTOR_TILE_SIZE = 512;
 const CENTER_COORD = [-58.3861497, -34.6111362];
 
 
-async function requestLocationPermission() {
+
+async function requestCameraPermission() {
   try {
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -72,8 +74,8 @@ const layerStyles = Mapbox.StyleSheet.create({
 
 
 const icono = {
-  selected: require('../assets/skyspotseleccionado/skyspotseleccionado.png'),
-  deselected: require('../assets/mapa/mapa.png')
+  selected: require('../../assets/skyspotseleccionado/skyspotseleccionado.png'),
+  deselected: require('../../assets/mapa/mapa.png')
 }
 
 class MapBoxContainer extends Component<{}> {
@@ -83,7 +85,7 @@ class MapBoxContainer extends Component<{}> {
     latitude: null,
     longitude: null,
     error: null,
-    name: `${this.props.selectedTrip.data.name}-${Date.now()}`,
+    name: `test-${Date.now()}`,
     offlineRegion: null,
     offlineRegionStatus: null,   
   }
@@ -100,10 +102,10 @@ class MapBoxContainer extends Component<{}> {
     console.log('entra al will unmount')
     // avoid setState warnings if we back out before we finishing downloading
     Mapbox.offlineManager.deletePack(this.state.name);
-    Mapbox.offlineManager.unsubscribe(this.props.selectedTrip.data.name);
+    Mapbox.offlineManager.unsubscribe('test');
   }
   componentDidMount() {
-    requestLocationPermission()
+    requestCameraPermission()
       .then(()=> this.getCurrentLocation())
 
     console.log('state is', this.state)
@@ -159,11 +161,10 @@ class MapBoxContainer extends Component<{}> {
 
     const options = {
       name: this.state.name,
-      // styleURL: Mapbox.StyleURL.Street,
-      styleURL: 'mapbox://styles/lautarogrande/cjl4qetsg5t072snrwgh08jaa',
+      styleURL: Mapbox.StyleURL.Street,
       bounds: [[bounds[0], bounds[1]], [bounds[2], bounds[3]]],
       minZoom: 3,
-      maxZoom: 8,
+      maxZoom: 20,
     };
 
     // start download
@@ -201,7 +202,6 @@ class MapBoxContainer extends Component<{}> {
     return Math.round(this.state.offlineRegionStatus.percentage / 10) / 10;
   }
   _getRegionDownloadState = (downloadState) => {
-    console.log('this.state.offlineRegionStatus.percentage', this.state.offlineRegionStatus.percentage)
     switch (downloadState) {
       case Mapbox.OfflinePackDownloadState.Active:
         return 'Activo';
@@ -220,17 +220,21 @@ class MapBoxContainer extends Component<{}> {
         anchor={{ x: 0.9, y: 0.9 }}
         coordinate={coords}
         onSelected={()=> {
+          // console.log('entra al selected')
           let newObj = {}
           newObj[id] = true
           this.setState(newObj)
         }}
         onDeselected ={()=> {
+          // console.log('entra al deselected')
           let newObj = {}
           newObj[id] = false
           this.setState(newObj)
         }}
         >
+        <TouchableOpacity onPress={() => this.selectAndDeselect(id)}>
           <Image source={!this.state[id] ? icono.deselected : icono.selected} />
+        </TouchableOpacity>
         <Mapbox.Callout title='Test!' />
       </Mapbox.PointAnnotation>
     )
@@ -262,9 +266,6 @@ class MapBoxContainer extends Component<{}> {
       );
     }
 
-    if(!this.state.longitude) return (<View style={{}}><Text>You need to accept location permissions in order to use this example
-            applications</Text></View>)
-
     return (
       <View style={styles.container}>
         <Mapbox.MapView
@@ -288,22 +289,33 @@ class MapBoxContainer extends Component<{}> {
               style={layerStyles.smileyFace}
             />
           </Mapbox.ShapeSource>*/}
-          {this.renderAnnotations()}
+         {/* {this.renderAnnotations()}*/}
         </Mapbox.MapView>
 
         {offlineRegionStatus !== null ? (
                   <Bubble>
                     <View style={{ flex: 1 }}>
-                    <View style={styles.downloadTitleContainer}>
-                      <Text style={styles.downloadTitleText}>
-                        Descargando mapa
+                      <Text>
+                        Download State:{' '}
+                        {this._getRegionDownloadState(offlineRegionStatus.state)}
                       </Text>
-                    </View>
-                    <View style={{}}>
-                      <Text>Porcentaje de la Descarga: {offlineRegionStatus.percentage}</Text>
-                    </View>
+                      <Text>Download Percent: {offlineRegionStatus.percentage}</Text>
+                      <Text>
+                        Completed Resource Count:{' '}
+                        {offlineRegionStatus.completedResourceCount}
+                      </Text>
+                      <Text>
+                        Completed Resource Size:{' '}
+                        {offlineRegionStatus.completedResourceSize}
+                      </Text>
+                      <Text>
+                        Completed Tile Count: {offlineRegionStatus.completedTileCount}
+                      </Text>
+                      <Text>
+                        Required Resource Count:{' '}
+                        {offlineRegionStatus.requiredResourceCount}
+                      </Text>
 
-                    {/*
                       <View style={styles.buttonCnt}>
                         <TouchableOpacity onPress={this.onResume}>
                           <View style={styles.button}>
@@ -323,15 +335,13 @@ class MapBoxContainer extends Component<{}> {
                           </View>
                         </TouchableOpacity>
                       </View>
-                    */}
-
                     </View>
                   </Bubble>
                 ) : null}
 
         <View style={styles.goBackContainer}>
           <TouchableOpacity onPress={()=> this.props.navigation.pop()}>
-              <Image source={require('../assets/atras/atras.png')} />
+              <Image source={require('../../assets/atras/atras.png')} />
           </TouchableOpacity>
         </View>
       </View>
