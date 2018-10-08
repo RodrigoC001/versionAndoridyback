@@ -175,7 +175,7 @@ class Search extends React.Component {
                   onFocus={()=> this.addKeyboardEventListener()}
                 />
                 <TouchableOpacity onPress={()=> console.log('test')} style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}>
-                  <Image style={{width: 16, height: 16, resizeMode: 'contain', flex: 1  }} tintColor={"#9B9B9B"} source={{uri: 'http://simpleicon.com/wp-content/uploads/magnifier-2.png'}} />
+                  <Image  source={require('../../assets/lupita/lupita.png')} />
                 </TouchableOpacity>
               </View>
             )}
@@ -222,7 +222,7 @@ class Search extends React.Component {
                 }} 
                 style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}
               >
-                <Image style={{width: 16, height: 16, resizeMode: 'contain', flex: 1  }} tintColor={"#9B9B9B"} source={{uri: 'http://simpleicon.com/wp-content/uploads/magnifier-2.png'}} />
+                <Image  source={require('../../assets/lupita/lupita.png')} />
               </TouchableOpacity>
               </View>
             )}

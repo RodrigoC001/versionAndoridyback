@@ -164,7 +164,8 @@ class MapBoxContainer extends Component<{}> {
       styleURL: 'mapbox://styles/lautarogrande/cjl4qetsg5t072snrwgh08jaa',
       bounds: [[bounds[0], bounds[1]], [bounds[2], bounds[3]]],
       minZoom: 3,
-      maxZoom: 8,
+      maxZoom: 10,
+      // maxZoom: 8,
     };
 
     // start download
@@ -176,7 +177,7 @@ class MapBoxContainer extends Component<{}> {
       name: offlineRegion.name,
       offlineRegion: offlineRegion,
       offlineRegionStatus: offlineRegionStatus,
-    });
+    }, ()=> console.log('percentage: ', this.state.offlineRegionStatus.percentage));
   }
   onResume = () => {
     if (this.state.offlineRegion) {
@@ -291,9 +292,9 @@ class MapBoxContainer extends Component<{}> {
           {this.renderAnnotations()}
         </Mapbox.MapView>
 
-        {offlineRegionStatus !== null && offlineRegionStatus.percentage !== 100 ? (
-                  <Bubble>
-                    <View style={styles.bubleContainer}>
+        {offlineRegionStatus !== null ? (
+                  <Bubble style={this.state.offlineRegionStatus.percentage === 100 && {opacity: 0}}>
+                    <View style={[styles.bubleContainer]}>
                     <View style={styles.downloadTitleContainer}>
                       <Text style={styles.downloadTitleText}>
                         Descargando mapa
