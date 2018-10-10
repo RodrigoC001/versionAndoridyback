@@ -34,10 +34,10 @@ export default function trips(state = defaultStartState, action) {
         newArr.push(skyspot.latitude)
         let newObj = {}
         newObj.id = skyspot.id
+        newObj.data = skyspot.data
         newObj.coords = newArr
         return newObj
       })
-      console.log('skyspotsArrayForMap', skyspotsArrayForMap)
       return Object.assign({}, state, {
         fetching: false,
         selectedTrip: action.payload.response,

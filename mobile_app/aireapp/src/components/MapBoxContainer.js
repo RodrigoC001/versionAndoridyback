@@ -14,6 +14,8 @@ import {
 import Mapbox from '@mapbox/react-native-mapbox-gl';
 import geoViewport from '@mapbox/geo-viewport';
 import Bubble from './Bubble';
+import ModalWordpress from './ModalWordpress';
+
 
 
 // import smileyFaceGeoJSON from './smiley_face.json';
@@ -87,6 +89,7 @@ class MapBoxContainer extends Component<{}> {
     name: `${this.props.selectedTrip.data.name}-${Date.now()}`,
     offlineRegion: null,
     offlineRegionStatus: null,   
+    dataLink: null
   }
   async componentWillMount() {
     if (IS_ANDROID) {
@@ -213,7 +216,7 @@ class MapBoxContainer extends Component<{}> {
         return 'Inactivo';
     }
   }
-  renderAnnotation (id, coords) {    
+  renderAnnotation (id, coords, dataLink) {    
     return (
       <Mapbox.PointAnnotation
         ref={(point) => {this[id] = point}}
@@ -222,6 +225,10 @@ class MapBoxContainer extends Component<{}> {
         anchor={{ x: 0.9, y: 0.9 }}
         coordinate={coords}
         onSelected={()=> {
+          this.setState({
+            testRender: true,
+            dataLink: dataLink
+          }, ()=> console.log('this.state.testRender', this.state.testRender))
           let newObj = {}
           newObj[id] = true
           this.setState(newObj)
@@ -233,7 +240,6 @@ class MapBoxContainer extends Component<{}> {
         }}
         >
           <Image source={!this.state[id] ? icono.deselected : icono.selected} />
-        <Mapbox.Callout title='Test!' />
       </Mapbox.PointAnnotation>
     )
   }
@@ -241,10 +247,15 @@ class MapBoxContainer extends Component<{}> {
     let skyspotsArrayForMap = this.props.skyspotsArrayForMap
 
     const items = skyspotsArrayForMap.map(skyspot => {
-      return this.renderAnnotation(skyspot.id.toString(), skyspot.coords)
+      return this.renderAnnotation(skyspot.id.toString(), skyspot.coords, skyspot.data)
     })
 
     return items
+  }
+  closeModal = () => {
+    this.setState({
+      testRender: false
+    }, ()=> console.log('this.state.testRender', this.state.testRender))
   }
   render() {
 
@@ -339,6 +350,7 @@ class MapBoxContainer extends Component<{}> {
               <Image source={require('../assets/atras/atras.png')} />
           </TouchableOpacity>
         </View>
+        {this.state.testRender && <ModalWordpress close={this.closeModal} dataLink={this.state.dataLink && this.state.dataLink} />}
       </View>
     );
   }
