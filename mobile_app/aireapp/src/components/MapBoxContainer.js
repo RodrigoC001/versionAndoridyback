@@ -346,10 +346,12 @@ class MapBoxContainer extends Component<{}> {
                 ) : null}
 
         <View style={styles.goBackContainer}>
-          <TouchableOpacity onPress={()=> this.props.navigation.pop()}>
+          <TouchableOpacity style={{backgroundColor: 'transparent', flex: 0.2}} onPress={()=> this.props.navigation.pop()}>
               <Image source={require('../assets/atras/atras.png')} />
           </TouchableOpacity>
+          <View style={{flex: 0.8}} />
         </View>
+
         {this.state.testRender && <ModalWordpress close={this.closeModal} dataLink={this.state.dataLink && this.state.dataLink} />}
       </View>
     );
@@ -381,7 +383,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     top: 27,
-    zIndex: 2
+    zIndex: 2,
+    // backgroundColor: 'green',
+    flexDirection: 'row',
+    // opacity: 0
   },
   buttonCnt: {
     flexDirection: 'row',

@@ -67,7 +67,12 @@ class Search extends React.Component {
     axios
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${this.props.dataLink}`)
       .then(response => {
+        console.log('response es', response.data.content)
+        
         let content = response.data.content.replace(/<p style=\"text-align:justify;\"><img/g, "<img").replace(/\n/g, '')
+
+        console.log('content es', content)
+
         this.setState({
           title: response.data.title,
           fetching: false,
@@ -104,7 +109,7 @@ class Search extends React.Component {
       return (
         <View style={s.containerBig}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <ActivityIndicator size="large" color='red' />
+            <ActivityIndicator size="large" color='rgb(188,224,253)' />
           </View>
         </View>
       )
@@ -128,7 +133,7 @@ class Search extends React.Component {
 
       <View style={s.bigContainer}>
 
-        <View style={{flex: 1, flexDirection: 'row'}}>  
+        <TouchableOpacity onPress={!this.state.showX ? this.scrollToTop : this.props.close} style={{flex: 1, flexDirection: 'row'}}>  
           
           <View style={[s.titleContainer, {flex: 0.8}]}>
             <Text style={s.titleText}>
@@ -136,11 +141,12 @@ class Search extends React.Component {
             </Text>
           </View>
 
-          <TouchableOpacity onPress={!this.state.showX ? this.scrollToTop : this.props.close} style={[s.imgContainer, {flex: 0.2}]}>
+          <View style={[s.imgContainer, {flex: 0.2}]}>
+
             <Image source={!this.state.showX ? require('../assets/arriba/arriba.png') : require('../assets/cerrar/cerrar.png') } />
-          </TouchableOpacity>
+          </View>
           
-        </View>
+        </TouchableOpacity>
 
         <View style={s.line} />
 
@@ -161,8 +167,12 @@ class Search extends React.Component {
 
 const s = StyleSheet.create({
   containerBig: {
-    flex: 1,
-    backgroundColor: 'transparent'
+    // flex: 1,
+    // height: FULL_SCREEN,
+    backgroundColor: 'rgba(0,0,0,0)',
+    width: '100%',
+    height: '100%',
+    position: 'absolute'
   },
   bigContainer: {
     height: 53,
