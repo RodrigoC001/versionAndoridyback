@@ -49,7 +49,7 @@ const MODAL_HEIGHT = Dimensions.get('window').height / 2
 const FULL_SCREEN = Dimensions.get('window').height 
 
 
-class Search extends React.Component {
+class ModalWordpress extends React.Component {
   state = {
     fetching: true,
     content: null,
@@ -213,4 +213,4 @@ const s = StyleSheet.create({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalWordpress);

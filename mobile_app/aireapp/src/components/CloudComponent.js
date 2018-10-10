@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, ImageBackground} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity} from 'react-native';
 
-export default ({title, icon, textColor, tintColor}) => (
+export default (props) => (
   <View style={s.container}>
-    <ImageBackground source={icon} style={s.cloudComponent}>
-      <Text style={[s.cloudCardText, {color: textColor }]}>
-        {title}
+  <TouchableOpacity onPress={()=> props.onPress()} activeOpacity={0.2}>
+    <ImageBackground source={props.icon} style={s.cloudComponent}>
+      <Text style={[s.cloudCardText, {color: props.textColor }]}>
+        {props.title}
       </Text>
-      <View style={[s.opacityView, {backgroundColor: tintColor}]} />
+      <View style={[s.opacityView, {backgroundColor: props.tintColor}]} />
     </ImageBackground>
+  </TouchableOpacity>
   </View>
 );
 

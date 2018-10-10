@@ -7,6 +7,7 @@ import AboutUs from '../components/AboutUs/AboutUs.js'
 import TabBar from '../navigation/TabBar.js'
 import MapBoxContainer from '../components/MapBoxContainer.js'
 import Nubes from '../views/nubes/'
+import CarouselNublado from '../views/nubes/CarouselNublado.js'
 import Hills from '../views/hills/'
 import Search from '../views/search/'
 import Faq from '../components/Faq.js'
@@ -35,12 +36,27 @@ const ConfigStack = createStackNavigator(
   }
 )
 
+const NubesStack = createStackNavigator(
+  {
+    Nubes: {
+      screen: Nubes
+    },
+    CarouselNublado: {
+      screen: CarouselNublado
+    }
+  },
+  {
+    initialRouteName: 'Nubes',
+    headerMode: 'none'
+  }
+)
+
 const BottomTabs = createBottomTabNavigator(
   { 
     AboutUs: AboutUs,
     Hills: Hills,
     Map: MapBoxContainer,
-    Nubes: Nubes,
+    Nubes: NubesStack,
     Config: ConfigStack,
   },
   {
