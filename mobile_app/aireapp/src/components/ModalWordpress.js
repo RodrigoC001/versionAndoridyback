@@ -67,11 +67,11 @@ class ModalWordpress extends React.Component {
     axios
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${this.props.dataLink}`)
       .then(response => {
-        console.log('response es', response.data.content)
+        // console.log('response es', response.data.content)
         
         let content = response.data.content.replace(/<p style=\"text-align:justify;\"><img/g, "<img").replace(/\n/g, '')
 
-        console.log('content es', content)
+        // console.log('content es', content)
 
         this.setState({
           title: response.data.title,
