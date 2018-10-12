@@ -138,12 +138,8 @@ const s = StyleSheet.create({
     flex: 1,
     left: 16,
     position: 'absolute',
-    // right: 0,
     top: 22,
-    zIndex: 999,
-    // backgroundColor: 'green',
-    // flexDirection: 'row',
-    // opacity: 0
+    zIndex: 999
   },
 });
 

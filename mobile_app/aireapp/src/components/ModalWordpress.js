@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, ActivityIndicator, ScrollView, Animated, StatusBar} from 'react-native';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import HTMLView from 'react-native-htmlview';
 import axios from "axios";
@@ -7,6 +8,21 @@ import axios from "axios";
 
 const { width } = Dimensions.get('window');
 
+const SLIDER_1_FIRST_ITEM = 0;
+
+const TAB_BAR_HEIGHT = 55
+
+const slideWidth = wp(75);
+const deviceHeight = Dimensions.get('window').height
+const itemHorizontalMargin = wp(2);
+
+const sliderWidth = width;
+const itemWidth = slideWidth + itemHorizontalMargin * 2;
+
+function wp (percentage) {
+    const value = (percentage * width) / 100;
+    return Math.round(value);
+}
 
 
 // REDUX
@@ -36,9 +52,9 @@ function renderNode(node, index, siblings, parent, defaultRenderer) {
     return (
       <Image
         key={index}
-        style={{ width: width, height: 300}}
+        style={null}
         resizeMode='contain'
-        source={{ uri: src }} />
+        source={ null } />
     );
   }
 }
@@ -54,24 +70,41 @@ class ModalWordpress extends React.Component {
     fetching: true,
     content: null,
     title: null,
-    showX: false
+    showX: false,
+    imageSrcArray: [],
+    slider1ActiveSlide: SLIDER_1_FIRST_ITEM,
   }
   componentWillMount() {
     this.animatedValue = new Animated.Value(0)
+  }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.dataLink === this.props.dataLink) return
+
+    this.setState({
+      fetching: true,
+      imageSrcArray: [],
+      slider1ActiveSlide: 0
+    }, ()=> {
+      console.log('this.state.fetching', this.state.fetching)
+      this.getWordPressApi()
+    })
   }
   componentDidMount() {
     Animated.timing(this.animatedValue, {
       toValue: 1,
       duration: 1500
     }).start()
+
+    this.getWordPressApi()
+  }
+  getWordPressApi = () => {
     axios
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${this.props.dataLink}`)
       .then(response => {
-        // console.log('response es', response.data.content)
         
-        let content = response.data.content.replace(/<p style=\"text-align:justify;\"><img/g, "<img").replace(/\n/g, '')
+        // let content = response.data.content.replace(/<p style=\"text-align:justify;\"><img/g, "<img").replace(/\n/g, '')
 
-        // console.log('content es', content)
+        let content = response.data.content
 
         this.setState({
           title: response.data.title,
@@ -79,6 +112,69 @@ class ModalWordpress extends React.Component {
           content
         })
       })
+  }
+  renderNode = (node, index, siblings, parent, defaultRenderer) => {
+    if (node.name == 'img') {
+      const { src, height } = node.attribs;
+
+      console.log('entra al renderNode')
+      this.setState((previousState) => {
+        return {imageSrcArray: [...previousState.imageSrcArray, src ]};
+      });
+
+      // const imageHeight = height || 300;
+      return (
+        <Image
+          key={index}
+          style={null}
+          resizeMode='contain'
+          source={ null } />
+      );
+    }
+  }
+  _renderItem = ({item, index}) => {
+      return (
+          <View style={{flex: 1}}>
+              <Image
+                key={index}
+                style={{ width: width, height: 300, resizeMode: 'contain'}}
+                resizeMode='contain'
+                source={{uri: item}} 
+              />
+          </View>
+      );
+  }
+  get pagination () {
+      const { imageSrcArray, slider1ActiveSlide } = this.state;
+      return (
+          <Pagination
+            dotsLength={imageSrcArray.length}
+            activeDotIndex={slider1ActiveSlide}
+            containerStyle={{ width: '100%'}}
+            dotStyle={{
+                width: 10,
+                height: 10,
+                borderRadius: 10,
+                marginHorizontal: 4,
+                // backgroundColor: 'rgb(64,76,155)',
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                borderWidth: 2,
+                borderColor: 'rgb(64,76,155)'  
+            }}
+            inactiveDotStyle={{
+                // Define styles for inactive dots here
+            }}
+            inactiveDotOpacity={0.4}
+            inactiveDotScale={0.6}
+          />
+      );
+  }
+  navigateItem = (index) => {
+   
+    this.setState({
+      // markerPressed: false,
+      slider1ActiveSlide: index
+    })
   }
   scrollToTop = () => {
     this.setState({
@@ -92,7 +188,8 @@ class ModalWordpress extends React.Component {
   render() {
     const interpolateDistance = this.animatedValue.interpolate({
       inputRange: [0, 1, 2],
-      outputRange: [-FULL_SCREEN +55, -MODAL_HEIGHT +55, -20]
+      // hago este ternario raro para que la pantalla de atras de todo, ocupe o toda la pantalla o solo la mitad, asi permito que se pueda seguri moviendo el mapa (que sino, queda abajo de esa view y no se como propagar el evento a la view que queda abajo de la containerBig que es absoluto), lo mismo en el estilo inline de containerBig
+      outputRange: !this.state.showX ? [-FULL_SCREEN +TAB_BAR_HEIGHT, -75, -20] : [-FULL_SCREEN +TAB_BAR_HEIGHT, -MODAL_HEIGHT +TAB_BAR_HEIGHT, -20]
       // outputRange: [-FULL_SCREEN, -MODAL_HEIGHT, -StatusBar.currentHeight]
       // aca necesito sacar el height de la status bar en ios & en Android, porque lo de arriba solo funciona en Android 
       // https://stackoverflow.com/questions/35436643/how-to-find-height-of-status-bar-in-android-through-react-native
@@ -115,13 +212,14 @@ class ModalWordpress extends React.Component {
       )
     }
     return (
-      <Animated.View style={s.containerBig}>
+
+      <Animated.View style={[s.containerBig, {top: !this.state.showX ? MODAL_HEIGHT - TAB_BAR_HEIGHT : null}]}>
         <Animated.View
           style={{
             zIndex: 10,
             position: 'absolute',
             // width: '100%',
-            height: FULL_SCREEN -55,
+            height: !this.state.showX ? FULL_SCREEN  : FULL_SCREEN - TAB_BAR_HEIGHT,
             backgroundColor: 'white',
             bottom: interpolateDistance,
             // paddingHorizontal: 12.5,
@@ -153,8 +251,22 @@ class ModalWordpress extends React.Component {
       </View>
 
         <ScrollView contentContainerStyle={{paddingBottom: !this.state.showX ? 300 : 35 }}>
+
+        <View style={s.igCounterContainer}>
+          <Text style={s.igCounterText}>{`${this.state.slider1ActiveSlide + 1}/${this.state.imageSrcArray.length}`}</Text>
+        </View>
+           <Carousel
+            ref={(c) => { this._carousel = c; }}
+            data={this.state.imageSrcArray}
+            renderItem={this._renderItem}
+            sliderWidth={width}
+            itemWidth={width}
+            onSnapToItem={(index) => this.navigateItem(index) }  
+           />
+           {/* { this.pagination }*/}
+
           <HTMLView
-            renderNode={renderNode}
+            renderNode={this.renderNode}
             value={this.state.content && `${this.state.content}`}
             stylesheet={s}
           />
@@ -185,6 +297,23 @@ const s = StyleSheet.create({
   imgContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  igCounterContainer: {
+    height: 30, 
+    backgroundColor: 'rgba(0, 0, 0, 0.75)', 
+    width: 50, 
+    borderRadius: 20, 
+    justifyContent: 'center',
+    alignItems: 'center', 
+    position: 'absolute', 
+    top: 50, 
+    right: 20, 
+    zIndex: 20
+  },
+  igCounterText: {
+    color: 'white', 
+    fontSize: 12, 
+    fontFamily: 'HouschkaRoundedAltMedium'
   },
   line: {
     backgroundColor: 'rgb(64,76,155)',

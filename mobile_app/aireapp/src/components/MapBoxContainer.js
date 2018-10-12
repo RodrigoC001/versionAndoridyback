@@ -227,13 +227,17 @@ class MapBoxContainer extends Component<{}> {
         onSelected={()=> {
           this.setState({
             testRender: true,
-            dataLink: dataLink
+            dataLink: dataLink,
+            id: id
           }, ()=> console.log('this.state.testRender', this.state.testRender))
           let newObj = {}
           newObj[id] = true
           this.setState(newObj)
         }}
         onDeselected ={()=> {
+          this.setState({
+            id: null
+          })
           let newObj = {}
           newObj[id] = false
           this.setState(newObj)
@@ -253,6 +257,10 @@ class MapBoxContainer extends Component<{}> {
     return items
   }
   closeModal = () => {
+
+    // deselecciono programaticamente el punto seleccionado
+    // this[this.state.id.toString()].props.onDeselected()
+
     this.setState({
       testRender: false
     }, ()=> console.log('this.state.testRender', this.state.testRender))
