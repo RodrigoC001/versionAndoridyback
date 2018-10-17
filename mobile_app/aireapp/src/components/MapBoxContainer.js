@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  AsyncStorage
 } from 'react-native';
 
 import Mapbox from '@mapbox/react-native-mapbox-gl';
@@ -109,9 +110,6 @@ class MapBoxContainer extends Component<{}> {
   componentDidMount() {
     requestLocationPermission()
       .then(()=> this.getCurrentLocation())
-
-    console.log('state is', this.state)
-    // console.log('this.props.selectedTrip.data.name', this.props.selectedTrip.data.name)
   }
   getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(
