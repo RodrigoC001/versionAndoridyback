@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, ActivityIndicator, ScrollView, Animated, StatusBar, AsyncStorage} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, ActivityIndicator, ScrollView, Animated, StatusBar, AsyncStorage, Alert} from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import HTMLView from 'react-native-htmlview';
@@ -76,13 +76,14 @@ class ModalWordpress extends React.Component {
     localImagesArray: [],
     reStoreCompleted: false,
     loadImages: false,
+    networkError: false
     // testUri: null
   }
   componentWillMount() {
     this.animatedValue = new Animated.Value(0)
   }
   // volver a rehacer esta parte del component did update
-/*  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.dataLink === this.props.dataLink) return
 
     this.setState({
@@ -90,10 +91,9 @@ class ModalWordpress extends React.Component {
       imageSrcArray: [],
       slider1ActiveSlide: 0
     }, ()=> {
-      console.log('this.state.fetching', this.state.fetching)
-      this.getWordPressApi()
+      this.checkIfContentIsDownloadedOrNot()
     })
-  }*/
+  }
   downloadImageWithLibrary = (imageSource) => {
     console.log('entra aca al downloadImageWithLibrary')
     OfflineImageStore.restore({
@@ -211,8 +211,10 @@ class ModalWordpress extends React.Component {
       toValue: 1,
       duration: 1500
     }).start()
-
-   /* const findOrCreateArray = [this.findOrCreateImageStorageFolder(), this.findOrCreateHtmlStorageFolder(), this.findOrCreateTitleStorageFolder()]
+    this.checkIfContentIsDownloadedOrNot()
+  }
+  checkIfContentIsDownloadedOrNot = () => {
+    /* const findOrCreateArray = [this.findOrCreateImageStorageFolder(), this.findOrCreateHtmlStorageFolder(), this.findOrCreateTitleStorageFolder()]
    */
     const findOrCreateArray = [this.findOrCreateHtmlStorageFolder(), this.findOrCreateTitleStorageFolder()]
 
@@ -238,8 +240,6 @@ class ModalWordpress extends React.Component {
         }, ()=> console.log('setea el estado con lo que levanto de async storage'));
       })
       .catch(error => console.log('error find or create array promise all',error))
-    
-    
   }
   saveHtmlToAsyncStorage = (htmlContent) => {
     return AsyncStorage.setItem(`${this.props.dataLink}_htmlFolder`, JSON.stringify(htmlContent))
@@ -291,6 +291,18 @@ class ModalWordpress extends React.Component {
       .catch(error => {
         if (!error.status) {
            console.log('network error', error)
+           this.setState({
+            networkError: true,
+            // fetching: false
+           })
+           Alert.alert(
+             'Error',
+             'Ocurrio un error, no estas conectado a Internet o no tenes descargado este contenido.',
+             [
+               {text: 'OK', onPress: () => this.props.close()},
+             ],
+             { cancelable: false }
+           )
          }
          return error
       })
