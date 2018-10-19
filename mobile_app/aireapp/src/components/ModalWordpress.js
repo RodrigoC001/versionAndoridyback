@@ -5,6 +5,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import HTMLView from 'react-native-htmlview';
 import axios from "axios";
 import RNFetchBlob from 'rn-fetch-blob'
+import { OfflineImage, OfflineImageStore } from 'react-native-image-offline';
 
 const { width } = Dimensions.get('window');
 
@@ -72,7 +73,9 @@ class ModalWordpress extends React.Component {
     showX: false,
     imageSrcArray: [],
     slider1ActiveSlide: SLIDER_1_FIRST_ITEM,
-    localImagesArray: []
+    localImagesArray: [],
+    reStoreCompleted: false,
+    loadImages: false,
     // testUri: null
   }
   componentWillMount() {
@@ -91,6 +94,24 @@ class ModalWordpress extends React.Component {
       this.getWordPressApi()
     })
   }*/
+  downloadImageWithLibrary = (imageSource) => {
+    console.log('entra aca al downloadImageWithLibrary')
+    OfflineImageStore.restore({
+      name: 'test_gallery',
+      imageRemoveTimeout: 120, // expire image after 120 seconds, default is 3 days if you don't provide this property.
+      debugMode: true,
+    }, () => {
+      console.log('Restore completed and callback called !');
+      // Restore completed!!
+      this.setState({ reStoreCompleted: true }, ()=> console.log('reStoreCompleted true'));
+
+      // Preload images
+      // Note: We recommend call this method on `restore` completion!
+      OfflineImageStore.preLoad([
+        imageSource
+      ]);
+    });
+  }
   findOrCreateImageStorageFolder = () => {
     // lo busco y si no existe lo creo.
     // async storage solo toma strings, asi que voy parseando de array a string y viceversa
@@ -267,6 +288,12 @@ class ModalWordpress extends React.Component {
           content
         })
       })
+      .catch(error => {
+        if (!error.status) {
+           console.log('network error', error)
+         }
+         return error
+      })
   }
   renderNode = (node, index, siblings, parent, defaultRenderer) => {
     if (node.name == 'img') {
@@ -275,6 +302,7 @@ class ModalWordpress extends React.Component {
       // console.log('node', node, 'index', index, 'siblings,', siblings, 'parent', parent)
 
       // this.downloadImageLocally(src)
+      this.downloadImageWithLibrary(src)
 
       this.setState((previousState) => {
         return {imageSrcArray: [...previousState.imageSrcArray, src ]};
@@ -287,11 +315,20 @@ class ModalWordpress extends React.Component {
   _renderItem = ({item, index}) => {
       return (
           <View style={{flex: 1}}>
-            <Image
+{/*            <Image
               key={index}
               style={{ width: width, height: 300, resizeMode: 'contain'}}
               resizeMode='contain'
               source={{uri: item}} 
+            />*/}
+            <OfflineImage
+              key={item}
+              onLoadEnd={(sourceUri) => {
+                console.log('Loading finished for image with path: ', sourceUri)
+              }}
+              style={{ width: width, height: 300, resizeMode: 'contain'}}
+              resizeMode='contain'
+              source={ { uri: item } }
             />
           </View>
       );
@@ -354,8 +391,7 @@ class ModalWordpress extends React.Component {
       width: '100%',
       height: '100%'
     }
-
-    if(this.state.fetching) {
+    if(this.state.fetching && !this.state.reStoreCompleted) {
       return (
         <View style={s.containerBig}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
