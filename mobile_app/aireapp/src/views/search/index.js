@@ -98,7 +98,7 @@ class Search extends React.Component {
 
     const { destinations } = this.state;
     const regex = new RegExp(`${query2.trim()}`, 'i');
-    return destinations.filter(trip => trip.destination.address.search(regex) >= 0);
+    return destinations && destinations.filter(trip => trip.destination.address.search(regex) >= 0);
   }
   render() {
     const { query, query2 } = this.state;

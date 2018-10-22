@@ -4,8 +4,6 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import HTMLView from 'react-native-htmlview';
 import axios from "axios";
-import RNFetchBlob from 'rn-fetch-blob'
-import { OfflineImage, OfflineImageStore } from 'react-native-image-offline';
 
 const { width } = Dimensions.get('window');
 
@@ -76,280 +74,79 @@ class ModalWordpress extends React.Component {
     localImagesArray: [],
     reStoreCompleted: false,
     loadImages: false,
-    networkError: false
+    networkError: false,
     // testUri: null
   }
   componentWillMount() {
     this.animatedValue = new Animated.Value(0)
   }
-  // volver a rehacer esta parte del component did update
   componentDidUpdate(prevProps, prevState, snapshot) {
+    // en el did update, corro la misma funcion que el didmount
     if (prevProps.dataLink === this.props.dataLink) return
-
     this.setState({
       fetching: true,
-      imageSrcArray: [],
+      localImagesArray: [],
       slider1ActiveSlide: 0
     }, ()=> {
-      this.checkIfContentIsDownloadedOrNot()
+      this.filterSelectedSkyspot()
     })
-  }
-  downloadImageWithLibrary = (imageSource) => {
-    console.log('entra aca al downloadImageWithLibrary')
-    OfflineImageStore.restore({
-      name: 'test_gallery',
-      imageRemoveTimeout: 120, // expire image after 120 seconds, default is 3 days if you don't provide this property.
-      debugMode: true,
-    }, () => {
-      console.log('Restore completed and callback called !');
-      // Restore completed!!
-      this.setState({ reStoreCompleted: true }, ()=> console.log('reStoreCompleted true'));
-
-      // Preload images
-      // Note: We recommend call this method on `restore` completion!
-      OfflineImageStore.preLoad([
-        imageSource
-      ]);
-    });
-  }
-  findOrCreateImageStorageFolder = () => {
-    // lo busco y si no existe lo creo.
-    // async storage solo toma strings, asi que voy parseando de array a string y viceversa
-    return AsyncStorage.getItem(`${this.props.dataLink}_imageArray`)
-         .then(req => JSON.parse(req))
-         .then(json => {
-          if(json) {
-            console.log('the data already exists and is', json)
-          }
-          if(!json) {
-            const emptyArray = [];
-            return AsyncStorage.setItem(`${this.props.dataLink}_imageArray`, emptyString)
-                  .then(json => {
-                    AsyncStorage.getItem(`${this.props.dataLink}_imageArray`)
-                    .then(data => console.log('data is created and is', data))
-                  })
-                  .catch(error => console.log('error!', error));
-          }
-         })
-         .catch(error => console.log('error!', error));
-  }
-  findOrCreateHtmlStorageFolder = () => {
-    // lo busco y si no existe lo creo.
-    // async storage solo toma strings, asi que voy parseando de array a string y viceversa
-    return AsyncStorage.getItem(`${this.props.dataLink}_htmlFolder`)
-         .then(req => JSON.parse(req))
-         .then(json => {
-          if(json) {
-            console.log('the data already exists and is', json)
-            return json
-          }
-          if(!json) {
-            const emptyString = '';
-            return AsyncStorage.setItem(`${this.props.dataLink}_htmlFolder`, emptyString)
-                  .then(json => {
-                    return AsyncStorage.getItem(`${this.props.dataLink}_htmlFolder`)
-                    .then(data => {
-                      console.log('data is created and is', data)
-                      return data
-                    })
-                  })
-                  .catch(error => console.log('error!', error));
-          }
-         })
-         .catch(error => console.log('error!', error));
-  }
-  findOrCreateTitleStorageFolder = () => {
-    // lo busco y si no existe lo creo.
-    // async storage solo toma strings, asi que voy parseando de array a string y viceversa
-    return AsyncStorage.getItem(`${this.props.dataLink}_title`)
-         .then(req => JSON.parse(req))
-         .then(json => {
-          if(json) {
-            console.log('the data already exists and is', json)
-            return json
-          }
-          if(!json) {
-            const emptyString = '';
-            return AsyncStorage.setItem(`${this.props.dataLink}_title`, emptyString)
-                  .then(json => {
-                    return AsyncStorage.getItem(`${this.props.dataLink}_title`)
-                    .then(data => {
-                      console.log('data is created and is', data)
-                      return data
-                    })
-                  })
-                  .catch(error => console.log('error!', error));
-          }
-         })
-         .catch(error => console.log('error!', error));
-  }
-  downloadImageLocally = (imageSource) => {
-    RNFetchBlob
-      .config({
-        fileCache : true,
-        // by adding this option, the temp files will have a file extension
-        // appendExt : 'png'
-      })
-      .fetch('GET', imageSource, {
-        //some headers ..
-      })
-      .then((res) => {
-        // the temp file path with file extension `png`
-        console.log('The file saved to ', res.path())
-        // Beware that when using a file path as Image source on Android,
-        // you must prepend "file://"" before the file path
-        // imageView = <Image source={{ uri :  }}/>
-        this.pushImageToAsyncStorageArray(Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path())
-
-        this.setState((previousState) => {
-        return {localImagesArray: [...previousState.localImagesArray, Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path()]};
-      }, ()=> console.log('this.state.localImagesArray', this.state.localImagesArray));
-      })
   }
   componentDidMount() {
     Animated.timing(this.animatedValue, {
       toValue: 1,
       duration: 1500
     }).start()
-    this.checkIfContentIsDownloadedOrNot()
+    // levanto la data del skyspot seleccionado
+    this.filterSelectedSkyspot()
   }
-  checkIfContentIsDownloadedOrNot = () => {
-    /* const findOrCreateArray = [this.findOrCreateImageStorageFolder(), this.findOrCreateHtmlStorageFolder(), this.findOrCreateTitleStorageFolder()]
-   */
-    const findOrCreateArray = [this.findOrCreateHtmlStorageFolder(), this.findOrCreateTitleStorageFolder()]
+  filterSelectedSkyspot = () => {
+    console.log('this,props.downloadedSkyspotsArray', this.props.downloadedSkyspotsArray)
+    console.log('this,props.id', this.props.id)
+
+    let downloadedSkyspotsArray = this.props.downloadedSkyspotsArray
+    let id = this.props.id
 
 
-    // primero encuentro o creo los async storage folders y despues hago el fetch
-    Promise.all(findOrCreateArray)
-      .then(data => {
-        const compareArray = [null, null]
-        console.log('data que llega del promise all de find or create es', data)
-        // stringify feo el arreglo que me llega con el que tengo aca para compararlos, sino no puedo compararlos. en este caso si es [null, null] === [null, null] es que tengo vacio eso en el storage, y necesito hacer el fetch a wordpress
-        if(JSON.stringify(data) === JSON.stringify(compareArray)) {
-          console.log('pide el fetch a wordpress')
-          return this.getWordPressApi()
-        };
-        // si ya tengo la info en el storage, la levanto y la pongo en el store
-        let content = data[0]
-        let title = data[1]
+    let selectedDownloadedSkyspot = downloadedSkyspotsArray.filter(skyspot => {
+      return skyspot.id === parseInt(id)
+    })
 
-        this.setState({
-          fetching: false,
-          content,
-          title
-        }, ()=> console.log('setea el estado con lo que levanto de async storage'));
-      })
-      .catch(error => console.log('error find or create array promise all',error))
-  }
-  saveHtmlToAsyncStorage = (htmlContent) => {
-    return AsyncStorage.setItem(`${this.props.dataLink}_htmlFolder`, JSON.stringify(htmlContent))
-                  .then(json => {
-                    AsyncStorage.getItem(`${this.props.dataLink}_htmlFolder`)
-                    .then(data => console.log('data saved is', data))
-                  })
-                  .catch(error => console.log('error!', error));
-  }
-  saveTitleToAsyncStorage = (title) => {
-    return AsyncStorage.setItem(`${this.props.dataLink}_title`, JSON.stringify(title))
-                  .then(json => {
-                    AsyncStorage.getItem(`${this.props.dataLink}_title`)
-                    .then(data => console.log('data saved is', data))
-                  })
-                  .catch(error => console.log('error!', error));    
-  }
-  pushImageToAsyncStorageArray = (imgPath) => {
-     return AsyncStorage.getItem(`${this.props.dataLink}_imageArray`)
-      .then(req => JSON.parse(req))
-      .then(array => {
-        let newArray = array.slice()
-        console.log('newArray before push is', newArray)
-        newArray.push(imgPath)
-        console.log('newArray after push is', newArray)
-        return AsyncStorage.setItem(`${this.props.dataLink}_imageArray`, JSON.stringify(newArray))
-              .then(json => console.log('success!'))
-              .catch(error => console.log('error en el ste item del imagearray!', error));
-      })
-      .catch(error => console.log('error! en el get item de image array', error));
-  }
-  getWordPressApi = () => {
-    axios
-      .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${this.props.dataLink}`)
-      .then(response => {
+    let content = selectedDownloadedSkyspot[0].content
+    let title = selectedDownloadedSkyspot[0].title
+    let imgArray = selectedDownloadedSkyspot[0].imgArray
 
-        let content = response.data.content
-        let title = response.data.title        
 
-        this.saveHtmlToAsyncStorage(content)
-        this.saveTitleToAsyncStorage(title)
-
-        this.setState({
-          title: response.data.title,
-          fetching: false,
-          content
-        })
-      })
-      .catch(error => {
-        if (!error.status) {
-           console.log('network error', error)
-           this.setState({
-            networkError: true,
-            // fetching: false
-           })
-           Alert.alert(
-             'Error',
-             'Ocurrio un error, no estas conectado a Internet o no tenes descargado este contenido.',
-             [
-               {text: 'OK', onPress: () => this.props.close()},
-             ],
-             { cancelable: false }
-           )
-         }
-         return error
-      })
+    this.setState({
+      fetching: false,
+      content,
+      title,
+      localImagesArray: imgArray
+    }, ()=> console.log('fetching a false', this.state))
   }
   renderNode = (node, index, siblings, parent, defaultRenderer) => {
     if (node.name == 'img') {
       const { src, height } = node.attribs;
-
-      // console.log('node', node, 'index', index, 'siblings,', siblings, 'parent', parent)
-
-      // this.downloadImageLocally(src)
-      this.downloadImageWithLibrary(src)
-
-      this.setState((previousState) => {
-        return {imageSrcArray: [...previousState.imageSrcArray, src ]};
-      }, ()=> console.log('this.state.imageSrcArray', this.state.imageSrcArray));
-
-      // retorno null para no renderear estas imagenes y guardarlas en un arreglo aparte;
+      // retorno null para no renderear estas imagenes;
       return null
     }
   }
   _renderItem = ({item, index}) => {
       return (
           <View style={{flex: 1}}>
-{/*            <Image
+            <Image
               key={index}
               style={{ width: width, height: 300, resizeMode: 'contain'}}
               resizeMode='contain'
               source={{uri: item}} 
-            />*/}
-            <OfflineImage
-              key={item}
-              onLoadEnd={(sourceUri) => {
-                console.log('Loading finished for image with path: ', sourceUri)
-              }}
-              style={{ width: width, height: 300, resizeMode: 'contain'}}
-              resizeMode='contain'
-              source={ { uri: item } }
             />
-          </View>
+           </View>
       );
   }
   get pagination () {
-      const { imageSrcArray, slider1ActiveSlide } = this.state;
+      const { localImagesArray, slider1ActiveSlide } = this.state;
       return (
           <Pagination
-            dotsLength={imageSrcArray.length}
+            dotsLength={localImagesArray.length}
             activeDotIndex={slider1ActiveSlide}
             containerStyle={{ width: '100%'}}
             dotStyle={{
@@ -403,7 +200,7 @@ class ModalWordpress extends React.Component {
       width: '100%',
       height: '100%'
     }
-    if(this.state.fetching && !this.state.reStoreCompleted) {
+    if(this.state.fetching) {
       return (
         <View style={s.containerBig}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -454,12 +251,12 @@ class ModalWordpress extends React.Component {
         <ScrollView contentContainerStyle={{paddingBottom: !this.state.showX ? 300 : 35 }}>
 
         <View style={s.igCounterContainer}>
-          <Text style={s.igCounterText}>{`${this.state.slider1ActiveSlide + 1}/${this.state.imageSrcArray.length}`}</Text>
+          <Text style={s.igCounterText}>{`${this.state.slider1ActiveSlide + 1}/${this.state.localImagesArray.length}`}</Text>
         </View>
 
            <Carousel
             ref={(c) => { this._carousel = c; }}
-            data={this.state.imageSrcArray}
+            data={this.state.localImagesArray}
             renderItem={this._renderItem}
             sliderWidth={width}
             itemWidth={width}
