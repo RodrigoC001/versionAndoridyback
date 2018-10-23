@@ -96,7 +96,11 @@ class MapBoxContainer extends Component<{}> {
     offlineRegionStatus: null,
     downloadingSkyspotsData: true,   
     dataLink: null,
-    downloadedSkyspotsArray: []
+    downloadedSkyspotsArray: [],
+    localImagesArray: [],
+    imgNodes: [],
+    counter: 0,
+    downloadingImages: true
   }
   async componentWillMount() {
     if (IS_ANDROID) {
@@ -129,6 +133,12 @@ class MapBoxContainer extends Component<{}> {
         this.setState({
           downloadingSkyspotsData: false
         })
+        if(data[0] !== undefined) {
+          // si entraa aca significa que ya se bajaron las imagenes en cache previamente
+          this.setState({
+            downloadingImages: false
+          })
+        }
       });
 
     console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
@@ -140,6 +150,14 @@ class MapBoxContainer extends Component<{}> {
 
     console.log('imgNodes', imgNodes)
 
+    let newStateWithDataLinkId = {}
+    newStateWithDataLinkId[dataLink] = imgNodes
+
+    this.setState(newStateWithDataLinkId, ()=> console.log('newStateWithDataLinkId', this.state))
+
+
+    // los seteo en el estado para luego compararlo con el arreglo de files bajados que tengo para despues guardarlo en async storage., porque necesito pushear el arreglo entero al async, si pusheaba uno por uno se rompia porque no llegaba a bajar todo
+
     // hago un map de ese arreglo de nodos y voy bajando cada src de img
     const promisesImgArray = imgNodes.map(imgNode => {
 
@@ -148,13 +166,24 @@ class MapBoxContainer extends Component<{}> {
       return this.downloadImageLocally(title, imgSrc, dataLink)
     })
 
-    // una vez estan todas, loggeo done
+    // no podia conseguir retornar el valor del path de cada file porque el setstate no retorna un valor, entonces tuve que volver a correr el find or create iamge storage folder para tener el arreglo de paths para mostrar la primerea vez que me bajo las cosas
     return Promise.all(promisesImgArray)
       .then((data) => {
-        console.log('DONE promise all final img src', data)
-        return data
+        return this.findOrCreateImageStorageFolder(dataLink)
+          .then(data => {
+            console.log('data del find or create', data)
+            return data
+          })
+          .then(data => {
+            this.setState({ counter: this.state.counter+1 }, ()=> {
+              if(this.state.counter === this.props.skyspotsArrayForMap) {
+                this.setState({
+                  downloadingImages: false
+                })
+              }
+            })
+          })
       });
-
   }
   downloadImageLocally = (title, imageSource, dataLink) => {
     return RNFetchBlob
@@ -173,36 +202,68 @@ class MapBoxContainer extends Component<{}> {
         // you must prepend "file://"" before the file path
         // imageView = <Image source={{ uri :  }}/>
         
-        this.pushImageToAsyncStorageArray(title, Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path(), dataLink)
+ /*       let emptyArray = []
+        let newStateWithDataLinkId = {}
+        newStateWithDataLinkId[dataLink + 'imgArray'] = []
+*/
 
-        return Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path()
+      if(!this.state[dataLink + 'imgArray']) {
+          // entra al undefined porque no existe el array, lo crea vacio por primera vez y lo llena con la primer imagen')
 
-        /*this.setState((previousState) => {
-        return {localImagesArray: [...previousState.localImagesArray, Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path()]};
-      }, ()=> console.log('this.state.localImagesArray', this.state.localImagesArray));
-        */
+          let newStateWithDataLinkId = {}
+          newStateWithDataLinkId[dataLink + 'imgArray'] = []
+
+          return this.setState(newStateWithDataLinkId, ()=> {
+
+            console.log('newStateWithDataLinkIdarray', this.state)
+
+            this.setState((previousState) => {
+              let newStateWithDataLinkId = {}
+              newStateWithDataLinkId[dataLink + 'imgArray'] = [...previousState[dataLink + 'imgArray'], Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path()]
+
+              return newStateWithDataLinkId
+            }, ()=> {
+
+              // newStateWithDataLinkId con el array lleno por primera vez'
+
+              if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
+                 // entra aca si tiene una sola iamgen
+                return this.pushImageToAsyncStorageArray(title, this.state[dataLink + 'imgArray'], dataLink)
+              }
+            }) 
+          })
+        }
+
+        if(this.state[dataLink + 'imgArray']) {
+          // entra al rreglo porque existe ya con una imagen, le sigue pusheando las siguientes
+
+          return this.setState((previousState) => {
+              let newStateWithDataLinkId = {}
+              newStateWithDataLinkId[dataLink + 'imgArray'] = [...previousState[dataLink + 'imgArray'], Platform.OS === 'android' ? 'file://' + res.path() : '' + res.path()]
+
+              return newStateWithDataLinkId
+            }, ()=> {
+                // newStateWithDataLinkId con el array lleno a partir de la segunda vez
+              if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
+                // entra aca con más de una imagen!!!
+                return this.pushImageToAsyncStorageArray(title, this.state[dataLink + 'imgArray'], dataLink)
+              }
+            })
+        }
+
       })
   }
-  pushImageToAsyncStorageArray = (title, imgPath, dataLink) => {
-     return AsyncStorage.getItem(`${dataLink}_imageArray`)
-      .then(req => JSON.parse(req))
-      .then(array => {
-        // console.log('array de push image to asnyc storage', array)
-        let newArray = array.slice()
-        // console.log('newArray before push is', newArray)
-        newArray.push(imgPath)
-        // console.log('newArray after push is', newArray)
-        AsyncStorage.setItem(`${dataLink}_imageArray`, JSON.stringify(newArray))
-              .then(json => {
-                AsyncStorage.getItem(`${dataLink}_imageArray`)
-                    .then(data => {
-                      console.log('img array is created, finded and is', data)
-                      // return data
-                    })
-              })
-              .catch(error => console.log('error en el push item del imagearray!', error));
-      })
-      .catch(error => console.log('error! en el get item de image array', error));
+  pushImageToAsyncStorageArray = (title, imgArray, dataLink) => {
+    return AsyncStorage.setItem(`${dataLink}_imageArray`, JSON.stringify(imgArray))
+                  .then(json => {
+                    return AsyncStorage.getItem(`${dataLink}_imageArray`)
+                      .then(req => JSON.parse(req))
+                      .then(array => {
+                        console.log('img array is created, finded and is', array)
+                        return array
+                      })
+                  })
+                  .catch(error => console.log('error!', error));
   }
   findOrCreateHtmlStorageFolder = (dataLink) => {
     // lo busco y si no existe lo creo.
@@ -550,7 +611,7 @@ class MapBoxContainer extends Component<{}> {
   }
   render() {
 
-    const { offlineRegionStatus, downloadingSkyspotsData } = this.state;
+    const { offlineRegionStatus, downloadingSkyspotsData, downloadingImages } = this.state;
 
     if (IS_ANDROID && !this.state.isAndroidPermissionGranted) {
       if (this.state.isFetchingAndroidPermission) {
@@ -638,6 +699,21 @@ class MapBoxContainer extends Component<{}> {
 
                 {(downloadingSkyspotsData) ? (
                   <Bubble style={!downloadingSkyspotsData ? {opacity: 0} : null}>
+                    <View style={[styles.bubleContainer]}>
+                    <View style={styles.downloadTitleContainer}>
+                      <Text style={styles.downloadTitleText}>
+                        Descargando imagenes
+                      </Text>
+                    </View>
+                    <View>
+                      <ActivityIndicator size="large" color='rgb(188,224,253)' />
+                    </View>
+                    </View>
+                  </Bubble>
+                ) : null}
+
+                {(downloadingImages) ? (
+                  <Bubble style={!downloadingImages ? {opacity: 0} : null}>
                     <View style={[styles.bubleContainer]}>
                     <View style={styles.downloadTitleContainer}>
                       <Text style={styles.downloadTitleText}>

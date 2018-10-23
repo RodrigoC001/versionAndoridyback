@@ -184,9 +184,9 @@ class OrigenDestinoTable extends React.Component {
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Origenes</h4>
+                <h4 className={classes.cardTitleWhite}>Origenes & Destinos</h4>
                 <p className={classes.cardCategoryWhite}>
-                  Tabla de Origenes
+                  Tabla de Origenes & Destinos
                 </p>
               </CardHeader>
               <CardBody>
@@ -202,7 +202,7 @@ class OrigenDestinoTable extends React.Component {
           </GridItem>
         </GridContainer>
 
-        <GridContainer>
+{/*        <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="primary">
@@ -222,7 +222,7 @@ class OrigenDestinoTable extends React.Component {
               </CardBody>
             </Card>
           </GridItem>
-        </GridContainer>
+        </GridContainer>*/}
 
         <div>
           <Dialog
