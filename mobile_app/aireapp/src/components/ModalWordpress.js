@@ -94,7 +94,7 @@ class ModalWordpress extends React.Component {
   componentDidMount() {
     Animated.timing(this.animatedValue, {
       toValue: 1,
-      duration: 1500
+      duration: 100
     }).start()
     // levanto la data del skyspot seleccionado
     this.filterSelectedSkyspot()
@@ -182,7 +182,7 @@ class ModalWordpress extends React.Component {
     })
     Animated.timing(this.animatedValue, {
       toValue: 2,
-      duration: 300
+      duration: 100
     }).start()
   }
   render() {
@@ -190,6 +190,7 @@ class ModalWordpress extends React.Component {
       inputRange: [0, 1, 2],
       // hago este ternario raro para que la pantalla de atras de todo, ocupe o toda la pantalla o solo la mitad, asi permito que se pueda seguri moviendo el mapa (que sino, queda abajo de esa view y no se como propagar el evento a la view que queda abajo de la containerBig que es absoluto), lo mismo en el estilo inline de containerBig
       outputRange: !this.state.showX ? [-FULL_SCREEN +TAB_BAR_HEIGHT, -75, -20] : [-FULL_SCREEN +TAB_BAR_HEIGHT, -MODAL_HEIGHT +TAB_BAR_HEIGHT, -20]
+      // corregir saltadito
       // outputRange: [-FULL_SCREEN, -MODAL_HEIGHT, -StatusBar.currentHeight]
       // aca el 75 es 55 del tab bar y 20 de la status bar creo, corregir calculo
       // aca necesito sacar el height de la status bar en ios & en Android, porque lo de arriba solo funciona en Android 

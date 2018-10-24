@@ -55,9 +55,9 @@ async function requestLocationPermission() {
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("You can use the geolocation")
+      // console.log("You can use the geolocation")
     } else {
-      console.log("geolocation permission denied")
+      // console.log("geolocation permission denied")
     }
   } catch (err) {
     console.warn(err)
@@ -91,7 +91,8 @@ class MapBoxContainer extends Component<{}> {
     latitude: null,
     longitude: null,
     error: null,
-    name: this.props.selectedTrip && `${this.props.selectedTrip.data.name}-${Date.now()}`,
+    // name: this.props.selectedTrip && `${this.props.selectedTrip.data.name}-${Date.now()}`,
+    name: 'aireApp',
     offlineRegion: null,
     offlineRegionStatus: null,
     downloadingSkyspotsData: true,   
@@ -114,10 +115,16 @@ class MapBoxContainer extends Component<{}> {
   componentWillUnmount() {
     console.log('entra al will unmount')
     // avoid setState warnings if we back out before we finishing downloading
-    /*Mapbox.offlineManager.deletePack(this.state.name);
-    Mapbox.offlineManager.unsubscribe(this.props.selectedTrip && this.props.selectedTrip.data.name);*/
+  /*  Mapbox.offlineManager.deletePack(this.state.name);
+    Mapbox.offlineManager.unsubscribe(this.state.name)*/;
   }
-  componentDidMount() {
+  async componentDidMount() {
+    // aca es cuando me suscribo al pack que ya tengo. le pongo siempre el mismo nombre a todo, asi que me queda guardado ese. entra a un unhandled promise rejection porque ya existe un pack con ese nuevo cuando lo queire bajar. tengo que validar que si existe, no lo intente bajar. jugar con niveles de zoom.
+    
+    let offlinePack = await Mapbox.offlineManager.getPack(this.state.name);
+
+    console.log('offlinePack', offlinePack)
+
     requestLocationPermission()
       .then(()=> this.getCurrentLocation())
 
@@ -129,7 +136,7 @@ class MapBoxContainer extends Component<{}> {
     Promise.all(promisesArray)
       .then((data) => {
         // ya cargue todo y cambio el fetching
-        console.log('cambiar el fetching y mostrar', data)
+        // console.log('cambiar el fetching y mostrar', data)
         this.setState({
           downloadingSkyspotsData: false
         })
@@ -141,22 +148,22 @@ class MapBoxContainer extends Component<{}> {
         }
       });
 
-    console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+    // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
   }
   getImgNodesAndTheirSrcFromHtml = (title, htmlContent, dataLink) => {
     let rootNode = DomSelector(htmlContent);
 
     let imgNodes = rootNode.getElementsByTagName('img');
 
-    console.log('imgNodes', imgNodes, 'dataLink', dataLink)
+    // console.log('imgNodes', imgNodes, 'dataLink', dataLink)
 
     let newStateWithDataLinkId = {}
     newStateWithDataLinkId[dataLink] = imgNodes
 
-    console.log('newStateWithDataLinkId is', newStateWithDataLinkId)
+    // console.log('newStateWithDataLinkId is', newStateWithDataLinkId)
     // aca llega a poner {null: }
 
-    this.setState(newStateWithDataLinkId, ()=> console.log('newStateWithDataLinkId', this.state))
+    this.setState(newStateWithDataLinkId)
 
 
     // los seteo en el estado para luego compararlo con el arreglo de files bajados que tengo para despues guardarlo en async storage., porque necesito pushear el arreglo entero al async, si pusheaba uno por uno se rompia porque no llegaba a bajar todo
@@ -174,15 +181,15 @@ class MapBoxContainer extends Component<{}> {
       .then((data) => {
         return this.findOrCreateImageStorageFolder(dataLink)
           .then(data => {
-            console.log('data del find or create', data)
+            // console.log('data del find or create', data)
             return data
           })
           .then(data => {
             this.setState({ counter: this.state.counter+1 }, ()=> {
-              console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
+              // console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
 
               if(this.state.counter === this.props.skyspotsArrayForMap.length) {
-                console.log('entra a este if y pone downloadingImages en false')
+                // console.log('entra a este if y pone downloadingImages en false')
                 this.setState({
                   downloadingImages: false
                 })
@@ -203,9 +210,9 @@ class MapBoxContainer extends Component<{}> {
         //some headers ..
       })
       .then((res) => {
-        console.log('res del rn fetch blob es', res)
+        // console.log('res del rn fetch blob es', res)
         // the temp file path with file extension `png`
-        console.log('The file saved to ', res.path())
+        // console.log('The file saved to ', res.path())
         // Beware that when using a file path as Image source on Android,
         // you must prepend "file://"" before the file path
         // imageView = <Image source={{ uri :  }}/>
@@ -223,7 +230,7 @@ class MapBoxContainer extends Component<{}> {
 
           return this.setState(newStateWithDataLinkId, ()=> {
 
-            console.log('newStateWithDataLinkIdarray', this.state)
+            // console.log('newStateWithDataLinkIdarray', this.state)
 
             this.setState((previousState) => {
               let newStateWithDataLinkId = {}
@@ -267,7 +274,7 @@ class MapBoxContainer extends Component<{}> {
                     return AsyncStorage.getItem(`${dataLink}_imageArray`)
                       .then(req => JSON.parse(req))
                       .then(array => {
-                        console.log('img array is created, finded and is', array)
+                        // console.log('img array is created, finded and is', array)
                         return array
                       })
                   })
@@ -280,7 +287,7 @@ class MapBoxContainer extends Component<{}> {
          .then(req => JSON.parse(req))
          .then(json => {
           if(json) {
-            console.log('the data already exists and is', json)
+            // console.log('the data already exists and is', json)
             return json
           }
           if(!json) {
@@ -289,7 +296,7 @@ class MapBoxContainer extends Component<{}> {
                   .then(json => {
                     return AsyncStorage.getItem(`${dataLink}_htmlFolder`)
                     .then(data => {
-                      console.log('data is created and is', data)
+                      // console.log('data is created and is', data)
                       return data
                     })
                   })
@@ -305,7 +312,7 @@ class MapBoxContainer extends Component<{}> {
          .then(req => JSON.parse(req))
          .then(json => {
           if(json) {
-            console.log('the image storage folder already exists and is', json)
+            // console.log('the image storage folder already exists and is', json)
             return json
           }
           if(!json) {
@@ -314,7 +321,7 @@ class MapBoxContainer extends Component<{}> {
                   .then(json => {
                     return AsyncStorage.getItem(`${dataLink}_imageArray`)
                     .then(data => {
-                      console.log('image storage folder is created and is', data)
+                      // console.log('image storage folder is created and is', data)
                       return data
                     })
                   })
@@ -330,7 +337,7 @@ class MapBoxContainer extends Component<{}> {
          .then(req => JSON.parse(req))
          .then(json => {
           if(json) {
-            console.log('the data already exists and is', json)
+            // console.log('the data already exists and is', json)
             return json
           }
           if(!json) {
@@ -339,7 +346,7 @@ class MapBoxContainer extends Component<{}> {
                   .then(json => {
                     return AsyncStorage.getItem(`${dataLink}_title`)
                     .then(data => {
-                      console.log('data is created and is', data)
+                      // console.log('data is created and is', data)
                       return data
                     })
                   })
@@ -351,7 +358,7 @@ class MapBoxContainer extends Component<{}> {
   getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log('position', position)
+        // console.log('position', position)
         this.setState({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
@@ -375,10 +382,10 @@ class MapBoxContainer extends Component<{}> {
     return Promise.all(findOrCreateArray)
       .then(data => {
         const compareArray = [null, null, '[]']
-        console.log('data que llega del promise all de find or create es', data)
+        // console.log('data que llega del promise all de find or create es', data)
         // stringify feo el arreglo que me llega con el que tengo aca para compararlos, sino no puedo compararlos. en este caso si es [null, null] === [null, null] es que tengo vacio eso en el storage, y necesito hacer el fetch a wordpress
         if(JSON.stringify(data) === JSON.stringify(compareArray)) {
-          console.log('pide el fetch a wordpress')
+          // console.log('pide el fetch a wordpress')
           return this.getWordPressApi(id, coords, dataLink)
         };
         // si ya tengo la info en el storage, la levanto y la pongo en el store
@@ -400,7 +407,7 @@ class MapBoxContainer extends Component<{}> {
           fetching: false,
           downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
         };
-      }, ()=> console.log('setea el estado con lo que levanto de async storage y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray));
+      });
       return downloadedSkyspotObj
       })
       .catch(error => {
@@ -409,12 +416,12 @@ class MapBoxContainer extends Component<{}> {
       })
     }
   getWordPressApi = async (id, coords, dataLink) => {
-    console.log('get wordpress api id coords dataLink', id, coords, dataLink)
+    // console.log('get wordpress api id coords dataLink', id, coords, dataLink)
     axios
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${dataLink}`)
       .then(response => {
 
-        console.log('response', response)
+        // console.log('response', response)
 
         let content = response.data.content
         let title = response.data.title        
@@ -424,7 +431,7 @@ class MapBoxContainer extends Component<{}> {
 
         return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
           .then(imgArray=> {
-            console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
+            // console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
 
             let downloadedSkyspotObj = {}
 
@@ -449,9 +456,9 @@ class MapBoxContainer extends Component<{}> {
 
       })
       .catch(error => {
-        console.log('error.response.status', error.response.status)
+        // console.log('error.response.status', error.response.status)
         if(error.response.status === 404) {
-          console.log('entra al 404')
+          // console.log('entra al 404')
 
           let title = 'Skyspot'
           let content = '<p>Este skyspot no tiene contenido disponible</p>'
@@ -461,7 +468,7 @@ class MapBoxContainer extends Component<{}> {
 
           return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
             .then(imgArray=> {
-              console.log('imgArray del catch de error', imgArray)
+              // console.log('imgArray del catch de error', imgArray)
 
               let downloadedSkyspotObj = {}
 
@@ -516,7 +523,7 @@ class MapBoxContainer extends Component<{}> {
 
   }
   onDidFinishLoadingStyle = async () => {
-    console.log('entra al onDidFinishLoadingStyle')
+    // console.log('entra al onDidFinishLoadingStyle')
 
     const { width, height } = Dimensions.get('window');
     const bounds = geoViewport.bounds(
@@ -534,20 +541,21 @@ class MapBoxContainer extends Component<{}> {
       maxZoom: 20,
     };*/
 
-    // bounds: [[neLng, neLat], [swLng, swLat]]
+    // bounds: [[neLng, neLat], [swLng, swLat]],
 
-    const neLng = -29.18254
-    const neLat =  30.32227
-    const swLng = -120.22669
-    const swLat =  -59.95731
+    const neLng = -48.38423
+    const neLat = -16.91542   
+    const swLng = -79.39246
+    const swLat =  -55.82520    
 
     const options = {
       name: this.state.name,
       // styleURL: Mapbox.StyleURL.Street,
       styleURL: 'mapbox://styles/lautarogrande/cjl4qetsg5t072snrwgh08jaa',
-      bounds: [[bounds[0], bounds[1]], [bounds[2], bounds[3]]],
+      // bounds: [[bounds[0], bounds[1]], [bounds[2], bounds[3]]],
+      bounds: [[neLng, neLat], [swLng, swLat]],
       minZoom: 3,
-      maxZoom: 15,
+      maxZoom: 5,
       // maxZoom: 8,
     };
 
@@ -586,7 +594,7 @@ class MapBoxContainer extends Component<{}> {
     return Math.round(this.state.offlineRegionStatus.percentage / 10) / 10;
   }
   _getRegionDownloadState = (downloadState) => {
-    console.log('this.state.offlineRegionStatus.percentage', this.state.offlineRegionStatus.percentage)
+    // console.log('this.state.offlineRegionStatus.percentage', this.state.offlineRegionStatus.percentage)
     switch (downloadState) {
       case Mapbox.OfflinePackDownloadState.Active:
         return 'Activo';
@@ -609,7 +617,7 @@ class MapBoxContainer extends Component<{}> {
             renderModal: true,
             dataLink: dataLink,
             id: id
-          }, ()=> console.log('this.state.renderModal', this.state.renderModal))
+          })
           let newObj = {}
           newObj[id] = true
           this.setState(newObj)
@@ -643,7 +651,7 @@ class MapBoxContainer extends Component<{}> {
 
     this.setState({
       renderModal: false
-    }, ()=> console.log('this.state.renderModal', this.state.renderModal))
+    })
   }
   render() {
 

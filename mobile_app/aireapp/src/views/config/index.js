@@ -1,12 +1,29 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, ImageBackground} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, ImageBackground, Alert, AsyncStorage} from 'react-native';
 import ConfigOption from '../../components/ConfigOption.js'
+
+import Mapbox from '@mapbox/react-native-mapbox-gl';
+
+// MAPBOX CONFIG
+Mapbox.setAccessToken('pk.eyJ1IjoibGF1dGFyb2dyYW5kZSIsImEiOiJjamtrNjFqMW8xbnVhM3BwYjdmZjczcXkyIn0._Gz0SnZDQIGeosDSbwFwMA');
 
 const configData = [{
   id: 1,
   icon: require('../../assets/config/cesto/cesto.png'),
   title: 'Eliminar rutas descargadas',
-  onPress: ()=> console.log('navigate')
+  onPress: ()=> {
+    Alert.alert(
+      'AI.RE',
+      '¿Queres eliminar todas las rutas descargadas?',
+      [
+        {text: 'OK', onPress: () => {
+          AsyncStorage.clear()
+        }},
+        {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+      ],
+      { cancelable: false }
+    )
+  }
 }, {
   id: 2,
   icon: require('../../assets/config/pregunta/pregunta.png'),
