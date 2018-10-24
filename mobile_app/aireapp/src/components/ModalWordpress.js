@@ -94,7 +94,7 @@ class ModalWordpress extends React.Component {
   componentDidMount() {
     Animated.timing(this.animatedValue, {
       toValue: 1,
-      duration: 100
+      duration: 300
       // jugar con la duration sin tener prendido el RN debugger
     }).start()
     // levanto la data del skyspot seleccionado

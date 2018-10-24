@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Keyboard, Dimensions, ActivityIndicator} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Keyboard, Dimensions, ActivityIndicator, PermissionsAndroid} from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -31,7 +31,8 @@ class Search extends React.Component {
     origins: [],
     query: '',
     destinations: [],
-    query2: ''
+    query2: '',
+    permission: false
   }
   componentDidMount() {
     this.addKeyboardEventListener()
@@ -40,6 +41,28 @@ class Search extends React.Component {
       .then(origins => {
         this.setState({origins: this.props.origins.data})
       })
+  }
+  requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          'title': 'Ubicación',
+          'message': 'Necesitamos poder acceder a tu ubicación para continuar con la aplicación'
+        }
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.setState({
+          permission: true
+        })
+      } else {
+        this.setState({
+          permission: false
+        })
+      }
+    } catch (err) {
+      console.warn(err)
+    }
   }
   addKeyboardEventListener = () => {
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
@@ -79,8 +102,21 @@ class Search extends React.Component {
     let finalTripObject = this.state.destinations && this.state.destinations.find(trip => trip.destination.address.toLowerCase().trim() === address.toLowerCase().trim());
 
     // una vez que tengo el trip seleccionado y puesto en el store, navego a la pantalla principal
-    finalTripObject && this.props.getTripRequest(finalTripObject.id)
+/*    finalTripObject && this.props.getTripRequest(finalTripObject.id)
       .then((data)=> this.props.navigation.navigate('BottomTabs'))
+*/
+    finalTripObject && 
+    this.requestLocationPermission()
+      .then(data => {
+        
+        if(this.state.permission) {
+          this.props.getTripRequest(finalTripObject.id)
+            .then((data)=> this.props.navigation.navigate('BottomTabs'))         
+        }
+
+      })
+
+
   }
   findOrigin(query) {
     if (query === '') {

@@ -125,8 +125,7 @@ class MapBoxContainer extends Component<{}> {
 
     console.log('offlinePack', offlinePack)
 
-    requestLocationPermission()
-      .then(()=> this.getCurrentLocation())
+    this.getCurrentLocation()
 
     const skyspotsArrayForMap = this.props.skyspotsArrayForMap
     // con el array de skyspots, checkeo en cada uno si el contenido esta bajado o no, o sea guardado en el async storage
@@ -678,8 +677,15 @@ class MapBoxContainer extends Component<{}> {
       );
     }
 
- /*   if(!this.state.longitude) return (<View style={{}}><Text>You need to accept location permissions in order to use this example
-            applications</Text></View>)*/
+    if(!this.state.longitude) {
+     return (
+       <View style={{backgroundColor: 'rgb(64,76,155)', flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20}}>
+         <Text style={[styles.downloadTitleText, {textAlign: 'center'}]}>
+           Necesitamos poder acceder a tu ubicación para continuar con la aplicación
+         </Text>
+       </View>
+     ); 
+    }
 
     return (
       <View style={styles.container}>
@@ -782,10 +788,15 @@ class MapBoxContainer extends Component<{}> {
                 ) : null}
 
         <View style={styles.goBackContainer}>
-          <TouchableOpacity style={{backgroundColor: 'transparent', flex: 0.2}} onPress={()=> this.props.navigation.pop()}>
+          <TouchableOpacity style={{backgroundColor: 'transparent', flex: 1}} onPress={()=> this.props.navigation.pop()}>
               <Image source={require('../assets/atras/atras.png')} />
           </TouchableOpacity>
-          <View style={{flex: 0.8}} />
+        </View>
+
+        <View style={styles.centerLocationContainer}>
+          <TouchableOpacity style={{backgroundColor: 'transparent', flex: 1}} onPress={this.centerMap}>
+              <Image source={require('../assets/centerlocation/centerlocation.png')} />
+          </TouchableOpacity>
         </View>
 
         {this.state.renderModal && <ModalWordpress close={this.closeModal} dataLink={this.state.dataLink && this.state.dataLink} id={this.state.id && this.state.id} downloadedSkyspotsArray={JSON.stringify(this.state.downloadedSkyspotsArray) !== JSON.stringify([]) ? this.state.downloadedSkyspotsArray : null} />}
@@ -813,7 +824,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'orange',
     transform: [{ scale: 0.6 }],
   },
-  goBackContainer: {
+  centerLocationContainer: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 67,
+    right: 20
+  },
+  /*goBackContainer: {
     flex: 1,
     left: 22,
     position: 'absolute',
@@ -821,6 +838,12 @@ const styles = StyleSheet.create({
     top: 27,
     zIndex: 2,
     flexDirection: 'row',
+  },*/
+  goBackContainer: {
+    flex: 1,
+    position: 'absolute',
+    top: 27,
+    left: 22
   },
   buttonCnt: {
     flexDirection: 'row',
