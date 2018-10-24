@@ -23,10 +23,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const mapStateToProps = state => ({
   skyspots: state.skyspots.skyspots,
-  skyspotsOrderedToTable: state.skyspots.skyspotsOrderedToTable
+  skyspotsOrderedToTable: state.skyspots.skyspotsOrderedToTable,
+  fetching: state.skyspots.fetching
 });
 
 function mapDispatchToProps(dispatch) {
@@ -64,6 +66,9 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  center: {
+    textAlign: 'center'
   }
 };
 
@@ -104,7 +109,8 @@ class SkyspotsTable extends React.Component {
     this.setState({openEdit: false, skyspotId: null})
   }
   render() {
-    const { classes, skyspotsOrderedToTable } = this.props;
+    const { classes, skyspotsOrderedToTable, fetching } = this.props;
+    if(fetching) return <div className={classes.center}><CircularProgress className={classes.progress} size={50} /></div>
     return (
       <div>
         <GridContainer>

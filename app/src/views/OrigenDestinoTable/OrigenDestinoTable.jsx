@@ -28,12 +28,16 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 const mapStateToProps = state => ({
   origins: state.origins,
   originsOrderedToTable: state.origins.originsOrderedToTable,
   destinations: state.destinations.destinations,
   destinationsOrderedToTable: state.destinations.destinationsOrderedToTable,
+  fetchingOrigins: state.origins.fetching,
+  fetchingDestinations: state.destinations.fetching,
 });
 
 
@@ -78,6 +82,9 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  center: {
+    textAlign: 'center'
   }
 };
 
@@ -177,7 +184,8 @@ class OrigenDestinoTable extends React.Component {
     this.setState({openEdit: false, destinationId: null});
   }  
   render() {
-    const { classes, originsOrderedToTable, destinationsOrderedToTable } = this.props;
+    const { classes, originsOrderedToTable, destinationsOrderedToTable, fetchingDestinations, fetchingOrigins } = this.props;
+    if(fetchingOrigins || fetchingDestinations) return <div className={classes.center}><CircularProgress className={classes.progress} size={50} /></div>
     return (
       <div>
         <GridContainer>

@@ -23,10 +23,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 const mapStateToProps = state => ({
   trips: state.trips.trips,
-  tripsOrderedToTable: state.trips.tripsOrderedToTable
+  tripsOrderedToTable: state.trips.tripsOrderedToTable,
+  fetching: state.trips.fetching
 });
 
 function mapDispatchToProps(dispatch) {
@@ -64,6 +67,9 @@ const styles = {
       fontWeight: "400",
       lineHeight: "1"
     }
+  },
+  center: {
+    textAlign: 'center'
   }
 };
 
@@ -74,6 +80,7 @@ class RoutesTable extends React.Component {
     tripId: null
   }
   componentDidMount() {
+    console.log('this.props.fetching', this.props.fetching)
     this.props.getTripsRequest()
   }
   handleDelete = (tripId) => {
@@ -104,7 +111,8 @@ class RoutesTable extends React.Component {
     this.setState({openEdit: false, tripId: null})
   }
   render() {
-    const { classes, tripsOrderedToTable } = this.props;
+    const { classes, tripsOrderedToTable, fetching } = this.props;
+    if(fetching) return <div className={classes.center}><CircularProgress className={classes.progress} size={50} /></div>
     return (
       <div>
         <GridContainer>
