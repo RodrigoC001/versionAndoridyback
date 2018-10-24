@@ -22,10 +22,33 @@ import logo from "Assets/img/aire@2x.png";
 import ModificarRuta from "../../views/ModificarRuta/ModificarRuta.jsx";
 import ModificarSkyspot from "../../views/ModificarSkyspot/ModificarSkyspot.jsx";
 import ModificarOrigenDestino from "../../views/ModificarOrigenDestino/ModificarOrigenDestino.jsx";
+import Login from "./Login.jsx";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
+// redux
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as authActions from "../../redux/actions/auth";
+
+
+const mapStateToProps = state => ({
+  fetching: state.auth.fetching,
+  user: state.auth.user,
+});
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    Object.assign(
+      {},
+      authActions
+    ),
+    dispatch
+  );
+}
 
 const switchRoutes = (
   <Switch>
+    <Route  path="/login" component={Login} />
     <Route  path="/trips/:id" component={ModificarRuta} />
     <Route  path="/skyspots/:id" component={ModificarSkyspot} />
     <Route  path="/origendestino/:id" component={ModificarOrigenDestino} />
@@ -36,6 +59,14 @@ const switchRoutes = (
     })}
   </Switch>
 );
+
+const styleCss = {
+    // backgroundColor: 'rgb(93,191,189)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: "100vh"
+};
 
 class App extends React.Component {
   constructor(props) {
@@ -56,6 +87,18 @@ class App extends React.Component {
       this.setState({ mobileOpen: false });
     }
   }
+  handleLoginFailure = () => {
+    this.props.history.push('/login')
+  }
+  componentWillMount() {
+    this.props.getMeRequest()
+      .then(data => {
+        console.log('this.props.user', this.props.user)
+        if(!this.props.user) {
+          this.handleLoginFailure()
+        }
+      })
+  }
   componentDidMount() {
     if (navigator.platform.indexOf("Win") > -1) {
       const ps = new PerfectScrollbar(this.refs.mainPanel);
@@ -75,6 +118,8 @@ class App extends React.Component {
   }
   render() {
     const { classes, ...rest } = this.props;
+    if(this.props.fetching) return <div style={styleCss}><CircularProgress size={50} /></div>
+    // if(true) return <Login />
     return (
       <div className={classes.wrapper}>
         <Sidebar
@@ -112,4 +157,6 @@ App.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(dashboardStyle)(App);
+const styledComponent = withStyles(dashboardStyle)(App);
+
+export default connect(mapStateToProps, mapDispatchToProps)(styledComponent);
