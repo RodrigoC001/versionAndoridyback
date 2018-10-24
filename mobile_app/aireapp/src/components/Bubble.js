@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     left: 48,
     right: 48,
     paddingVertical: 16,
-    minHeight: 60,
+    minHeight: 120,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgb(64,76,155)',

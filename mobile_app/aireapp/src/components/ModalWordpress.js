@@ -111,6 +111,8 @@ class ModalWordpress extends React.Component {
       return skyspot.id === parseInt(id)
     })
 
+    console.log('selectedDownloadedSkyspot', selectedDownloadedSkyspot)
+
     let content = selectedDownloadedSkyspot[0].content
     let title = selectedDownloadedSkyspot[0].title
     let imgArray = selectedDownloadedSkyspot[0].imgArray
@@ -142,7 +144,7 @@ class ModalWordpress extends React.Component {
            </View>
       );
   }
-  get pagination () {
+/*  get pagination () {
       const { localImagesArray, slider1ActiveSlide } = this.state;
       return (
           <Pagination
@@ -166,7 +168,7 @@ class ModalWordpress extends React.Component {
             inactiveDotScale={0.6}
           />
       );
-  }
+  }*/
   navigateItem = (index) => {
    
     this.setState({
@@ -250,11 +252,15 @@ class ModalWordpress extends React.Component {
 
         <ScrollView contentContainerStyle={{paddingBottom: !this.state.showX ? 300 : 35 }}>
 
-        <View style={s.igCounterContainer}>
-          <Text style={s.igCounterText}>{`${this.state.slider1ActiveSlide + 1}/${this.state.localImagesArray.length}`}</Text>
-        </View>
+        
 
-           <Carousel
+        {this.state.localImagesArray.length === 0 ? null :
+          <View style={s.igCounterContainer}>
+            <Text style={s.igCounterText}>{`${this.state.slider1ActiveSlide + 1}/${this.state.localImagesArray.length}`}</Text>
+          </View>
+        }
+
+          <Carousel
             ref={(c) => { this._carousel = c; }}
             data={this.state.localImagesArray}
             renderItem={this._renderItem}

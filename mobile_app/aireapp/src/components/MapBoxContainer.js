@@ -114,8 +114,8 @@ class MapBoxContainer extends Component<{}> {
   componentWillUnmount() {
     console.log('entra al will unmount')
     // avoid setState warnings if we back out before we finishing downloading
-    Mapbox.offlineManager.deletePack(this.state.name);
-    Mapbox.offlineManager.unsubscribe(this.props.selectedTrip && this.props.selectedTrip.data.name);
+    /*Mapbox.offlineManager.deletePack(this.state.name);
+    Mapbox.offlineManager.unsubscribe(this.props.selectedTrip && this.props.selectedTrip.data.name);*/
   }
   componentDidMount() {
     requestLocationPermission()
@@ -148,10 +148,13 @@ class MapBoxContainer extends Component<{}> {
 
     let imgNodes = rootNode.getElementsByTagName('img');
 
-    console.log('imgNodes', imgNodes)
+    console.log('imgNodes', imgNodes, 'dataLink', dataLink)
 
     let newStateWithDataLinkId = {}
     newStateWithDataLinkId[dataLink] = imgNodes
+
+    console.log('newStateWithDataLinkId is', newStateWithDataLinkId)
+    // aca llega a poner {null: }
 
     this.setState(newStateWithDataLinkId, ()=> console.log('newStateWithDataLinkId', this.state))
 
@@ -176,12 +179,16 @@ class MapBoxContainer extends Component<{}> {
           })
           .then(data => {
             this.setState({ counter: this.state.counter+1 }, ()=> {
-              if(this.state.counter === this.props.skyspotsArrayForMap) {
+              console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
+
+              if(this.state.counter === this.props.skyspotsArrayForMap.length) {
+                console.log('entra a este if y pone downloadingImages en false')
                 this.setState({
                   downloadingImages: false
                 })
               }
             })
+            return data
           })
       });
   }
@@ -196,6 +203,7 @@ class MapBoxContainer extends Component<{}> {
         //some headers ..
       })
       .then((res) => {
+        console.log('res del rn fetch blob es', res)
         // the temp file path with file extension `png`
         console.log('The file saved to ', res.path())
         // Beware that when using a file path as Image source on Android,
@@ -406,6 +414,8 @@ class MapBoxContainer extends Component<{}> {
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${dataLink}`)
       .then(response => {
 
+        console.log('response', response)
+
         let content = response.data.content
         let title = response.data.title        
 
@@ -439,23 +449,42 @@ class MapBoxContainer extends Component<{}> {
 
       })
       .catch(error => {
-        if (!error.status) {
-           console.log('network error', error)
-           this.setState({
-            networkError: true,
-            fetching: false
-           })
-           Alert.alert(
-             'Error',
-             'Ocurrio un error, no estas conectado a Internet o no tenes descargado este contenido.',
-             [
-               {text: 'OK', onPress: () => console.log('ok, manejar error')},
-             ],
-             { cancelable: false }
-           )
-         }
-         console.log('error', error)
-         return error
+        console.log('error.response.status', error.response.status)
+        if(error.response.status === 404) {
+          console.log('entra al 404')
+
+          let title = 'Skyspot'
+          let content = '<p>Este skyspot no tiene contenido disponible</p>'
+
+          this.saveHtmlToAsyncStorage(content, dataLink)
+          this.saveTitleToAsyncStorage(title, dataLink)
+
+          return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
+            .then(imgArray=> {
+              console.log('imgArray del catch de error', imgArray)
+
+              let downloadedSkyspotObj = {}
+
+              downloadedSkyspotObj.id = id
+              downloadedSkyspotObj.coords = coords
+              downloadedSkyspotObj.content = content
+              downloadedSkyspotObj.title = title
+              downloadedSkyspotObj.imgArray = []            
+
+              this.setState((previousState) => {
+                return {
+                  fetching: false,
+                  // downloadingImages: false,
+                  downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
+                };
+              }, ()=> {
+                console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+              });
+
+              return downloadedSkyspotObj
+
+            })
+        }
       })
   }
   saveHtmlToAsyncStorage = (htmlContent, dataLink) => {
@@ -492,7 +521,7 @@ class MapBoxContainer extends Component<{}> {
     const { width, height } = Dimensions.get('window');
     const bounds = geoViewport.bounds(
       CENTER_COORD,
-      12,
+      10,
       [width, height],
       MAPBOX_VECTOR_TILE_SIZE,
     );
@@ -505,13 +534,20 @@ class MapBoxContainer extends Component<{}> {
       maxZoom: 20,
     };*/
 
+    // bounds: [[neLng, neLat], [swLng, swLat]]
+
+    const neLng = -29.18254
+    const neLat =  30.32227
+    const swLng = -120.22669
+    const swLat =  -59.95731
+
     const options = {
       name: this.state.name,
       // styleURL: Mapbox.StyleURL.Street,
       styleURL: 'mapbox://styles/lautarogrande/cjl4qetsg5t072snrwgh08jaa',
       bounds: [[bounds[0], bounds[1]], [bounds[2], bounds[3]]],
       minZoom: 3,
-      maxZoom: 10,
+      maxZoom: 15,
       // maxZoom: 8,
     };
 
@@ -524,7 +560,7 @@ class MapBoxContainer extends Component<{}> {
       name: offlineRegion.name,
       offlineRegion: offlineRegion,
       offlineRegionStatus: offlineRegionStatus,
-    }, ()=> console.log('percentage: ', this.state.offlineRegionStatus.percentage));
+    }, ()=> console.log('percentage: ', this.state.offlineRegionStatus.percentage, 'tileCount is:', this.state.offlineRegionStatus.completedTileCount, 'offlineRegionStatus: ', offlineRegionStatus));
   }
   onResume = () => {
     if (this.state.offlineRegion) {
@@ -655,7 +691,7 @@ class MapBoxContainer extends Component<{}> {
           {this.renderAnnotations()}
         </Mapbox.MapView>
 
-        {(offlineRegionStatus !== null) ? (
+          {(offlineRegionStatus !== null) ? (
                   <Bubble style={this.state.offlineRegionStatus.percentage === 100 && {opacity: 0}}>
                     <View style={[styles.bubleContainer]}>
                     <View style={styles.downloadTitleContainer}>
@@ -670,7 +706,6 @@ class MapBoxContainer extends Component<{}> {
                     <View>
                       <Text style={styles.downloadTitleText}>Porcentaje de la Descarga: {offlineRegionStatus.percentage}</Text>
                     </View>
-
                     
                       <View style={styles.buttonCnt}>
                         <TouchableOpacity onPress={this.onResume}>
@@ -678,13 +713,11 @@ class MapBoxContainer extends Component<{}> {
                             <Text style={styles.buttonTxt}>Resume</Text>
                           </View>
                         </TouchableOpacity>
-
                         <TouchableOpacity onPress={this.onStatusRequest}>
                           <View style={styles.button}>
                             <Text style={styles.buttonTxt}>Status</Text>
                           </View>
                         </TouchableOpacity>
-
                         <TouchableOpacity onPress={this.onPause}>
                           <View style={styles.button}>
                             <Text style={styles.buttonTxt}>Pause</Text>
@@ -698,33 +731,37 @@ class MapBoxContainer extends Component<{}> {
                 ) : null}
 
                 {(downloadingSkyspotsData) ? (
-                  <Bubble style={!downloadingSkyspotsData ? {opacity: 0} : null}>
-                    <View style={[styles.bubleContainer]}>
-                    <View style={styles.downloadTitleContainer}>
-                      <Text style={styles.downloadTitleText}>
-                        Descargando imagenes
-                      </Text>
-                    </View>
-                    <View>
-                      <ActivityIndicator size="large" color='rgb(188,224,253)' />
-                    </View>
-                    </View>
-                  </Bubble>
+                  <View style={[{backgroundColor: 'rgba(0,0,0,0.6)', height: '100%', width: '100%', position: 'absolute', top: 0}, !downloadingSkyspotsData ? {opacity: 0} : null ]}>
+                    <Bubble style={{}}>
+                      <View style={[styles.bubleContainer]}>
+                      <View style={styles.downloadTitleContainer}>
+                        <Text style={styles.downloadTitleText}>
+                          Descargando información
+                        </Text>
+                      </View>
+                      <View>
+                        <ActivityIndicator size="large" color='rgb(188,224,253)' />
+                      </View>
+                      </View>
+                    </Bubble>
+                  </View>
                 ) : null}
 
                 {(downloadingImages) ? (
-                  <Bubble style={!downloadingImages ? {opacity: 0} : null}>
-                    <View style={[styles.bubleContainer]}>
-                    <View style={styles.downloadTitleContainer}>
-                      <Text style={styles.downloadTitleText}>
-                        Descargando imagenes
-                      </Text>
-                    </View>
-                    <View>
-                      <ActivityIndicator size="large" color='rgb(188,224,253)' />
-                    </View>
-                    </View>
-                  </Bubble>
+                  <View style={[{backgroundColor: 'rgba(0,0,0,0.6)', height: '100%', width: '100%', position: 'absolute', top: 0}, !downloadingImages ? {opacity: 0} : null ]}>
+                    <Bubble style={{}}>
+                      <View style={[styles.bubleContainer]}>
+                      <View style={styles.downloadTitleContainer}>
+                        <Text style={styles.downloadTitleText}>
+                          Descargando imagenes
+                        </Text>
+                      </View>
+                      <View>
+                        <ActivityIndicator size="large" color='rgb(188,224,253)' />
+                      </View>
+                      </View>
+                    </Bubble>
+                  </View>
                 ) : null}
 
         <View style={styles.goBackContainer}>
@@ -792,10 +829,10 @@ const styles = StyleSheet.create({
   downloadTitleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 5
+    marginBottom: 10
   },
   downloadTitleText: {
-    fontSize: 19,
+    fontSize: 16,
     fontFamily: 'HouschkaRoundedAltDemiBold',
     color: 'rgb(255,255,255)',
     letterSpacing: 1.9

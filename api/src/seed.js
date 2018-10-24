@@ -73,7 +73,7 @@ const setUp = init.then(() => Trip.create(aTrip))
     name: 'Test solo con ids',
     originId: 1,
     destinationId: 2}))
-  .then(trip => trip.setSkyspots([1,2,3,4]))
+  .then(trip => trip.setSkyspots([1,2,3,4,9]))
   .then(()=> Trip.create({
     name: 'Test trip 2',
     originId: 1,
