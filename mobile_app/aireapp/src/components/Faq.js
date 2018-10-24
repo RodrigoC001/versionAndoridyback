@@ -127,6 +127,12 @@ const s = StyleSheet.create({
     fontFamily: 'HouschkaRoundedAltLight',
     fontSize: 15,
     lineHeight: 19
+  },
+  strong: {
+    color: 'rgb(255,255,255)',
+    fontFamily: 'HouschkaRoundedAltDemiBold',
+    fontSize: 15,
+    lineHeight: 19
   }
 });
 

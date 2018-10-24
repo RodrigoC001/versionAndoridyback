@@ -680,9 +680,7 @@ class MapBoxContainer extends Component<{}> {
     if(!this.state.longitude) {
      return (
        <View style={{backgroundColor: 'rgb(64,76,155)', flex: 1, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 20}}>
-         <Text style={[styles.downloadTitleText, {textAlign: 'center'}]}>
-           Necesitamos poder acceder a tu ubicación para continuar con la aplicación
-         </Text>
+         <ActivityIndicator size="large" color='rgb(188,224,253)' />
        </View>
      ); 
     }
