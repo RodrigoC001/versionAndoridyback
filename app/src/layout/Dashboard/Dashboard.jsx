@@ -48,7 +48,6 @@ function mapDispatchToProps(dispatch) {
 
 const switchRoutes = (
   <Switch>
-    <Route  path="/login" component={Login} />
     <Route  path="/trips/:id" component={ModificarRuta} />
     <Route  path="/skyspots/:id" component={ModificarSkyspot} />
     <Route  path="/origendestino/:id" component={ModificarOrigenDestino} />
@@ -90,7 +89,7 @@ class App extends React.Component {
   handleLoginFailure = () => {
     this.props.history.push('/login')
   }
-  componentWillMount() {
+  componentDidMount() {
     this.props.getMeRequest()
       .then(data => {
         console.log('this.props.user', this.props.user)
@@ -98,8 +97,7 @@ class App extends React.Component {
           this.handleLoginFailure()
         }
       })
-  }
-  componentDidMount() {
+
     if (navigator.platform.indexOf("Win") > -1) {
       const ps = new PerfectScrollbar(this.refs.mainPanel);
     }
@@ -107,7 +105,9 @@ class App extends React.Component {
   }
   componentDidUpdate(e) {
     if (e.history.location.pathname !== e.location.pathname) {
-      this.refs.mainPanel.scrollTop = 0;
+      if(this.refs.mainPanel) {
+        this.refs.mainPanel.scrollTop = 0;
+      }
       if (this.state.mobileOpen) {
         this.setState({ mobileOpen: false });
       }
@@ -118,8 +118,8 @@ class App extends React.Component {
   }
   render() {
     const { classes, ...rest } = this.props;
-    if(this.props.fetching) return <div style={styleCss}><CircularProgress size={50} /></div>
     // if(true) return <Login />
+    // if(this.props.fetching) return <div style={styleCss}><CircularProgress size={50} /></div>
     return (
       <div className={classes.wrapper}>
         <Sidebar
@@ -133,20 +133,21 @@ class App extends React.Component {
           {...rest}
         />
         <div className={classes.mainPanel} ref="mainPanel">
-          <Header
-            routes={dashboardRoutes}
-            handleDrawerToggle={this.handleDrawerToggle}
-            {...rest}
-          />
-          {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-          {this.getRoute() ? (
-            <div className={classes.content}>
-              <div className={classes.container}>{switchRoutes}</div>
+        {
+          this.props.fetching ? <div style={styleCss}><CircularProgress size={50} /></div> 
+          : (
+            <div>
+            <Header
+              routes={dashboardRoutes}
+              handleDrawerToggle={this.handleDrawerToggle}
+              {...rest}
+            />
+              <div className={classes.content}>
+                <div className={classes.container}>{switchRoutes}</div>
+              </div>
             </div>
-          ) : (
-            <div className={classes.map}>{switchRoutes}</div>
-          )}
-        {/*  {this.getRoute() ? <Footer /> : null}*/}
+            )
+        }
         </div>
       </div>
     );

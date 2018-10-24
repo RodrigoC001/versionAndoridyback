@@ -72,15 +72,6 @@ class Login extends React.Component {
     openSuccess: false,
     openFailure: false
   }
-  componentDidMount() {
-    // console.log('this.props del login', this.props)
-    this.props.getMeRequest()
-      .then(data => {
-        if(this.props.user) {
-          this.handleLoginSucces()
-        }
-      })
-  }
   handleChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   }
@@ -99,6 +90,15 @@ class Login extends React.Component {
         console.log('props after login', this.props)
       })
 
+  }
+  componentDidMount() {
+    this.props.getMeRequest()
+      .then(data => {
+        console.log('this.props.user', this.props.user)
+        if(this.props.user) {
+          this.handleLoginSucces()
+        }
+      })
   }
   handleLoginSucces = () => {
     this.props.history.push('/crearruta')

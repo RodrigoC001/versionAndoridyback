@@ -75,7 +75,7 @@ export function getMeRequest() {
         return dispatch(getMeSuccess(response))
       })
       .catch(error => {
-        console.log('eror en el destinations request', error)
+        console.log('eror en el auth request', error)
         return dispatch(getMeFailure(error))
       });
   };
