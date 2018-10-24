@@ -71,6 +71,8 @@ class AgregarOrigenDestino extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
 
+    if(this.state.address === '') return this.showNotificationFailure()
+
     const createOriginAndDestination = [
       this.props.postOrigin({address: this.state.address}),
       this.props.postDestination({address: this.state.address})
@@ -157,7 +159,7 @@ class AgregarOrigenDestino extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al crear este Origen & Destino"
+            message="Error, verifica que todos los campos esten completos"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close

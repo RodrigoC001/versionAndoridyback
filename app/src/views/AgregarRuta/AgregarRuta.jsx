@@ -131,7 +131,7 @@ class AgregarRuta extends React.Component {
   checkBox = name => event => {
     this.setState({ [name]: event.target.checked});
   }
-  handleSubmit = (event) => {
+/*  handleSubmit = (event) => {
     event.preventDefault();
 
     const createOriginAndDestination = [
@@ -163,7 +163,7 @@ class AgregarRuta extends React.Component {
         this.showNotificationFailure()
         console.log('err en el PromiseAll', err)
       })
-  }
+  }*/
   handleSubmit = (event) => {
     const originId = this.state.originAddress
     const destinationId = this.state.destinationAddress
@@ -175,8 +175,16 @@ class AgregarRuta extends React.Component {
     delete skyspotsObject.openSuccess
     delete skyspotsObject.openFailure
     const skyspotsArray = Object.keys(skyspotsObject)
-
+  
     event.preventDefault();
+
+    console.log('skyspotsArray', skyspotsArray)
+    
+    if(this.state.name === '') return this.showNotificationFailure()
+    if(this.state.originAddress === '') return this.showNotificationFailure()
+    if(this.state.destinationAddress === '') return this.showNotificationFailure()
+    if(skyspotsArray.length === 0) return this.showNotificationFailure()
+
 
     this.props.postTrip({
       name: this.state.name,
@@ -354,7 +362,7 @@ class AgregarRuta extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al crear esta Ruta"
+            message="Error, verifica que todos los campos esten completos"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close

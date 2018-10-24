@@ -187,6 +187,11 @@ class ModificarRuta extends React.Component {
 
     const skyspotsArray = Object.keys(skyspotsObject)
 
+    if(this.state.name === '') return this.showNotificationFailure()
+    if(this.state.originAddress === '') return this.showNotificationFailure()
+    if(this.state.destinationAddress === '') return this.showNotificationFailure()
+    if(skyspotsArray.length === 0) return this.showNotificationFailure()
+
     this.props.putTrip(id, {
       name: this.state.name,
       originId,
@@ -221,9 +226,9 @@ class ModificarRuta extends React.Component {
   showNotificationFailure = () => {
     this.setState({
       openFailure: true, 
-      name: '',
-      originAddress: '',
-      destinationAddress: ''
+      // name: '',
+      // originAddress: '',
+      // destinationAddress: ''
     });
     setTimeout(function(){
             this.setState({openFailure: false});
@@ -364,7 +369,7 @@ class ModificarRuta extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al intentar modificar esta Ruta"
+            message="Error, verifica que todos los campos esten completos"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close

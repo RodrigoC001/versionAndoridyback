@@ -97,6 +97,8 @@ class AgregarOrigenDestino extends React.Component {
     
     event.preventDefault();
 
+    if(this.state.address === '') return this.showNotificationFailure()
+
     const modifyOriginAndDestination = [
       this.props.putOrigin(id, {address: this.state.address}),
       this.props.putDestination(id, {address: this.state.address})
@@ -123,7 +125,7 @@ class AgregarOrigenDestino extends React.Component {
   showNotificationFailure = () => {
     this.setState({
       openFailure: true, 
-      address: '',
+      // address: '',
     });
     setTimeout(function(){
             this.setState({openFailure: false});
@@ -184,7 +186,7 @@ class AgregarOrigenDestino extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al intentar modificar este Origen & Destino"
+            message="Error, verifica que todos los campos esten completos"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close

@@ -9,6 +9,13 @@ import axios from 'axios';
 
 import Button from "Components/CustomButtons/Button.jsx";
 
+
+
+// Alert components
+import AddAlert from "@material-ui/icons/AddAlert";
+import Snackbar from "Components/Snackbar/Snackbar.jsx"
+
+
 /*const divStyle = {
   backgroundColor: 'white',
 };*/
@@ -18,6 +25,8 @@ export default class TerminosContainer extends React.Component {
     super(props);
     this.state = {
       texto: EditorState.createEmpty(),
+      openSuccess: false,
+      openFailure: false,
     };
     this.onEditorStateChange = this.onEditorStateChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -38,7 +47,26 @@ export default class TerminosContainer extends React.Component {
     // e.preventDefault();
     const texto = draftToHtml(convertToRaw(this.state.texto.getCurrentContent()));
     axios.post('api/terminos', { termsAndPrivacy: texto })
-      .then(()=> console.log('modificado'));
+      .then(()=> this.showNotificationSuccess())
+      .catch(()=> this.showNotificationFailure())
+  }
+  showNotificationSuccess = () => {
+    this.setState({
+      openSuccess: true, 
+      address: '',
+    });
+    setTimeout(function(){
+            this.setState({openSuccess: false})
+        }.bind(this),1000);
+  }
+  showNotificationFailure = () => {
+    this.setState({
+      openFailure: true, 
+      // address: '',
+    });
+    setTimeout(function(){
+            this.setState({openFailure: false});
+        }.bind(this),6000);
   }
   onEditorStateChange(e) {
     this.setState({ texto: e });
@@ -56,6 +84,28 @@ export default class TerminosContainer extends React.Component {
           <div style={{marginTop: 50, display: 'flex', justifyContent: 'flex-end'}} onClick={()=> this.onSubmit()}>
             <Button type="submit" color="primary">Enviar</Button>
           </div>
+        <div>
+          <Snackbar
+            place="bc"
+            color="success"
+            icon={AddAlert}
+            message="Privacidad y Terminos modificado!"
+            open={this.state.openSuccess}
+            closeNotification={() => this.setState({openSuccess:false})}
+            close
+          />
+        </div>
+        <div>
+          <Snackbar
+            place="bc"
+            color="danger"
+            icon={AddAlert}
+            message="Error, verifica que todos los campos esten completos"
+            open={this.state.openFailure}
+            closeNotification={() => this.setState({openFailure:false})}
+            close
+          />
+        </div>
       </div>);
   }
 }

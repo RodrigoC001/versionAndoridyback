@@ -60,13 +60,19 @@ class AgregarSkyspot extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   }
   handleSubmit = (event) => {
+    event.preventDefault();
+
+    if(this.state.name === '') return this.showNotificationFailure()
+    if(this.state.data === '') return this.showNotificationFailure()
+    if(this.state.latitude === '') return this.showNotificationFailure()
+    if(this.state.longitude === '') return this.showNotificationFailure()
+
     this.props.postSkyspot({
       name: this.state.name, 
       data: this.state.data, 
       latitude: this.state.latitude, 
       longitude: this.state.longitude
     }, this.showNotificationSuccess, this.showNotificationFailure)
-    event.preventDefault();
   }
   showNotificationSuccess = () => {
     this.setState({
@@ -197,7 +203,7 @@ class AgregarSkyspot extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al crear este Skyspot"
+            message="Error, verifica que todos los campos esten completos"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close

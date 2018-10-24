@@ -93,6 +93,11 @@ class ModificarSkyspot extends React.Component {
     
     event.preventDefault();
 
+    if(this.state.name === '') return this.showNotificationFailure()
+    if(this.state.data === '') return this.showNotificationFailure()
+    if(this.state.latitude === '') return this.showNotificationFailure()
+    if(this.state.longitude === '') return this.showNotificationFailure()
+
     this.props.putSkyspot(id, {
       name: this.state.name, 
       data: this.state.data, 
@@ -115,10 +120,10 @@ class ModificarSkyspot extends React.Component {
   showNotificationFailure = () => {
     this.setState({
       openFailure: true, 
-      name: '', 
-      data: '', 
-      latitude: '', 
-      longitude: ''
+      // name: '', 
+      // data: '', 
+      // latitude: '', 
+      // longitude: ''
     });
     setTimeout(function(){
             this.setState({openFailure: false});
@@ -230,7 +235,7 @@ class ModificarSkyspot extends React.Component {
             place="bc"
             color="danger"
             icon={AddAlert}
-            message="Hubo un error al intentar modificar este Skyspot"
+            message="Error, verifica que todos los campos esten completos"
             open={this.state.openFailure}
             closeNotification={() => this.setState({openFailure:false})}
             close
