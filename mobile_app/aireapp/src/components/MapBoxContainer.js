@@ -653,6 +653,14 @@ class MapBoxContainer extends Component<{}> {
       renderModal: false
     })
   }
+  centerMap = () => {
+    // usar esta funcion, pero fijarse que la primera vez que le das permiso a la aplicación no tenes automaticamente esto de la latitud y la longitud, capaz conviene pedirlo una pantalla antes
+    if (this.state.latitude && this.state.longitude) {
+      this._map.setCamera({
+        centerCoordinate: [this.state.longitude, this.state.latitude],
+      })
+    }
+  }
   render() {
 
     const { offlineRegionStatus, downloadingSkyspotsData, downloadingImages } = this.state;
@@ -676,6 +684,7 @@ class MapBoxContainer extends Component<{}> {
     return (
       <View style={styles.container}>
         <Mapbox.MapView
+          ref={map => { this._map = map; }}
           styleURL={'mapbox://styles/lautarogrande/cjl4qetsg5t072snrwgh08jaa'}
           zoomLevel={3}
           centerCoordinate={CENTER_COORD}
