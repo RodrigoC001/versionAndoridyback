@@ -3,7 +3,6 @@ package com.aireapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.mapbox.rctmgl.RCTMGLPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.mapbox.rctmgl.RCTMGLPackage;

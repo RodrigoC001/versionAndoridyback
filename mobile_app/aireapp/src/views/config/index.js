@@ -18,6 +18,7 @@ const configData = [{
       [
         {text: 'OK', onPress: () => {
           AsyncStorage.clear()
+            .then((data)=> console.log('async storage cleared', data) )
         }},
         {text: 'Cancelar', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
       ],

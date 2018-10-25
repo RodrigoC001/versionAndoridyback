@@ -141,6 +141,7 @@ class MapBoxContainer extends Component<{}> {
         })
         if(data[0] !== undefined) {
           // si entraa aca significa que ya se bajaron las imagenes en cache previamente
+          console.log('si entraa aca significa que ya se bajaron las imagenes en cache previamente')
           this.setState({
             downloadingImages: false
           })
@@ -188,7 +189,7 @@ class MapBoxContainer extends Component<{}> {
               // console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
 
               if(this.state.counter === this.props.skyspotsArrayForMap.length) {
-                // console.log('entra a este if y pone downloadingImages en false')
+                console.log('entra a este if y pone downloadingImages en false')
                 this.setState({
                   downloadingImages: false
                 })
@@ -211,7 +212,7 @@ class MapBoxContainer extends Component<{}> {
       .then((res) => {
         // console.log('res del rn fetch blob es', res)
         // the temp file path with file extension `png`
-        // console.log('The file saved to ', res.path())
+        console.log('The file saved to ', res.path())
         // Beware that when using a file path as Image source on Android,
         // you must prepend "file://"" before the file path
         // imageView = <Image source={{ uri :  }}/>
@@ -242,6 +243,7 @@ class MapBoxContainer extends Component<{}> {
 
               if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
                  // entra aca si tiene una sola iamgen
+                console.log('entra aca si tiene una sola iamgen', this.state[dataLink + 'imgArray'] )
                 return this.pushImageToAsyncStorageArray(title, this.state[dataLink + 'imgArray'], dataLink)
               }
             }) 
@@ -260,6 +262,7 @@ class MapBoxContainer extends Component<{}> {
                 // newStateWithDataLinkId con el array lleno a partir de la segunda vez
               if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
                 // entra aca con más de una imagen!!!
+                console.log('entra entra aca con más de una imagen!!!', this.state[dataLink + 'imgArray'] )
                 return this.pushImageToAsyncStorageArray(title, this.state[dataLink + 'imgArray'], dataLink)
               }
             })
@@ -273,7 +276,7 @@ class MapBoxContainer extends Component<{}> {
                     return AsyncStorage.getItem(`${dataLink}_imageArray`)
                       .then(req => JSON.parse(req))
                       .then(array => {
-                        // console.log('img array is created, finded and is', array)
+                        console.log('img array is created, finded and is', array)
                         return array
                       })
                   })
@@ -430,7 +433,7 @@ class MapBoxContainer extends Component<{}> {
 
         return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
           .then(imgArray=> {
-            // console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
+            console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
 
             let downloadedSkyspotObj = {}
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Keyboard, Dimensions, ActivityIndicator, PermissionsAndroid} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image, ImageBackground, TouchableOpacity, TextInput, Keyboard, Dimensions, ActivityIndicator, PermissionsAndroid, AsyncStorage, NetInfo} from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -16,7 +16,8 @@ const mapStateToProps = state => ({
   possibleDestinations: state.trips.possibleDestinations,
   originsFetching: state.origins.fetching,
   tripsFetching: state.trips.fetching,
-  selectedTrip: state.trips.selectedTrip
+  selectedTrip: state.trips.selectedTrip,
+  skyspotsArrayForMap: state.trips.skyspotsArrayForMap
 });
 
 function mapDispatchToProps(dispatch) {
@@ -35,12 +36,89 @@ class Search extends React.Component {
     permission: false
   }
   componentDidMount() {
+    console.log('entra al did mount')
     this.addKeyboardEventListener()
 
-    this.props.getOriginsRequest()
-      .then(origins => {
-        this.setState({origins: this.props.origins.data})
+    this.findOrCreateDownloadedTripsAsyncStorageFolder()
+      .then(data => console.log('lo que retorna el findOrCreateDownloadedTripsAsyncStorageFolder es', data))
+
+    this.getConnectionInfo()
+      .then(connectionInfo => {
+        if (connectionInfo === 'none') {
+          // no hay conexion y entra  a este if
+          // aca hago lo necesario para levantar esa info de forma offline
+          console.log('no hay conexion y entra a este if', connectionInfo)
+          return null
+        }
+        return this.props.getOriginsRequest()    
       })
+      .then(origins => {
+        if(origins) {
+          console.log('Primer paso con internet, array de origins', this.props.origins.data)
+          this.setState({origins: this.props.origins.data})
+        }
+      })
+
+    
+  }
+  getConnectionInfo = () => {
+    return NetInfo.getConnectionInfo()
+      .then((connectionInfo) => {
+      // console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+      return connectionInfo.type
+      });
+  }
+  findOrCreateDownloadedTripsAsyncStorageFolder = () => {
+    return AsyncStorage.getItem('tripsArray')
+         .then(req => JSON.parse(req))
+         .then(json => {
+          if(json) {
+            console.log('the trips array async storage folder already exists and is', json)
+            return json
+          }
+          if(!json) {
+            const emptyArray = [];
+            return AsyncStorage.setItem('tripsArray', JSON.stringify(emptyArray))
+                  .then(json => {
+                    return AsyncStorage.getItem('tripsArray')
+                    .then(data => {
+                      console.log('trips array storage folder is created for the first time and is', JSON.parse(data))
+                      return JSON.parse(data)
+                    })
+                  })
+                  .catch(error => console.log('error!', error));
+          }
+         })
+         .catch(error => console.log('error!', error));
+  }
+  pushFinalTripToAsyncStorage = (tripObject) => {
+   return AsyncStorage.getItem('tripsArray')
+         .then(req => JSON.parse(req))
+         .then(json => {
+          if(json) {
+            let clonedArray = json.slice()
+            //clono el arreglo que me llega, y le pusheo el tripObject que tengo, 
+            // console.log('el array, antes de pushearle algo es', clonedArray)
+            
+            // valido que si ya existe, no lo pusheo y corto ahi
+            for (var i = 0; i < clonedArray.length; i++) {
+              if(clonedArray[i].id === tripObject.id) {
+                return null
+              }
+            }
+
+            clonedArray.push(tripObject)
+            // console.log('finalArray es', clonedArray)
+            return AsyncStorage.setItem('tripsArray', JSON.stringify(clonedArray))
+          }
+         })
+         .then(json => AsyncStorage.getItem('tripsArray'))
+         .then(req => JSON.parse(req))
+         .then(data => {
+                      console.log('se pusheo al arreglo, y el arreglo final que queda guardado en async storage es', data)
+                      return data
+                    })
+         .catch(error => console.log('error!', error)); 
   }
   requestLocationPermission = async () => {
     try {
@@ -92,6 +170,8 @@ class Search extends React.Component {
 
    selectedTripObject && this.props.getTripsWithOriginRequest(selectedTripObject.id)
     .then(data => {
+      // console.log('Segundo paso, get trip with Origin, el origin seleccionado es', selectedTripObject)
+      // console.log('Segundo paso, todas las posibles destinations son', this.props.possibleDestinations.data)
       this.setState({destinations: this.props.possibleDestinations.data})
     })
   }
@@ -111,7 +191,17 @@ class Search extends React.Component {
         
         if(this.state.permission) {
           this.props.getTripRequest(finalTripObject.id)
-            .then((data)=> this.props.navigation.navigate('BottomTabs'))         
+            .then((data)=> {
+              console.log('Tercer paso, getSelectedTripWithOriginAndDestination, el destination seleccionado es', address)
+              console.log('Tercer paso, el final trip seleccionado es', this.props.selectedTrip.data)
+              console.log('Tercer paso, el array final de skyspots del trip seleccionado es', this.props.skyspotsArrayForMap)
+
+              return this.pushFinalTripToAsyncStorage(this.props.selectedTrip.data)
+            })
+            .then(data => {
+              console.log('lo que llega del pushFinalTripToAsyncStorage es', data)
+              this.props.navigation.navigate('BottomTabs')
+            })         
         }
 
       })
