@@ -68,13 +68,13 @@ const Sidebar = ({ ...props }) => {
     </List>
   );
   var brand = (
-    <div className={classes.logo}>
-      <a href="http://localhost" className={classes.logoLink}>
+    <div className={classes.logo} style={{cursor: 'pointer'}} onClick={()=> props.history.push('/')}>
+      <div className={classes.logoLink}>
         <div className={classes.logoImage}>
           <img src={logo} alt="logo" className={classes.img} />
         </div>
         Ai.re
-      </a>
+      </div>
     </div>
   );
   return (
