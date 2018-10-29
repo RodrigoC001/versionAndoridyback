@@ -114,6 +114,7 @@ class MapBoxContainer extends Component<{}> {
   }
   componentWillUnmount() {
     console.log('entra al will unmount')
+    this.props.navigation.state.params.getBackFromChildComponentAndUpdate(true)
     // avoid setState warnings if we back out before we finishing downloading
   /*  Mapbox.offlineManager.deletePack(this.state.name);
     Mapbox.offlineManager.unsubscribe(this.state.name)*/;

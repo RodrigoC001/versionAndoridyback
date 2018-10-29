@@ -39,6 +39,10 @@ class Search extends React.Component {
   componentDidMount() {
     console.log('entra al did mount')
     this.addKeyboardEventListener()
+    this.startFlow()
+  }
+  startFlow = () => {
+    console.log('begins flow');
 
     this.findOrCreateDownloadedTripsAsyncStorageFolder()
       .then(data => {
@@ -69,11 +73,15 @@ class Search extends React.Component {
           this.setState({origins: this.props.origins.data})
         }
       })
-
-    // primero asegurarse que algo se crea o vuelve, despues 
-    // this.getConnectionInfo()
-
-    
+  }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    console.log('entra al did update');
+  }
+  getBackFromChildComponentAndUpdate = (data) => {
+    // si vuelvo para atras, hago lo mismo que en el didMount : checkeo si tengo internet o no (puede ser que en la pantalla de adelante, el usuario haya bajado el mapa, y despues vuelve para tras y queda ahi)
+    if(data) {
+      this.startFlow()
+    }
   }
   getConnectionInfo = () => {
     return NetInfo.getConnectionInfo()
@@ -231,7 +239,7 @@ class Search extends React.Component {
           console.log('no hay conexion y entra a este if en el tercer paso', connectionInfo)
           this.props.grabDataFromAsyncStorage(finalTripObject)
           console.log('this.props.skyspotsArrayForMap sacado del async storage es', this.props.skyspotsArrayForMap)
-          this.props.navigation.navigate('BottomTabs')
+          this.props.navigation.navigate('BottomTabs',  {getBackFromChildComponentAndUpdate: this.getBackFromChildComponentAndUpdate})
           return null
         }
 
@@ -248,7 +256,7 @@ class Search extends React.Component {
           return this.pushFinalTripToAsyncStorage(this.props.selectedTrip.data)
             .then(data => {
             console.log('lo que llega del pushFinalTripToAsyncStorage es', data)
-            this.props.navigation.navigate('BottomTabs')
+            this.props.navigation.navigate('BottomTabs', {getBackFromChildComponentAndUpdate: this.getBackFromChildComponentAndUpdate})
             }) 
         }
 
