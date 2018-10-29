@@ -25,6 +25,16 @@ function Header({ ...props }) {
     });
     return name;
   }
+  function makePath() {
+    var pathFinal;
+    props.routes.map((prop, key) => {
+      if (prop.path === props.location.pathname) {
+        pathFinal = prop.path;
+      }
+      return null;
+    });
+    return pathFinal;
+  }
   const { classes, color } = props;
   const appBarClasses = classNames({
     [" " + classes[color]]: color
@@ -34,7 +44,7 @@ function Header({ ...props }) {
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
-          <Button color="transparent" href="#" className={classes.title}>
+          <Button color="transparent" href={makePath()} className={classes.title}>
             {makeBrand()}
           </Button>
         </div>
