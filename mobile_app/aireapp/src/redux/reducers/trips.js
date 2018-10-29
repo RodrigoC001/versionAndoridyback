@@ -50,6 +50,7 @@ export default function trips(state = defaultStartState, action) {
         error: action.payload.error
       });
     case "GRAB_DATA_FROM_ASYNC_STORAGE":
+      console.log('action.payload.response de grab data from async storage is', action.payload.response)
       let skyspotsFromAsync = action.payload.response.skyspots
       let skyspotsArrayForMapFromAsync = skyspotsFromAsync.map(skyspot => {
         let newArr = []

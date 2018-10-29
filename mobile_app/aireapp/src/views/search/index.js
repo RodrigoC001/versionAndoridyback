@@ -80,6 +80,10 @@ class Search extends React.Component {
   getBackFromChildComponentAndUpdate = (data) => {
     // si vuelvo para atras, hago lo mismo que en el didMount : checkeo si tengo internet o no (puede ser que en la pantalla de adelante, el usuario haya bajado el mapa, y despues vuelve para tras y queda ahi)
     if(data) {
+      this.setState({
+        query: '',
+        query2: '' 
+      })
       this.startFlow()
     }
   }
