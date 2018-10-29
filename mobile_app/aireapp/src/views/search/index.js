@@ -33,21 +33,32 @@ class Search extends React.Component {
     query: '',
     destinations: [],
     query2: '',
-    permission: false
+    permission: false,
+    asyncStorageTripsArray: null
   }
   componentDidMount() {
     console.log('entra al did mount')
     this.addKeyboardEventListener()
 
     this.findOrCreateDownloadedTripsAsyncStorageFolder()
-      .then(data => console.log('lo que retorna el findOrCreateDownloadedTripsAsyncStorageFolder es', data))
-
-    this.getConnectionInfo()
+      .then(data => {
+        this.setState({
+          asyncStorageTripsArray: data
+        })
+        console.log('lo que retorna el findOrCreateDownloadedTripsAsyncStorageFolder es', data)
+      })
+      .then(()=> this.getConnectionInfo())
       .then(connectionInfo => {
         if (connectionInfo === 'none') {
           // no hay conexion y entra  a este if
-          // aca hago lo necesario para levantar esa info de forma offline
           console.log('no hay conexion y entra a este if', connectionInfo)
+          // aca hago lo necesario para levantar esa info de forma offline
+          let asyncStorageTripsArray = this.state.asyncStorageTripsArray
+          let arrayFinal = asyncStorageTripsArray.map(trip => trip.origin)
+          
+          console.log('arrayFinal', arrayFinal)
+
+          this.setState({origins: arrayFinal})
           return null
         }
         return this.props.getOriginsRequest()    
@@ -58,6 +69,9 @@ class Search extends React.Component {
           this.setState({origins: this.props.origins.data})
         }
       })
+
+    // primero asegurarse que algo se crea o vuelve, despues 
+    // this.getConnectionInfo()
 
     
   }
@@ -168,12 +182,31 @@ class Search extends React.Component {
     // con la string de la address, busco el id de esa address en el arreglo de origins
     let selectedTripObject = this.state.origins && this.state.origins.find(origin => origin.address.toLowerCase().trim() === address.toLowerCase().trim());
 
-   selectedTripObject && this.props.getTripsWithOriginRequest(selectedTripObject.id)
-    .then(data => {
-      // console.log('Segundo paso, get trip with Origin, el origin seleccionado es', selectedTripObject)
-      // console.log('Segundo paso, todas las posibles destinations son', this.props.possibleDestinations.data)
-      this.setState({destinations: this.props.possibleDestinations.data})
-    })
+    selectedTripObject && 
+      this.getConnectionInfo()
+        .then(connectionInfo => {
+          if (connectionInfo === 'none') {
+            // no hay conexion y entra  a este if
+            console.log('no hay conexion y entra a este if en el segundo paso', connectionInfo)
+            let asyncStorageTripsArray = this.state.asyncStorageTripsArray
+            
+            let arrayDestinations = asyncStorageTripsArray.filter(trip => trip.originId === selectedTripObject.id)
+            
+            console.log('arrayDestinations', arrayDestinations)
+
+            this.setState({destinations: arrayDestinations})
+            return null
+          }
+          return this.props.getTripsWithOriginRequest(selectedTripObject.id)
+        })
+        .then(trips => {
+          if(trips) {
+            console.log('Segundo paso, get trip with Origin, el origin seleccionado es', selectedTripObject)
+            console.log('Segundo paso, todas las posibles trips son, con sus respectivos destinations y origins', this.props.possibleDestinations.data)
+
+            this.setState({destinations: this.props.possibleDestinations.data})
+          }
+        })
   }
   getSelectedTripWithOriginAndDestination = (address) => {
     // cuando hago la busqueda, scrolleo arriba de todo
@@ -181,31 +214,45 @@ class Search extends React.Component {
     // una vez que tengo el origen y el destino que quiere, filtro para conseguir el trip al cual voy a navegar
     let finalTripObject = this.state.destinations && this.state.destinations.find(trip => trip.destination.address.toLowerCase().trim() === address.toLowerCase().trim());
 
+    console.log('finalTripObject is', finalTripObject)
+
     // una vez que tengo el trip seleccionado y puesto en el store, navego a la pantalla principal
 /*    finalTripObject && this.props.getTripRequest(finalTripObject.id)
       .then((data)=> this.props.navigation.navigate('BottomTabs'))
 */
+
+
     finalTripObject && 
     this.requestLocationPermission()
-      .then(data => {
-        
-        if(this.state.permission) {
-          this.props.getTripRequest(finalTripObject.id)
-            .then((data)=> {
-              console.log('Tercer paso, getSelectedTripWithOriginAndDestination, el destination seleccionado es', address)
-              console.log('Tercer paso, el final trip seleccionado es', this.props.selectedTrip.data)
-              console.log('Tercer paso, el array final de skyspots del trip seleccionado es', this.props.skyspotsArrayForMap)
+      .then(()=> this.getConnectionInfo())
+      .then(connectionInfo => {
+        if (connectionInfo === 'none') {
+          // no hay conexion y entra  a este if
+          console.log('no hay conexion y entra a este if en el tercer paso', connectionInfo)
+          this.props.grabDataFromAsyncStorage(finalTripObject)
+          console.log('this.props.skyspotsArrayForMap sacado del async storage es', this.props.skyspotsArrayForMap)
+          this.props.navigation.navigate('BottomTabs')
+          return null
+        }
 
-              return this.pushFinalTripToAsyncStorage(this.props.selectedTrip.data)
-            })
+        if(this.state.permission) {
+          return this.props.getTripRequest(finalTripObject.id)
+        }
+      })
+      .then(trip => {
+        if(trip) {
+          console.log('Tercer paso, getSelectedTripWithOriginAndDestination, el destination seleccionado es', address)
+          console.log('Tercer paso, el final trip seleccionado es', this.props.selectedTrip.data)
+          console.log('Tercer paso, el array final de skyspots del trip seleccionado es', this.props.skyspotsArrayForMap)
+
+          return this.pushFinalTripToAsyncStorage(this.props.selectedTrip.data)
             .then(data => {
-              console.log('lo que llega del pushFinalTripToAsyncStorage es', data)
-              this.props.navigation.navigate('BottomTabs')
-            })         
+            console.log('lo que llega del pushFinalTripToAsyncStorage es', data)
+            this.props.navigation.navigate('BottomTabs')
+            }) 
         }
 
       })
-
 
   }
   findOrigin(query) {

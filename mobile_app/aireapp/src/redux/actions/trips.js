@@ -76,3 +76,12 @@ export function getTripRequest(id) {
       });
   };
 }
+
+export function grabDataFromAsyncStorage(data) {
+  return {
+    type: "GRAB_DATA_FROM_ASYNC_STORAGE",
+    payload: {
+      response: data
+    }
+  };
+}

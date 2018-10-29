@@ -49,6 +49,24 @@ export default function trips(state = defaultStartState, action) {
         fetching: false,
         error: action.payload.error
       });
+    case "GRAB_DATA_FROM_ASYNC_STORAGE":
+      let skyspotsFromAsync = action.payload.response.skyspots
+      let skyspotsArrayForMapFromAsync = skyspotsFromAsync.map(skyspot => {
+        let newArr = []
+        newArr.push(skyspot.longitude)
+        newArr.push(skyspot.latitude)
+        let newObj = {}
+        newObj.id = skyspot.id
+        newObj.data = skyspot.data
+        newObj.coords = newArr
+        return newObj
+      })
+      console.log('skyspotsArrayForMapFromAsync', skyspotsArrayForMapFromAsync)
+      return Object.assign({}, state, {
+        fetching: false,
+        // selectedTrip: action.payload.response,
+        skyspotsArrayForMap: skyspotsArrayForMapFromAsync 
+      });      
     default:
       return state;
   }
