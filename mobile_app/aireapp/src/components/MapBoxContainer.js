@@ -101,7 +101,8 @@ class MapBoxContainer extends Component<{}> {
     localImagesArray: [],
     imgNodes: [],
     counter: 0,
-    downloadingImages: true
+    downloadingImages: true,
+    offlinePack: null
   }
   async componentWillMount() {
     if (IS_ANDROID) {
@@ -115,16 +116,23 @@ class MapBoxContainer extends Component<{}> {
   componentWillUnmount() {
     console.log('entra al will unmount')
     this.props.navigation.state.params.getBackFromChildComponentAndUpdate(true)
-    // avoid setState warnings if we back out before we finishing downloading
-  /*  Mapbox.offlineManager.deletePack(this.state.name);
-    Mapbox.offlineManager.unsubscribe(this.state.name)*/;
+    if(this.state.offlineRegionStatus.percentage < 100) {
+      // si desmonto el componente antes de que termine de bajar el mapa, lo borro y me desuscribo
+      // avoid setState warnings if we back out before we finishing downloading
+      Mapbox.offlineManager.deletePack(this.state.name);
+      Mapbox.offlineManager.unsubscribe(this.state.name);
+    }
   }
   async componentDidMount() {
     // aca es cuando me suscribo al pack que ya tengo. le pongo siempre el mismo nombre a todo, asi que me queda guardado ese. entra a un unhandled promise rejection porque ya existe un pack con ese nuevo cuando lo queire bajar. tengo que validar que si existe, no lo intente bajar. jugar con niveles de zoom.
     
     let offlinePack = await Mapbox.offlineManager.getPack(this.state.name);
 
-    console.log('offlinePack', offlinePack)
+    this.setState({
+      offlinePack: offlinePack
+    }, ()=> console.log('offlinePack', this.state.offlinePack))
+    
+    // console.log('offlinePack', offlinePack)
 
     this.getCurrentLocation()
 
@@ -562,6 +570,8 @@ class MapBoxContainer extends Component<{}> {
       maxZoom: 8 // maximo posible
     };
 
+    // si ya lo tengo bajado, no bajo, solo me suscribo en el didMount
+    if(this.state.offlinePack) return
     // start download
     Mapbox.offlineManager.createPack(options, this.onDownloadProgress);
   }
