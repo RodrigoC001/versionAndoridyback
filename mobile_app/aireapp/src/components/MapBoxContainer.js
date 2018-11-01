@@ -557,9 +557,9 @@ class MapBoxContainer extends Component<{}> {
       styleURL: 'mapbox://styles/lautarogrande/cjl4qetsg5t072snrwgh08jaa',
       // bounds: [[bounds[0], bounds[1]], [bounds[2], bounds[3]]],
       bounds: [[neLng, neLat], [swLng, swLat]],
-      minZoom: 3,
-      maxZoom: 5,
-      // maxZoom: 8,
+      minZoom: 1, // minimo
+      // maxZoom: 3,
+      maxZoom: 8 // maximo posible
     };
 
     // start download
@@ -725,7 +725,9 @@ class MapBoxContainer extends Component<{}> {
                       </Text>
                     </View>
                     <View>
-                      <ActivityIndicator size="large" color='rgb(188,224,253)' />
+                      <Text style={styles.downloadTitleText}>
+                        {Math.round(this.state.offlineRegionStatus.percentage)} %
+                      </Text>
                     </View>
 {/*
                     <View>
