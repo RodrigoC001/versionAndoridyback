@@ -1,0 +1,21 @@
+Splash Screen: 
+- falta agregar imagen ala avión con logo de aire
+Origen-Destino: 
+- poner fondo ala avión y que cuando sale teclado se pone azul.
+- si estas desconectado no podes acceder a la ruta descargada. Esto es muy importante ya que el usuario descarga la ruta antes de subir al avión. -- Listo!
+
+- agregar footer. supongamos que se abre la app arriba del avion sin tener descargada una ruta, deberia igualmente poder usar todas las secciones. -- no esta en el diseño y por consiguiente no en el presupuesto.
+
+Mapa: 
+- poner escala. recheckear en el presupuesto y diseño, creo que no esta.
+
+- imagen de skyspots hay espacio en blanco (igualmente cuando nos juntemos vemos en mas detalle tema wordpress. habias quedado que nos ibas a pasar que tipo de imagenes usar, tamaño texto, etc)
+
+Ya lo corregi lo mas posible. Igual, un espacio minimo siempre va a quedar porque las distintas imagenes tienen distintas alturas.
+
+- cuando esta un skyspot apretado y se ve mitad mapa mitad skyspotstory, al apretar en el mapa deberia bajarse el story. -- listo!
+
+- gif en los skyspot stories se ven como imagens y no como gif
+listo, era un problema en android.
+
+- esto suecede a veces - callout? esta arreglado? intentar encontrar cuando pasa.

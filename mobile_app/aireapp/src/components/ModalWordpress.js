@@ -138,7 +138,7 @@ class ModalWordpress extends React.Component {
           <View style={{flex: 1}}>
             <Image
               key={index}
-              style={{ width: width, height: 300, resizeMode: 'contain'}}
+              style={{ width: width, height: 250, resizeMode: 'contain'}}
               resizeMode='contain'
               source={{uri: item}} 
             />
@@ -190,7 +190,7 @@ class ModalWordpress extends React.Component {
     const interpolateDistance = this.animatedValue.interpolate({
       inputRange: [0, 1, 2],
       // hago este ternario raro para que la pantalla de atras de todo, ocupe o toda la pantalla o solo la mitad, asi permito que se pueda seguri moviendo el mapa (que sino, queda abajo de esa view y no se como propagar el evento a la view que queda abajo de la containerBig que es absoluto), lo mismo en el estilo inline de containerBig
-      outputRange: !this.state.showX ? [-FULL_SCREEN +TAB_BAR_HEIGHT, -75, -20] : [-FULL_SCREEN +TAB_BAR_HEIGHT, -MODAL_HEIGHT +TAB_BAR_HEIGHT, -20]
+      outputRange: !this.state.showX ? [-FULL_SCREEN +TAB_BAR_HEIGHT, -MODAL_HEIGHT, -20] : [-FULL_SCREEN +TAB_BAR_HEIGHT, -MODAL_HEIGHT +TAB_BAR_HEIGHT, -20]
       // corregir saltadito
       // outputRange: [-FULL_SCREEN, -MODAL_HEIGHT, -StatusBar.currentHeight]
       // aca el 75 es 55 del tab bar y 20 de la status bar creo, corregir calculo
@@ -215,7 +215,15 @@ class ModalWordpress extends React.Component {
     }
     return (
 
-      <Animated.View style={[s.containerBig, {top: !this.state.showX ? MODAL_HEIGHT - TAB_BAR_HEIGHT : null}]}>
+      // <Animated.View style={[s.containerBig, {top: !this.state.showX ? MODAL_HEIGHT - TAB_BAR_HEIGHT : null}]}>
+      <Animated.View style={[s.containerBig, {top: 0}]}>
+        
+          <TouchableOpacity 
+            style={{backgroundColor: 'rgba(0,0,0,0)', flex: 1}}
+            onPress={()=> this.props.close()} 
+          />
+        
+
         <Animated.View
           style={{
             zIndex: 10,
@@ -291,7 +299,8 @@ const s = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0)',
     width: '100%',
     height: '100%',
-    position: 'absolute'
+    position: 'absolute',
+    // backgroundColor: 'orange'
   },
   bigContainer: {
     height: 53,
