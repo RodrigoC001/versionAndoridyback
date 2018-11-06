@@ -19,3 +19,23 @@ Ya lo corregi lo mas posible. Igual, un espacio minimo siempre va a quedar porqu
 listo, era un problema en android.
 
 - esto suecede a veces - callout? esta arreglado? intentar encontrar cuando pasa.
+
+
+Nubes:
+- podes hacer que entre todo sin tener que bajar la pantalla. si necesitas pedirle a cami xfa hacelo-- listo!
+
+Porque esta nublado
+- no se ven textos -- listo, cami ya me paso las imagenes correctas.
+
+CONFIG:
+- cuando se gira pantalla no se baja el listado
+En el diseño no hay diseños para la pantalla de costado, asi que no fue tenido en cuenta en el presupuesto. Desactive que se pueda girar el celular, asi que solo se ve derecho aunque gires. -- Listo
+
+
+- justificar texto preguntas frecuentes y terminos y condiciones
+en Android no se puede justificar el texto, en iOS si. lo puse para iOS.
+
+AIRE:
+
+- justificar texto. Cami tiene la imagen con el texto justificado si lo necesitas.
+lo mismo que antes

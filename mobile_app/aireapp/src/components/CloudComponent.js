@@ -4,7 +4,7 @@ import {Platform, StyleSheet, Text, View, Image, ImageBackground, TouchableOpaci
 export default (props) => (
   <View style={s.container}>
   <TouchableOpacity onPress={()=> props.onPress()} activeOpacity={0.2}>
-    <ImageBackground source={props.icon} style={s.cloudComponent}>
+    <ImageBackground source={props.icon} style={[s.cloudComponent, {height: props.heightPerComponent}]}>
       <Text style={[s.cloudCardText, {color: props.textColor }]}>
         {props.title}
       </Text>
@@ -18,7 +18,7 @@ export default (props) => (
 const s = StyleSheet.create({
   cloudComponent: {
     zIndex: 1,
-    height: 163,
+    // height: 163,
     justifyContent: 'center',
     alignItems: 'center',
   },

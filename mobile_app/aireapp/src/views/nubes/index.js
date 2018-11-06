@@ -19,25 +19,41 @@ const nubesData = [{
   onPress: ()=> console.log('navigate')
 }]
 
-export default (props) => (
-  <View style={s.container}>
-      <View style={s.nubesContainer}>
-        <Text style={s.nubesText}>
-          NUBES
-        </Text>
+export default class NubesIndex extends React.Component {
+  state = {
+    remainingHeight: null
+  }
+  _getComponentDimensions = (event) => {
+    console.log('entra aca')
+    this.setState({
+      remainingHeight: event.nativeEvent.layout.height
+    })
+  }
+  render() {
+    return (
+      <View style={s.container}>
+          <View style={s.nubesContainer}>
+            <Text style={s.nubesText}>
+              NUBES
+            </Text>
+          </View>
+        <ScrollView
+          onLayout={ (event) => this._getComponentDimensions(event) }  
+          style={{flex: 1}}>
+          {nubesData.map((nube, index)=> <CloudComponent key={nube.id} heightPerComponent={this.state.remainingHeight / 3} title={nube.title} icon={nube.icon} textColor={index % 2 ? 'rgb(212,220,241)' : 'rgb(64,76,155)' } tintColor={index % 2 ? 'rgb(64,76,155)' : 'rgb(212,220,241)'} onPress={()=> nube.onPress(this.props)} />)}
+        </ScrollView>
       </View>
-    <ScrollView>
-      {nubesData.map((nube, index)=> <CloudComponent key={nube.id} title={nube.title} icon={nube.icon} textColor={index % 2 ? 'rgb(212,220,241)' : 'rgb(64,76,155)' } tintColor={index % 2 ? 'rgb(64,76,155)' : 'rgb(212,220,241)'} onPress={()=> nube.onPress(props)} />)}
-    </ScrollView>
-  </View>
-)
+    );
+  }
+}
+
 
 const s = StyleSheet.create({
   container: {
     flex: 1,
   },
   nubesContainer: {
-    height: 120,
+    height: 100,
     backgroundColor: '#3f4b9a',
     justifyContent: 'center',
     alignItems: 'center'

@@ -73,7 +73,8 @@ const s = StyleSheet.create({
     color: 'rgb(255,255,255)',
     fontFamily: 'HouschkaRoundedAltLight',
     fontSize: 15,
-    lineHeight: 19
+    lineHeight: 19,
+    textAlign: 'justify'
   },
   buttonPosition: {
     justifyContent: 'center',
