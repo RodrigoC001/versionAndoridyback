@@ -10,6 +10,10 @@ import * as destinationActions from "../../redux/actions/destinations";
 import * as originActions from "../../redux/actions/origins";
 import * as tripActions from "../../redux/actions/trips";
 
+
+import SplashScreen from 'react-native-splash-screen'
+
+
 const mapStateToProps = state => ({
   destinations: state.destinations.destinations,
   origins: state.origins.origins,
@@ -62,7 +66,7 @@ class Search extends React.Component {
           
           console.log('arrayFinal', arrayFinal)
 
-          this.setState({origins: arrayFinal})
+          this.setState({origins: arrayFinal}, ()=> SplashScreen.hide())
           return null
         }
         return this.props.getOriginsRequest()    
@@ -70,7 +74,7 @@ class Search extends React.Component {
       .then(origins => {
         if(origins) {
           console.log('Primer paso con internet, array de origins', this.props.origins.data)
-          this.setState({origins: this.props.origins.data})
+          this.setState({origins: this.props.origins.data},  ()=> SplashScreen.hide())
         }
       })
   }
