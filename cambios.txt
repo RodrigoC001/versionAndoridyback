@@ -16,3 +16,51 @@ Ademas, podes subir todos los origenes/destinos? Va el excel
 
 Listo.
 
+Splash Screen: 
+- falta agregar imagen ala avión con logo de aire
+Listo! Le agregue el icono tambien.
+
+
+Origen-Destino: 
+- poner fondo ala avión y que cuando sale teclado se pone azul.
+
+Listo! Les adjunto un .APK con esto de que cambia de color a imagen, y uno solo con el color de fondo. Yo les recomiendo que usen solo el que tiene el fondo de un solo color, pero por las dudas les mando los dos.
+
+- si estas desconectado no podes acceder a la ruta descargada. Esto es muy importante ya que el usuario descarga la ruta antes de subir al avión.
+Listo, ahora de las rutas descargadas tambien queda guardado su origen y destino, asi que cuando entras a la primer pantalla de busqueda, aunque no tengas conexión, te aparecen como opcion en los inputs las rutas que tenes descargadas. Las que no tenes, directamente no te aparecen.
+
+- agregar footer. supongamos que se abre la app arriba del avion sin tener descargada una ruta, deberia igualmente poder usar todas las secciones.
+Esto no esta contemplado en el diseño o el presupuesto, y requiere refactorear toda la navegación de la aplicación. Lo que podemos hacer es definir bien como deberia ser todo, lo presupuestamos y lo codeo.
+
+Mapa: 
+- poner escala
+Lo mismo que el punto anterior.
+- imagen de skyspots hay espacio en blanco (igualmente cuando nos juntemos vemos en mas detalle tema wordpress. habias quedado que nos ibas a pasar que tipo de imagenes usar, tamaño texto, etc)
+Saque un poco del espacio en blanco. En algunos casos, un poco va a quedar porque las alturas de las imagenes son distintas.
+- cuando esta un skyspot apretado y se ve mitad mapa mitad skyspotstory, al apretar en el mapa deberia bajarse el story
+Listo!
+- gif en los skyspot stories se ven como imagens y no como gif
+Listo, era que faltaba una configuración en Android.
+- esto suecede a veces
+No pude reproducir esto, pero creo que quizas dejo de pasar cuando agrege la función de que se cierra la skyspotstory cuando clickeas el mapa.
+
+Nubes:
+- podes hacer que entre todo sin tener que bajar la pantalla. si necesitas pedirle a cami xfa hacelo
+Listo!
+
+Porque esta nublado
+- no se ven textos
+Listo, ya le pedi las imagenes correctas a Cami.
+- cuando giras pantalla pasa esto
+En el diseño y en el presupuesto no esta contemplado un diseño de la aplicación con la pantalla de costado, asi que le trabe esa posiblidad y ahora solo se puede ver derecho (como es común en varias aplaciones)
+
+CONFIG:
+- cuando se gira pantalla no se baja el listado
+Lo mismo que el punto anterior.
+- justificar texto preguntas frecuentes y terminos y condiciones.
+Android no soporta texto justificado. En iOS ya lo deje justificado.
+
+Mapas:
+- OK. Vamos viendo. para esta primera versión entonces definiria como la región offline unicamente a Argentina, hasta el nivel de zoom máximo posible teniendo en cuenta la limitación de 6000tiles de MapBox.
+
+Estuve viendo y al final Argentina termina ocupando más o menos lo mismo en tiles con un nivel maximo de zoom 8, medio que no importa que tanto area ocupas, que cuando ya queres pasar a un zoom mayor a 8 ya se te va la cantidad de tiles a un numero altisimo. Claramente esta hecho para que si queres una app con mucho zoom termines pagando la cuenta enterprise.
