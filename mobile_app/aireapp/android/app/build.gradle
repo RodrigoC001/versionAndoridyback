@@ -151,6 +151,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-splash-screen')
     compile project(':rn-fetch-blob')
     compile project(':react-native-linear-gradient')
     compile (project(':mapbox-react-native-mapbox-gl')) {

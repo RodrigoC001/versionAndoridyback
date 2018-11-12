@@ -20,6 +20,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.7.2",
     "react-native-linear-gradient": "^2.4.0",
     "react-native-snap-carousel": "^3.7.5",
+    "react-native-splash-screen": "^3.1.1",
     "react-navigation": "^2.11.2",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
