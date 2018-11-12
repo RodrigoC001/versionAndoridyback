@@ -1,0 +1,3 @@
+const originDestinationsArray = ["Buenos Aires","Comodoro Rivadavia","Córdoba","Mendoza","Neuquen","Puerto Iguazú","Rosario","San Carlos de Bariloche","Ushuaia","Bahía Blanca","Corrientes","El Calafate","Esquel","Formosa","La Rioja","Mar del Plata","Paraná","Posadas","Puerto Madryn","Resistencia","Río Cuarto","Río Gallegos","Río Grande","Río Hondo","Salta","San Fernando del Valle de Catamarca","San Juan","San Luis","San Martin de los Andes","San Rafael","San Salvador de Jujuy","Santa Fe","Santa Rosa","Santiago del Estero","Trelew","Tucumán","Viedma","Reconquista"]
+
+module.exports = originDestinationsArray;

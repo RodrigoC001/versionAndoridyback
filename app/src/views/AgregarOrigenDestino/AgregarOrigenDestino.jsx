@@ -121,7 +121,7 @@ class AgregarOrigenDestino extends React.Component {
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
                       <CustomInput
-                        labelText="Dirección"
+                        labelText="Ciudad"
                         id="company-disabled"
                         formControlProps={{
                           fullWidth: true,

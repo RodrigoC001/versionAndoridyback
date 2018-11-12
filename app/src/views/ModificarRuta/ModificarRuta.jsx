@@ -247,6 +247,9 @@ class ModificarRuta extends React.Component {
                   <h4 className={classes.cardTitleWhite}>{this.props.trip && this.props.trip.data.name}</h4>
                   <p className={classes.cardCategoryWhite}>Modificar Ruta</p>
                 </CardHeader>
+                <CardFooter>
+                  <Button type="submit" color="primary">Enviar</Button>
+                </CardFooter>
                 <CardBody>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>

@@ -1,0 +1,18 @@
+Dashboard
+
+Cuando usas la funcin ctrl+f no se mueve para abajo la pantalla al buscar. Esto complica al buscar algun destino o algun skyspot. podes ver de como solucionarlo?
+
+Eso es un comportamiento del explorador (chrome, firefox, etc). Es en tu compu que te pasa eso? Si queres trae tu compu a la reunión y lo vemos juntos, yo lo probe en distintas laptos y macbooks y me funciona bien.
+
+en Agregar Origen/Destino, En vez de Dirección pone Ciudad
+
+Listo.
+
+En Agrega Ruta pone el boton de ENVIAR arriba.
+
+Listo.
+
+Ademas, podes subir todos los origenes/destinos? Va el excel
+
+Listo.
+

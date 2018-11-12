@@ -240,6 +240,9 @@ class AgregarRuta extends React.Component {
                   <h4 className={classes.cardTitleWhite}>Ruta</h4>
                   <p className={classes.cardCategoryWhite}>Agregar ruta</p>
                 </CardHeader>
+                <CardFooter>
+                  <Button type="submit" color="primary">Enviar</Button>
+                </CardFooter>
                 <CardBody>
                   <GridContainer>
                     <GridItem xs={12} sm={12} md={12}>
@@ -339,9 +342,6 @@ class AgregarRuta extends React.Component {
                     </GridItem>
                   </GridContainer>
                 </CardBody>
-                <CardFooter>
-                  <Button type="submit" color="primary">Enviar</Button>
-                </CardFooter>
               </form>
             </Card>
           </GridItem>
