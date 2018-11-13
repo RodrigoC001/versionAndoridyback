@@ -64,3 +64,13 @@ Mapas:
 - OK. Vamos viendo. para esta primera versión entonces definiria como la región offline unicamente a Argentina, hasta el nivel de zoom máximo posible teniendo en cuenta la limitación de 6000tiles de MapBox.
 
 Estuve viendo y al final Argentina termina ocupando más o menos lo mismo en tiles con un nivel maximo de zoom 8, medio que no importa que tanto area ocupas, que cuando ya queres pasar a un zoom mayor a 8 ya se te va la cantidad de tiles a un numero altisimo. Claramente esta hecho para que si queres una app con mucho zoom termines pagando la cuenta enterprise.
+
+
+El apk con el fondo solo de color: https://drive.google.com/open?id=1wuv02K6crbOA52s3kQNsKiU4UU2UkMsb
+El apk con el fondo de color y la imagen del avion: https://drive.google.com/open?id=1zVL9cpkTxejwWIsVvF1psxxFvQXDzGyI
+El dashboard: http://aire.dev5.io/
+Accesos: valid@email.com validPassword
+
+Ahora mismo, esos APK estan conectados al servidor de prueba que esta hosteado en dev5.io. Una vez este confirmado todo, les subimos aire a su servidor y les paso los APK apuntando a su servidor y no al de prueba nuestro. Si quieren ir adelantando ese proceso, pueden ir creandose una cuenta de Amazon Web Services https://aws.amazon.com/es/ . Van a necesitar una tarjeta de crédito y un celular donde los puedan llamar para verificar. Tambien pueden pasarme un usuario y contraseña que les gustaria tener asi no usan ese de "valid@email.com".
+
+Saludos!
