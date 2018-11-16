@@ -38,12 +38,18 @@ class Search extends React.Component {
     destinations: [],
     query2: '',
     permission: false,
-    asyncStorageTripsArray: null
+    asyncStorageTripsArray: null,
+    showColor: false
   }
   componentDidMount() {
     console.log('entra al did mount')
     this.addKeyboardEventListener()
     this.startFlow()
+  }
+  changeStateBackGround = () => {
+    this.setState({
+      showColor: true
+    })
   }
   startFlow = () => {
     console.log('begins flow');
@@ -182,6 +188,9 @@ class Search extends React.Component {
     // cuadno se esconde el keyboard, blureo el textinput para forzar el onfocus
     this.textInput.blur()
     this.state.query && this.getTripWithOrigin(this.state.query)
+    this.setState({
+      showColor: false
+    })
   }
   getTripWithOrigin = (address) => {
     // cuando hago la busqueda, scrolleo arriba de todo
@@ -299,9 +308,10 @@ class Search extends React.Component {
                 enableOnAndroid={true}
                 innerRef={ref => {this.scroll = ref}}
               >
+                 
      <View style={s.containerBig}>
     
-
+      <ImageBackground source={this.state.showColor ? null : require('../../assets/aire_1242x2436.jpg')} style={{width: '100%', height: '100%'}}>
 
         <View style={s.titleContainer}>
           <Text style={s.titleExploreText}>
@@ -330,7 +340,7 @@ class Search extends React.Component {
             autoCapitalize="none"
             autoCorrect={false}
             containerStyle={{}}
-            listStyle={{backgroundColor: "rgb(64,76,155)", borderWidth: 0}}
+            listStyle={{backgroundColor: this.state.showColor ? "rgb(64,76,155)" : 'transparent', borderWidth: 0}}
             inputContainerStyle={{borderWidth: 0}}
             data={origins && origins.length === 1 && comp(query, origins[0].address) ? [] : origins}
             defaultValue={query}
@@ -358,7 +368,10 @@ class Search extends React.Component {
                   onSubmitEditing={()=> {
                     this.state.query && this.getTripWithOrigin(this.state.query)
                   }}
-                  onFocus={()=> this.addKeyboardEventListener()}
+                  onFocus={()=> {
+                    this.changeStateBackGround()
+                    this.addKeyboardEventListener()
+                  }}
                 />
                 <TouchableOpacity onPress={()=> console.log('test')} style={{flex: 0.15, justifyContent: "center", paddingRight: 10}}>
                   <Image  source={require('../../assets/lupita/lupita.png')} />
@@ -402,6 +415,9 @@ class Search extends React.Component {
                 onSubmitEditing={()=> {
                   this.state.query2 && this.getSelectedTripWithOriginAndDestination(this.state.query2)
                 }}
+                onFocus={()=> {
+                    this.changeStateBackGround()
+                  }}
               />
               <TouchableOpacity onPress={()=> {
                   this.state.query2 && this.getSelectedTripWithOriginAndDestination(this.state.query2)
@@ -417,7 +433,9 @@ class Search extends React.Component {
        }
 
        
+          </ImageBackground>
       </View>
+
 </KeyboardAwareScrollView>
     );
   }
@@ -425,7 +443,7 @@ class Search extends React.Component {
 
 const s = StyleSheet.create({
   containerBig: {
-    height: deviceHeight * 1.3,
+    height: deviceHeight,
   },
   titleContainer: {
     justifyContent: 'center',
