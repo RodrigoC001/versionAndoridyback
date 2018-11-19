@@ -7,16 +7,17 @@ const originRouter = require('./origin.js');
 const destinationRouter = require('./destination.js');
 const terminosRouter = require('./terminos.js');
 
+const { validateCookie } = require('controllers/auth');
 
 const router = Router();
 
 // load each router on a route
 // i.e: router.use('/auth', authRouter);
 router.use('/auth', authRouter);
-router.use('/skyspot', skyspotRouter);
-router.use('/trip', tripRouter);
-router.use('/origin', originRouter);
-router.use('/destination', destinationRouter);
-router.use('/terminos', terminosRouter);
+router.use('/skyspot', validateCookie, skyspotRouter);
+router.use('/trip', validateCookie, tripRouter);
+router.use('/origin', validateCookie, originRouter);
+router.use('/destination', validateCookie, destinationRouter);
+router.use('/terminos', validateCookie, terminosRouter);
 
 module.exports = router;

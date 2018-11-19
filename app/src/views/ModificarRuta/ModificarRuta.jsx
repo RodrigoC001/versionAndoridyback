@@ -248,7 +248,7 @@ class ModificarRuta extends React.Component {
                   <p className={classes.cardCategoryWhite}>Modificar Ruta</p>
                 </CardHeader>
                 <CardFooter>
-                  <Button type="submit" color="primary">Enviar</Button>
+                  <Button type="submit" color="primary">Modificar</Button>
                 </CardFooter>
                 <CardBody>
                   <GridContainer>
@@ -349,9 +349,6 @@ class ModificarRuta extends React.Component {
                     </GridItem>
                   </GridContainer>
                 </CardBody>
-                <CardFooter>
-                  <Button type="submit" color="primary">Modificar</Button>
-                </CardFooter>
               </form>
             </Card>
           </GridItem>
