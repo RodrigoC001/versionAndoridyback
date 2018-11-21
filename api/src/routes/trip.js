@@ -3,6 +3,8 @@ const { expose } = require('utils/').scopes.module;
 const server = require('express').Router();
 const { Trip, Skyspot, Origin, Destination } = require('models/');
 
+const { validateCookie } = require('controllers/auth');
+
 server.param('id', (req, res, next, id) => {
   Trip.find({
     where: { id }, 
@@ -51,7 +53,7 @@ server.get('/:id/skyspots', (req, res, next) => {
 
 
 // first I update with name, originId and destinationId, then set the skyspots
-server.put('/:id', (req, res, next) => {
+server.put('/:id', validateCookie, (req, res, next) => {
   if (!req.trip) return res.sendStatus(404);
   req.trip
     .update({name: req.body.name, originId: req.body.originId, destinationId: req.body.destinationId})
@@ -91,7 +93,7 @@ server.get('/', (req, res, next) => {
     .catch(next);
 });
 
-server.post('/', (req, res, next) => {
+server.post('/', validateCookie, (req, res, next) => {
   Trip.create({name: req.body.name, originId: req.body.originId, destinationId: req.body.destinationId})
     .then(trip => {
       trip.setSkyspots(req.body.skyspotsArray)
@@ -101,7 +103,7 @@ server.post('/', (req, res, next) => {
     .catch(next);
 });
 
-server.delete('/:id', (req, res, next) => {
+server.delete('/:id', validateCookie, (req, res, next) => {
   req.trip
     .destroy()
     .then(trip => res.send(ok(req.trip)))

@@ -3,6 +3,8 @@ const { expose } = require('utils/').scopes.module;
 const server = require('express').Router();
 const { Origin, Trip } = require('models/');
 
+const { validateCookie } = require('controllers/auth');
+
 server.param('id', (req, res, next, id) => {
   Origin.find({
     where: { id },
@@ -32,13 +34,13 @@ server.get('/', (req, res, next) => {
     .catch(next);
 });
 
-server.post('/', (req, res, next) => {
+server.post('/', validateCookie, (req, res, next) => {
   Origin.create(req.body)
     .then(resource => res.status(201).send(created(resource)))
     .catch(next);
 });
 
-server.put('/:id', (req, res, next) => {
+server.put('/:id', validateCookie, (req, res, next) => {
   if (!req.origin) return res.sendStatus(404);
   req.origin
     .update(req.body)
@@ -46,7 +48,7 @@ server.put('/:id', (req, res, next) => {
     .catch(next)
 })
 
-server.delete('/:id', (req, res, next) => {
+server.delete('/:id', validateCookie, (req, res, next) => {
   req.origin
     .destroy()
     .then(origin => res.send(ok(req.origin)))

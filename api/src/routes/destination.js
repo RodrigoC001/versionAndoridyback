@@ -3,6 +3,8 @@ const { expose } = require('utils/').scopes.module;
 const server = require('express').Router();
 const { Destination, Trip } = require('models/');
 
+const { validateCookie } = require('controllers/auth');
+
 server.param('id', (req, res, next, id) => {
   Destination.find({
     where: { id },
@@ -33,13 +35,13 @@ server.get('/', (req, res, next) => {
     .catch(next);
 });
 
-server.post('/', (req, res, next) => {
+server.post('/', validateCookie, (req, res, next) => {
   Destination.create(req.body)
     .then(resource => res.status(201).send(created(resource)))
     .catch(next);
 });
 
-server.put('/:id', (req, res, next) => {
+server.put('/:id', validateCookie, (req, res, next) => {
   if (!req.destination) return res.sendStatus(404);
   req.destination
     .update(req.body)
@@ -47,7 +49,7 @@ server.put('/:id', (req, res, next) => {
     .catch(next)
 })
 
-server.delete('/:id', (req, res, next) => {
+server.delete('/:id', validateCookie, (req, res, next) => {
   req.destination
     .destroy()
     .then(destination => res.status(204).send(deleted(destination)))
