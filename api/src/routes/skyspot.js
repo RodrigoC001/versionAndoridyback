@@ -43,7 +43,7 @@ server.post('/', validateCookie, (req, res, next) => {
 server.put('/:id', validateCookie, (req, res, next) => {
   if (!req.skyspot) return res.sendStatus(404);
   req.skyspot
-    .upsert(req.body)
+    .update(req.body)
     .then(skyspot => res.send(ok(skyspot)))
     .catch(next)
 })
