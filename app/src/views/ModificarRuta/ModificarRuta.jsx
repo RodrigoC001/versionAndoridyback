@@ -185,7 +185,9 @@ class ModificarRuta extends React.Component {
     delete skyspotsObject.openFailure
     delete skyspotsObject.fetching
 
-    const skyspotsArray = Object.keys(skyspotsObject)
+    const skyspotsArrayNotFiltered = Object.keys(skyspotsObject)
+    // filter only the true values
+    const skyspotsArray = skyspotsArrayNotFiltered.filter(key => skyspotsObject[key])
 
     if(this.state.name === '') return this.showNotificationFailure()
     if(this.state.originAddress === '') return this.showNotificationFailure()
