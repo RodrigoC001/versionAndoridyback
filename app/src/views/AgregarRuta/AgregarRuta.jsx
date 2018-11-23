@@ -165,6 +165,8 @@ class AgregarRuta extends React.Component {
       })
   }*/
   handleSubmit = (event) => {
+    console.log('cuando entra al handle submit, el estado es', this.state)
+
     const originId = this.state.originAddress
     const destinationId = this.state.destinationAddress
     // filtro todas las keys del estado que no sean id's de skyspots y las pongo en un arreglo
@@ -174,7 +176,9 @@ class AgregarRuta extends React.Component {
     delete skyspotsObject.destinationAddress
     delete skyspotsObject.openSuccess
     delete skyspotsObject.openFailure
-    const skyspotsArray = Object.keys(skyspotsObject)
+    const skyspotsArrayNotFiltered = Object.keys(skyspotsObject)
+    // filter only the true values
+    const skyspotsArray = skyspotsArrayNotFiltered.filter(key => skyspotsObject[key])
   
     event.preventDefault();
 
@@ -195,6 +199,7 @@ class AgregarRuta extends React.Component {
       
   }
   showNotificationSuccess = () => {
+    console.log('entra aca?')
     // filtro todas las keys del estado que no sean id's de skyspots y las pongo en false para resetear
     let skyspotsObject = Object.assign({}, this.state);
     delete skyspotsObject.name
@@ -211,7 +216,9 @@ class AgregarRuta extends React.Component {
       destinationAddress: ''
     }, skyspotsObject )
 
-    this.setState(newState)
+    console.log('skyspotsObject', skyspotsObject)
+
+    this.setState(newState, ()=> console.log('el estado actual es, en el show notifications succcess', this.state))
 
     setTimeout(function(){
             this.setState({openSuccess: false});
