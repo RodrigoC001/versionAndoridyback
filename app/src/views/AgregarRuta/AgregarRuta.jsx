@@ -178,8 +178,10 @@ class AgregarRuta extends React.Component {
     delete skyspotsObject.openFailure
     const skyspotsArrayNotFiltered = Object.keys(skyspotsObject)
     // filter only the true values
-    const skyspotsArray = skyspotsArrayNotFiltered.filter(key => skyspotsObject[key])
+    const skyspotsArrayString = skyspotsArrayNotFiltered.filter(key => skyspotsObject[key])
   
+    const skyspotsArray = skyspotsArrayString.map(string => Number(string))
+
     event.preventDefault();
 
     console.log('skyspotsArray', skyspotsArray)

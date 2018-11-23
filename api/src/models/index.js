@@ -11,6 +11,7 @@ const Terminos = require('./Terminos.js');
 // Trips & Skyspots
 Trip.belongsToMany(Skyspot, {through: 'skyspot_trip'});
 Skyspot.belongsToMany(Trip, {through: 'skyspot_trip'});
+
 // Trips & Origin / Destination
 Origin.hasMany(Trip, {as: 'routes_origin', foreignKey: 'originId'})
 Destination.hasMany(Trip, {as: 'routes_destination', foreignKey: 'destinationId'})

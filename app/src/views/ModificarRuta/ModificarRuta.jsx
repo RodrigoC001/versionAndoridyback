@@ -187,7 +187,9 @@ class ModificarRuta extends React.Component {
 
     const skyspotsArrayNotFiltered = Object.keys(skyspotsObject)
     // filter only the true values
-    const skyspotsArray = skyspotsArrayNotFiltered.filter(key => skyspotsObject[key])
+    const skyspotsArrayString = skyspotsArrayNotFiltered.filter(key => skyspotsObject[key])
+
+    const skyspotsArray = skyspotsArrayString.map(string => Number(string))
 
     if(this.state.name === '') return this.showNotificationFailure()
     if(this.state.originAddress === '') return this.showNotificationFailure()
