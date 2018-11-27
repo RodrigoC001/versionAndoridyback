@@ -68,7 +68,13 @@ class Search extends React.Component {
           console.log('no hay conexion y entra a este if', connectionInfo)
           // aca hago lo necesario para levantar esa info de forma offline
           let asyncStorageTripsArray = this.state.asyncStorageTripsArray
-          let arrayFinal = asyncStorageTripsArray.map(trip => trip.origin)
+          let arrayParcial = asyncStorageTripsArray.map(trip => trip.origin)
+
+          let arrayFinal = arrayParcial.filter((origin, index, self) =>
+            index === self.findIndex(o => (
+              o.address === origin.address && o.id === origin.id
+            ))
+          )
           
           console.log('arrayFinal', arrayFinal)
 
@@ -347,7 +353,10 @@ class Search extends React.Component {
             onChangeText={text => this.setState({ query: text })}
             placeholder="Ingresa tu origen acá"
             renderItem={({ address, release_date }) => (
-              <TouchableOpacity style={s.listOptionStyle} onPress={() => this.setState({ query: address }, ()=> this.getTripWithOrigin(address))}>
+              <TouchableOpacity style={s.listOptionStyle} onPress={() => this.setState({ query: address }, ()=> {
+                console.log('despues de tocar la query es', this.state.query)
+                this.getTripWithOrigin(address)
+              })}>
                 <Text style={s.itemText}>
                   {address}
                 </Text>
