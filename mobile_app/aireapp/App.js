@@ -24,11 +24,16 @@ type Props = {};
 
 const IS_ANDROID = Platform.OS === 'android';
 
+import SplashScreen from 'react-native-splash-screen'
+
 export default class App extends Component<{}> {
   state = {
     isFetchingAndroidPermission: IS_ANDROID,
     isAndroidPermissionGranted: false,
     activeExample: -1,
+  }
+  componentDidMount() {
+    SplashScreen.hide()
   }
   async componentWillMount() {
     if (IS_ANDROID) {

@@ -10,10 +10,6 @@ import * as destinationActions from "../../redux/actions/destinations";
 import * as originActions from "../../redux/actions/origins";
 import * as tripActions from "../../redux/actions/trips";
 
-
-import SplashScreen from 'react-native-splash-screen'
-
-
 const mapStateToProps = state => ({
   destinations: state.destinations.destinations,
   origins: state.origins.origins,
@@ -28,6 +24,9 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, destinationActions, originActions, tripActions), dispatch)
 }
 
+import SplashScreen from 'react-native-splash-screen'
+
+
 // DEVICE INFO
 let deviceHeight = Dimensions.get('window').height
 
@@ -39,10 +38,12 @@ class Search extends React.Component {
     query2: '',
     permission: false,
     asyncStorageTripsArray: null,
-    showColor: false
+    showColor: false,
+    fetching: true
   }
   componentDidMount() {
     console.log('entra al did mount')
+    SplashScreen.hide()
     this.addKeyboardEventListener()
     this.startFlow()
   }
@@ -78,7 +79,7 @@ class Search extends React.Component {
           
           console.log('arrayFinal', arrayFinal)
 
-          this.setState({origins: arrayFinal}, ()=> SplashScreen.hide())
+          this.setState({origins: arrayFinal, fetching: false})
           return null
         }
         return this.props.getOriginsRequest()    
@@ -86,7 +87,7 @@ class Search extends React.Component {
       .then(origins => {
         if(origins) {
           console.log('Primer paso con internet, array de origins', this.props.origins.data)
-          this.setState({origins: this.props.origins.data},  ()=> SplashScreen.hide())
+          this.setState({origins: this.props.origins.data, fetching: false})
         }
       })
   }
@@ -306,7 +307,7 @@ class Search extends React.Component {
     const origins = this.findOrigin(query);
     const destinations = this.findDestination(query2);
     const comp = (a, b) => a.toLowerCase().trim() === b.toLowerCase().trim();
-
+    if(this.state.fetching) return <View style={s.containerBig}><ImageBackground source={this.state.showColor ? null : require('../../assets/aire_1242x2436.jpg')} style={{width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center'}}><ActivityIndicator size="large" color='rgb(188,224,253)' /></ImageBackground></View>
     return (
               <KeyboardAwareScrollView 
                 extraScrollHeight={450} 
