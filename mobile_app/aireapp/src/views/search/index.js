@@ -60,7 +60,7 @@ class Search extends React.Component {
         this.setState({
           asyncStorageTripsArray: data
         })
-        console.log('lo que retorna el findOrCreateDownloadedTripsAsyncStorageFolder es', data)
+        console.log('lo que retorna el findOrCreateDownloadedTripsAsyncStorageFolder es', data) // hasta acá llega, despues algo pasa que rompe y al then (origins) de abajo nunca llega, lo reinicio y si llega. es random el comportamiento
       })
       .then(()=> this.getConnectionInfo())
       .then(connectionInfo => {

@@ -160,11 +160,11 @@ class MapBoxContainer extends Component<{}> {
     // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
   }
   getImgNodesAndTheirSrcFromHtml = (title, htmlContent, dataLink) => {
-    let rootNode = DomSelector(htmlContent);
+    let rootNode = DomSelector(htmlContent)
 
     let imgNodes = rootNode.getElementsByTagName('img');
 
-    // console.log('imgNodes', imgNodes, 'dataLink', dataLink)
+    console.log('imgNodes', imgNodes, 'dataLink', dataLink, 'rootNode', rootNode)
 
     let newStateWithDataLinkId = {}
     newStateWithDataLinkId[dataLink] = imgNodes
@@ -185,17 +185,23 @@ class MapBoxContainer extends Component<{}> {
       return this.downloadImageLocally(title, imgSrc, dataLink)
     })
 
+    console.log('promisesImgArray', promisesImgArray)
+
+
+
     // no podia conseguir retornar el valor del path de cada file porque el setstate no retorna un valor, entonces tuve que volver a correr el find or create iamge storage folder para tener el arreglo de paths para mostrar la primerea vez que me bajo las cosas
     return Promise.all(promisesImgArray)
       .then((data) => {
         return this.findOrCreateImageStorageFolder(dataLink)
           .then(data => {
-            // console.log('data del find or create', data)
+            console.log('data del find or create', data)
             return data
           })
           .then(data => {
             this.setState({ counter: this.state.counter+1 }, ()=> {
-              // console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
+              console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
+              console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+              console.log('data del data del find or create', data)
 
               if(this.state.counter === this.props.skyspotsArrayForMap.length) {
                 console.log('entra a este if y pone downloadingImages en false')
@@ -206,9 +212,11 @@ class MapBoxContainer extends Component<{}> {
             })
             return data
           })
+          .catch((err) => console.log('entra a este catch del find or create?', err))
       });
   }
   downloadImageLocally = (title, imageSource, dataLink) => {
+    // si falla este rn fetch blob, ver que se hace
     return RNFetchBlob
       .config({
         fileCache : true,
@@ -249,6 +257,8 @@ class MapBoxContainer extends Component<{}> {
             }, ()=> {
 
               // newStateWithDataLinkId con el array lleno por primera vez'
+              console.log('this.state[dataLink].length', this.state[dataLink].length)
+              console.log('this.state[dataLink + "imgArray".length', this.state[dataLink + 'imgArray'].length)
 
               if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
                  // entra aca si tiene una sola iamgen
@@ -396,7 +406,9 @@ class MapBoxContainer extends Component<{}> {
         // console.log('data que llega del promise all de find or create es', data)
         // stringify feo el arreglo que me llega con el que tengo aca para compararlos, sino no puedo compararlos. en este caso si es [null, null] === [null, null] es que tengo vacio eso en el storage, y necesito hacer el fetch a wordpress
         if(JSON.stringify(data) === JSON.stringify(compareArray)) {
-          // console.log('pide el fetch a wordpress')
+          console.log('pide el fetch a wordpress')
+          console.log('data', data, 'compareArray', compareArray)
+
           return this.getWordPressApi(id, coords, dataLink)
         };
         // si ya tengo la info en el storage, la levanto y la pongo en el store
@@ -437,6 +449,49 @@ class MapBoxContainer extends Component<{}> {
         let content = response.data.content
         let title = response.data.title        
 
+        console.log('content is', content)
+
+        if(content === '') {
+          console.log('entra a este if el get wordpress afi de content vacionull, porque el post de wordpress esta vacio y es una string vacia', content)
+          // let title = 'Skyspot' usamos el title que si tiene
+          let contentReemplazo = '<p>Este skyspot no tiene contenido disponible</p>'
+
+          this.saveHtmlToAsyncStorage(contentReemplazo, dataLink)
+          this.saveTitleToAsyncStorage(title, dataLink)
+
+          return this.getImgNodesAndTheirSrcFromHtml(title, contentReemplazo, dataLink)
+            .then(imgArray=> {
+              // console.log('imgArray del catch de error', imgArray)
+
+              let downloadedSkyspotObj = {}
+
+              downloadedSkyspotObj.id = id
+              downloadedSkyspotObj.coords = coords
+              downloadedSkyspotObj.content = contentReemplazo
+              downloadedSkyspotObj.title = title
+              downloadedSkyspotObj.imgArray = []            
+
+              this.setState((previousState) => {
+                return {
+                  fetching: false,
+                  // downloadingImages: false,
+                  downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
+                };
+              }, ()=> {
+                console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+              });
+
+              return downloadedSkyspotObj
+
+            })
+          
+          // this.setState({ counter: this.state.counter+1 }, ()=> console.log('this.state.counter is', this.state.counter))
+          
+          // tenia un quilombo que si venia null el post de blog, no sumaba al counter en la otra parte del codigo que se encarga de eso en this.getImgNodesAndTheirSrcFromHtml asi que puse este hotfix aca
+        }
+
+        console.log('llega acá')
+
         this.saveHtmlToAsyncStorage(content, dataLink)
         this.saveTitleToAsyncStorage(title, dataLink)
 
@@ -467,8 +522,44 @@ class MapBoxContainer extends Component<{}> {
 
       })
       .catch(error => {
-        // console.log('error.response.status', error.response.status)
+        console.log('entra al error?', error)
         if(error.response.status === 404) {
+          // console.log('entra al 404')
+
+          let title = 'Skyspot'
+          let content = '<p>Este skyspot no tiene contenido disponible</p>'
+
+          this.saveHtmlToAsyncStorage(content, dataLink)
+          this.saveTitleToAsyncStorage(title, dataLink)
+
+          return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
+            .then(imgArray=> {
+              // console.log('imgArray del catch de error', imgArray)
+
+              let downloadedSkyspotObj = {}
+
+              downloadedSkyspotObj.id = id
+              downloadedSkyspotObj.coords = coords
+              downloadedSkyspotObj.content = content
+              downloadedSkyspotObj.title = title
+              downloadedSkyspotObj.imgArray = []            
+
+              this.setState((previousState) => {
+                return {
+                  fetching: false,
+                  // downloadingImages: false,
+                  downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
+                };
+              }, ()=> {
+                console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+              });
+
+              return downloadedSkyspotObj
+
+            })
+        }
+        
+        if(error.response.status === 403) {
           // console.log('entra al 404')
 
           let title = 'Skyspot'
@@ -509,7 +600,12 @@ class MapBoxContainer extends Component<{}> {
     return AsyncStorage.setItem(`${dataLink}_htmlFolder`, JSON.stringify(htmlContent))
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_htmlFolder`)
-                    .then(data => console.log('data saved is', data))
+                    .then(data => {
+                      console.log('data saved is', data)
+                      if(data === "") {
+                        console.log('entra a ese if con los posts vacios de blog que no tienen content', data)
+                      }
+                    })
                   })
                   .catch(error => console.log('error!', error));
   }
@@ -581,7 +677,9 @@ class MapBoxContainer extends Component<{}> {
       name: offlineRegion.name,
       offlineRegion: offlineRegion,
       offlineRegionStatus: offlineRegionStatus,
-    }, ()=> console.log('percentage: ', this.state.offlineRegionStatus.percentage, 'tileCount is:', this.state.offlineRegionStatus.completedTileCount, 'offlineRegionStatus: ', offlineRegionStatus));
+    }
+    // , ()=> console.log('percentage: ', this.state.offlineRegionStatus.percentage, 'tileCount is:', this.state.offlineRegionStatus.completedTileCount, 'offlineRegionStatus: ', offlineRegionStatus)
+    );
   }
   onResume = () => {
     if (this.state.offlineRegion) {
