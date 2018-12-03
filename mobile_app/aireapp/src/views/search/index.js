@@ -86,7 +86,7 @@ class Search extends React.Component {
       })
       .then(origins => {
         if(origins) {
-          console.log('Primer paso con internet, array de origins', this.props.origins.data)
+          // console.log('Primer paso con internet, array de origins', this.props.origins.data)
           this.setState({origins: this.props.origins.data, fetching: false})
         }
       })
@@ -104,7 +104,7 @@ class Search extends React.Component {
   getConnectionInfo = () => {
     return NetInfo.getConnectionInfo()
       .then((connectionInfo) => {
-      // console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+      console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
       return connectionInfo.type
       });
   }
@@ -230,8 +230,8 @@ class Search extends React.Component {
         })
         .then(trips => {
           if(trips) {
-            console.log('Segundo paso, get trip with Origin, el origin seleccionado es', selectedTripObject)
-            console.log('Segundo paso, todas las posibles trips son, con sus respectivos destinations y origins', this.props.possibleDestinations.data)
+            // console.log('Segundo paso, get trip with Origin, el origin seleccionado es', selectedTripObject)
+            // console.log('Segundo paso, todas las posibles trips son, con sus respectivos destinations y origins', this.props.possibleDestinations.data)
 
             this.setState({destinations: this.props.possibleDestinations.data})
           }

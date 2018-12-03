@@ -114,7 +114,7 @@ class MapBoxContainer extends Component<{}> {
     }
   }
   componentWillUnmount() {
-    console.log('entra al will unmount')
+    // console.log('entra al will unmount')
     this.props.navigation.state.params.getBackFromChildComponentAndUpdate(true)
     if(this.state.offlineRegionStatus.percentage < 100) {
       // si desmonto el componente antes de que termine de bajar el mapa, lo borro y me desuscribo
@@ -150,7 +150,7 @@ class MapBoxContainer extends Component<{}> {
         })
         if(data[0] !== undefined) {
           // si entraa aca significa que ya se bajaron las imagenes en cache previamente
-          console.log('si entraa aca significa que ya se bajaron las imagenes en cache previamente')
+          // console.log('si entraa aca significa que ya se bajaron las imagenes en cache previamente')
           this.setState({
             downloadingImages: false
           })
@@ -162,13 +162,13 @@ class MapBoxContainer extends Component<{}> {
   getImgNodesAndTheirSrcFromHtml = (title, htmlContent, dataLink) => {
     let rootNode = DomSelector(htmlContent)
 
-    if(!rootNode) {
-      console.log('entra aca con el rootNode undefined y su title es?', title, dataLink)
-    }
+    // if(!rootNode) {
+    //   console.log('entra aca con el rootNode undefined y su title es?', title, dataLink)
+    // }
 
     let imgNodes = rootNode ? rootNode.getElementsByTagName('img') : [];
 
-    console.log('imgNodes', imgNodes, 'dataLink', dataLink, 'rootNode', rootNode)
+    // console.log('imgNodes', imgNodes, 'dataLink', dataLink, 'rootNode', rootNode)
 
     let newStateWithDataLinkId = {}
     newStateWithDataLinkId[dataLink] = imgNodes
@@ -189,7 +189,7 @@ class MapBoxContainer extends Component<{}> {
       return this.downloadImageLocally(title, imgSrc, dataLink)
     })
 
-    console.log('promisesImgArray', promisesImgArray)
+    // console.log('promisesImgArray', promisesImgArray)
 
 
 
@@ -198,17 +198,17 @@ class MapBoxContainer extends Component<{}> {
       .then((data) => {
         return this.findOrCreateImageStorageFolder(dataLink)
           .then(data => {
-            console.log('data del find or create', data)
+            // console.log('data del find or create', data)
             return data
           })
           .then(data => {
             this.setState({ counter: this.state.counter+1 }, ()=> {
-              console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
-              console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
-              console.log('data del data del find or create', data)
+              // console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
+              // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+              // console.log('data del data del find or create', data)
 
               if(this.state.counter === this.props.skyspotsArrayForMap.length) {
-                console.log('entra a este if y pone downloadingImages en false')
+                // console.log('entra a este if y pone downloadingImages en false')
                 this.setState({
                   downloadingImages: false
                 })
@@ -410,8 +410,8 @@ class MapBoxContainer extends Component<{}> {
         // console.log('data que llega del promise all de find or create es', data)
         // stringify feo el arreglo que me llega con el que tengo aca para compararlos, sino no puedo compararlos. en este caso si es [null, null] === [null, null] es que tengo vacio eso en el storage, y necesito hacer el fetch a wordpress
         if(JSON.stringify(data) === JSON.stringify(compareArray)) {
-          console.log('pide el fetch a wordpress')
-          console.log('data', data, 'compareArray', compareArray)
+          // console.log('pide el fetch a wordpress')
+          // console.log('data', data, 'compareArray', compareArray)
 
           return this.getWordPressApi(id, coords, dataLink)
         };
@@ -453,10 +453,10 @@ class MapBoxContainer extends Component<{}> {
         let content = response.data.content
         let title = response.data.title        
 
-        console.log('content is', content)
+        // console.log('content is', content)
 
         if(content === '') {
-          console.log('entra a este if el get wordpress afi de content vacionull, porque el post de wordpress esta vacio y es una string vacia', content)
+          // console.log('entra a este if el get wordpress afi de content vacionull, porque el post de wordpress esta vacio y es una string vacia', content)
           // let title = 'Skyspot' usamos el title que si tiene
           let contentReemplazo = '<p>Este skyspot no tiene contenido disponible</p>'
 
@@ -482,7 +482,8 @@ class MapBoxContainer extends Component<{}> {
                   downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
                 };
               }, ()=> {
-                console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                // ACA ESTA EL CONTADOR DE COSAS YA BAJADAS
+                // console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -494,14 +495,14 @@ class MapBoxContainer extends Component<{}> {
           // tenia un quilombo que si venia null el post de blog, no sumaba al counter en la otra parte del codigo que se encarga de eso en this.getImgNodesAndTheirSrcFromHtml asi que puse este hotfix aca
         }
 
-        console.log('llega acá')
+        // console.log('llega acá')
 
         this.saveHtmlToAsyncStorage(content, dataLink)
         this.saveTitleToAsyncStorage(title, dataLink)
 
         return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
           .then(imgArray=> {
-            console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
+            // console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
 
             let downloadedSkyspotObj = {}
 
@@ -517,7 +518,7 @@ class MapBoxContainer extends Component<{}> {
                 downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
               };
             }, ()=> {
-              console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+              // console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
             });
 
             return downloadedSkyspotObj
@@ -555,7 +556,7 @@ class MapBoxContainer extends Component<{}> {
                   downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
                 };
               }, ()=> {
-                console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                // console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -591,7 +592,7 @@ class MapBoxContainer extends Component<{}> {
                   downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
                 };
               }, ()=> {
-                console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                // console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -605,9 +606,9 @@ class MapBoxContainer extends Component<{}> {
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_htmlFolder`)
                     .then(data => {
-                      console.log('data saved is', data)
+                      // console.log('data saved is', data)
                       if(data === "") {
-                        console.log('entra a ese if con los posts vacios de blog que no tienen content', data)
+                        // console.log('entra a ese if con los posts vacios de blog que no tienen content', data)
                       }
                     })
                   })
@@ -617,7 +618,7 @@ class MapBoxContainer extends Component<{}> {
     return AsyncStorage.setItem(`${dataLink}_title`, JSON.stringify(title))
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_title`)
-                    .then(data => console.log('data saved is', data))
+                    // .then(data => console.log('data saved is', data))
                   })
                   .catch(error => console.log('error!', error));    
   }
