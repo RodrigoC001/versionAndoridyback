@@ -191,13 +191,31 @@ class AgregarRuta extends React.Component {
     if(this.state.destinationAddress === '') return this.showNotificationFailure()
     if(skyspotsArray.length === 0) return this.showNotificationFailure()
 
+    // la ruta va y vuelve, entonces invierto los ids de origen y destino y creo las dos rutas 
 
+    const createRouteBackAndForth = [
     this.props.postTrip({
       name: this.state.name,
       originId,
       destinationId,
       skyspotsArray
-    }, this.showNotificationSuccess, this.showNotificationFailure)
+    }),
+    this.props.postTrip({
+      name: this.state.name,
+      originId: destinationId,
+      destinationId: originId,
+      skyspotsArray
+    })
+    ]
+
+    Promise.all(createRouteBackAndForth)
+      .then(data => {
+        this.showNotificationSuccess()
+      })
+      .catch(error => {
+        console.log('error', error)
+        this.showNotificationFailure()
+      })
       
   }
   showNotificationSuccess = () => {

@@ -104,12 +104,12 @@ export function postTrip(body, success, failure) {
     return axios
       .post('/api/trip/', body)
       .then(response => {
-        success()
+        // success()
         return dispatch(postTripSuccess(response));
       })
       .catch(error => {
         console.log('error', error)
-        failure()
+        // failure()
         return dispatch(postTripFailure(error))
       });
   };

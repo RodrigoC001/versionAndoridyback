@@ -162,7 +162,11 @@ class MapBoxContainer extends Component<{}> {
   getImgNodesAndTheirSrcFromHtml = (title, htmlContent, dataLink) => {
     let rootNode = DomSelector(htmlContent)
 
-    let imgNodes = rootNode.getElementsByTagName('img');
+    if(!rootNode) {
+      console.log('entra aca con el rootNode undefined y su title es?', title, dataLink)
+    }
+
+    let imgNodes = rootNode ? rootNode.getElementsByTagName('img') : [];
 
     console.log('imgNodes', imgNodes, 'dataLink', dataLink, 'rootNode', rootNode)
 
@@ -558,7 +562,7 @@ class MapBoxContainer extends Component<{}> {
 
             })
         }
-        
+
         if(error.response.status === 403) {
           // console.log('entra al 404')
 
