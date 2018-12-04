@@ -11,6 +11,7 @@
     "@mapbox/geo-viewport": "^0.4.0",
     "@mapbox/react-native-mapbox-gl": "git+https://github.com/mapbox/react-native-mapbox-gl#release/6.1.2",
     "axios": "^0.18.0",
+    "bluebird": "^3.5.3",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-autocomplete-input": "^3.5.0",

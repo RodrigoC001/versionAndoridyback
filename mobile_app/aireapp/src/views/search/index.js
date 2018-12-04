@@ -17,7 +17,8 @@ const mapStateToProps = state => ({
   originsFetching: state.origins.fetching,
   tripsFetching: state.trips.fetching,
   selectedTrip: state.trips.selectedTrip,
-  skyspotsArrayForMap: state.trips.skyspotsArrayForMap
+  skyspotsArrayForMap: state.trips.skyspotsArrayForMap,
+  error: state.origins.error
 });
 
 function mapDispatchToProps(dispatch) {
@@ -86,14 +87,16 @@ class Search extends React.Component {
         return this.props.getOriginsRequest()    
       })
       .then(origins => {
+        // console.log('si entra el error, origins es el error?', origins, 'y props.error tiene adentro...', this.props.error)
         // console.log('llega el .then y origins es', origins)
         if(origins) {
           // console.log('Primer paso con internet, array de origins', this.props.origins.data)
           this.setState({origins: this.props.origins.data, fetching: false})
         }
-      })
-      .catch(err => {
-        console.log('err en el index search', err)
+        if(this.props.error && !this.props.error.status) {
+          console.log('network error')
+          this.props.getOriginsRequest()
+        }
       })
   }
   getBackFromChildComponentAndUpdate = (data) => {

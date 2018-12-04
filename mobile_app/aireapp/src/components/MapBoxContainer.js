@@ -23,6 +23,8 @@ import axios from "axios";
 import DomSelector from 'react-native-dom-parser';
 import RNFetchBlob from 'rn-fetch-blob'
 
+import Promise from 'bluebird';
+
 // import smileyFaceGeoJSON from './smiley_face.json';
 
 // REDUX
@@ -155,11 +157,13 @@ class MapBoxContainer extends Component<{}> {
             downloadingImages: false
           })
         }
-      });
+      })
+      .catch(err => console.log('err del earch?', err))
 
     // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
   }
   getImgNodesAndTheirSrcFromHtml = (title, htmlContent, dataLink) => {
+    // console.log('entra al getImgNodesAndTheirSrcFromHtml')
     let rootNode = DomSelector(htmlContent)
 
     // if(!rootNode) {
@@ -196,8 +200,10 @@ class MapBoxContainer extends Component<{}> {
     // no podia conseguir retornar el valor del path de cada file porque el setstate no retorna un valor, entonces tuve que volver a correr el find or create iamge storage folder para tener el arreglo de paths para mostrar la primerea vez que me bajo las cosas
     return Promise.all(promisesImgArray)
       .then((data) => {
+        // console.log('entra aca despues del promises img array')
         return this.findOrCreateImageStorageFolder(dataLink)
           .then(data => {
+            // console.log('entra aca despues del find findOrCreateImageStorageFolder')
             // console.log('data del find or create', data)
             return data
           })
@@ -220,6 +226,7 @@ class MapBoxContainer extends Component<{}> {
       });
   }
   downloadImageLocally = (title, imageSource, dataLink) => {
+    // console.log('entra al download image locally?')
     // si falla este rn fetch blob, ver que se hace
     return RNFetchBlob
       .config({
@@ -261,12 +268,12 @@ class MapBoxContainer extends Component<{}> {
             }, ()=> {
 
               // newStateWithDataLinkId con el array lleno por primera vez'
-              console.log('this.state[dataLink].length', this.state[dataLink].length)
-              console.log('this.state[dataLink + "imgArray".length', this.state[dataLink + 'imgArray'].length)
+              // console.log('this.state[dataLink].length', this.state[dataLink].length)
+              // console.log('this.state[dataLink + "imgArray".length', this.state[dataLink + 'imgArray'].length)
 
               if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
                  // entra aca si tiene una sola iamgen
-                console.log('entra aca si tiene una sola iamgen', this.state[dataLink + 'imgArray'] )
+                // console.log('entra aca si tiene una sola iamgen', this.state[dataLink + 'imgArray'] )
                 return this.pushImageToAsyncStorageArray(title, this.state[dataLink + 'imgArray'], dataLink)
               }
             }) 
@@ -285,7 +292,7 @@ class MapBoxContainer extends Component<{}> {
                 // newStateWithDataLinkId con el array lleno a partir de la segunda vez
               if(this.state[dataLink].length === this.state[dataLink + 'imgArray'].length) {
                 // entra aca con más de una imagen!!!
-                console.log('entra entra aca con más de una imagen!!!', this.state[dataLink + 'imgArray'] )
+                // console.log('entra entra aca con más de una imagen!!!', this.state[dataLink + 'imgArray'] )
                 return this.pushImageToAsyncStorageArray(title, this.state[dataLink + 'imgArray'], dataLink)
               }
             })
@@ -299,7 +306,7 @@ class MapBoxContainer extends Component<{}> {
                     return AsyncStorage.getItem(`${dataLink}_imageArray`)
                       .then(req => JSON.parse(req))
                       .then(array => {
-                        console.log('img array is created, finded and is', array)
+                        // console.log('img array is created, finded and is', array)
                         return array
                       })
                   })
@@ -443,13 +450,13 @@ class MapBoxContainer extends Component<{}> {
       })
     }
   getWordPressApi = async (id, coords, dataLink) => {
-    console.log('entra al get wordpress api')
+    // console.log('entra al get wordpress api')
     // console.log('get wordpress api id coords dataLink', id, coords, dataLink)
     axios
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${dataLink}`)
       .then(response => {
 
-        // console.log('response', response)
+        console.log('response', response)
 
         let content = response.data.content
         let title = response.data.title        
@@ -484,7 +491,7 @@ class MapBoxContainer extends Component<{}> {
                 };
               }, ()=> {
                 // ACA ESTA EL CONTADOR DE COSAS YA BAJADAS
-                console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                // console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -504,7 +511,7 @@ class MapBoxContainer extends Component<{}> {
         return this.getImgNodesAndTheirSrcFromHtml(title, content, dataLink)
           .then(imgArray=> {
             // console.log('imgArray de getImgNodesAndTheirSrcFromHtml', imgArray)
-
+            // console.log('llega a este img array')
             let downloadedSkyspotObj = {}
 
             downloadedSkyspotObj.id = id
@@ -603,7 +610,7 @@ class MapBoxContainer extends Component<{}> {
       })
   }
   saveHtmlToAsyncStorage = (htmlContent, dataLink) => {
-    console.log('entra al saveHtmlToAsyncStorage')
+    // console.log('entra al saveHtmlToAsyncStorage')
     return AsyncStorage.setItem(`${dataLink}_htmlFolder`, JSON.stringify(htmlContent))
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_htmlFolder`)
@@ -617,7 +624,7 @@ class MapBoxContainer extends Component<{}> {
                   .catch(error => console.log('error!', error));
   }
   saveTitleToAsyncStorage = (title, dataLink) => {
-    console.log('entra al saveTitleToAsyncStorage')
+    // console.log('entra al saveTitleToAsyncStorage')
     return AsyncStorage.setItem(`${dataLink}_title`, JSON.stringify(title))
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_title`)
