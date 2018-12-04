@@ -203,7 +203,7 @@ class MapBoxContainer extends Component<{}> {
           })
           .then(data => {
             this.setState({ counter: this.state.counter+1 }, ()=> {
-              // console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
+              console.log('this.state.counter is', this.state.counter, 'this.props.skyspotsArrayForMap.length is', this.props.skyspotsArrayForMap.length)
               // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
               // console.log('data del data del find or create', data)
 
@@ -443,6 +443,7 @@ class MapBoxContainer extends Component<{}> {
       })
     }
   getWordPressApi = async (id, coords, dataLink) => {
+    console.log('entra al get wordpress api')
     // console.log('get wordpress api id coords dataLink', id, coords, dataLink)
     axios
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${dataLink}`)
@@ -483,7 +484,7 @@ class MapBoxContainer extends Component<{}> {
                 };
               }, ()=> {
                 // ACA ESTA EL CONTADOR DE COSAS YA BAJADAS
-                // console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -602,6 +603,7 @@ class MapBoxContainer extends Component<{}> {
       })
   }
   saveHtmlToAsyncStorage = (htmlContent, dataLink) => {
+    console.log('entra al saveHtmlToAsyncStorage')
     return AsyncStorage.setItem(`${dataLink}_htmlFolder`, JSON.stringify(htmlContent))
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_htmlFolder`)
@@ -615,6 +617,7 @@ class MapBoxContainer extends Component<{}> {
                   .catch(error => console.log('error!', error));
   }
   saveTitleToAsyncStorage = (title, dataLink) => {
+    console.log('entra al saveTitleToAsyncStorage')
     return AsyncStorage.setItem(`${dataLink}_title`, JSON.stringify(title))
                   .then(json => {
                     AsyncStorage.getItem(`${dataLink}_title`)
@@ -748,6 +751,7 @@ class MapBoxContainer extends Component<{}> {
         }}
         >
           <Image source={!this.state[id] ? icono.deselected : icono.selected} />
+          <Mapbox.Callout title='Look! An annotation!' />
       </Mapbox.PointAnnotation>
     )
   }

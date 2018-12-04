@@ -82,13 +82,18 @@ class Search extends React.Component {
           this.setState({origins: arrayFinal, fetching: false})
           return null
         }
+        // console.log('entra a la linea arriba de this.props.getOriginsRequest')
         return this.props.getOriginsRequest()    
       })
       .then(origins => {
+        // console.log('llega el .then y origins es', origins)
         if(origins) {
           // console.log('Primer paso con internet, array de origins', this.props.origins.data)
           this.setState({origins: this.props.origins.data, fetching: false})
         }
+      })
+      .catch(err => {
+        console.log('err en el index search', err)
       })
   }
   getBackFromChildComponentAndUpdate = (data) => {
