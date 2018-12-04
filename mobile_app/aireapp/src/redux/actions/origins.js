@@ -30,10 +30,14 @@ export function getOriginsRequest() {
     dispatch(getOriginsAttempt());
     return axios
       .get(`${ip}/origin`)
-      .then(response => dispatch(getOriginsSuccess(response)))
+      .then(response => {
+        console.log('response is', response)
+        return dispatch(getOriginsSuccess(response))
+      })
       .catch(error => {
         console.log('get origins request', error)
         return dispatch(getOriginsFailure(error))
       });
+    console.log('despues del axios')
   };
 }
