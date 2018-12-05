@@ -160,7 +160,41 @@ class MapBoxContainer extends Component<{}> {
       })
       .catch(err => console.log('err del earch?', err))
 
+    setTimeout(() => {
+      if(this.state.counter !== this.props.skyspotsArrayForMap.length) {
+        console.log('entra a este if y pone retryStartUpFlow')
+        this.retryStartUpFlow()
+      }
+      console.log('no entra al if anterior pero si loggea esto')
+    }, 60000);
+
     // console.log('this.props.skyspotsArrayForMap', this.props.skyspotsArrayForMap)
+  }
+  retryStartUpFlow = () => {
+    // console.log('entra a la funcion test')
+    const skyspotsArrayForMap = this.props.skyspotsArrayForMap
+    // con el array de skyspots, checkeo en cada uno si el contenido esta bajado o no, o sea guardado en el async storage
+    const promisesArray = skyspotsArrayForMap.map(skyspot => this.checkIfContentIsDownloadedOrNot(skyspot.id, skyspot.coords, skyspot.data));
+
+    // una vez estan todas
+    Promise.all(promisesArray)
+      .then((data) => {
+        // ya cargue todo y cambio el fetching
+        // console.log('cambiar el fetching y mostrar', data)
+        this.setState({
+          downloadingSkyspotsData: false
+        })
+        if(data[0] !== undefined) {
+          // si entraa aca significa que ya se bajaron las imagenes en cache previamente
+          // console.log('si entraa aca significa que ya se bajaron las imagenes en cache previamente')
+          this.setState({
+            downloadingImages: false
+          })
+        }
+      })
+      .catch(err => console.log('err del earch?', err))
+
+    // setTimeout(function(){ alert("Hello"); }, 3000);
   }
   getImgNodesAndTheirSrcFromHtml = (title, htmlContent, dataLink) => {
     // console.log('entra al getImgNodesAndTheirSrcFromHtml')
@@ -172,7 +206,7 @@ class MapBoxContainer extends Component<{}> {
 
     let imgNodes = rootNode ? rootNode.getElementsByTagName('img') : [];
 
-    // console.log('imgNodes', imgNodes, 'dataLink', dataLink, 'rootNode', rootNode)
+    console.log('imgNodes', imgNodes, 'dataLink', dataLink, 'rootNode', rootNode)
 
     let newStateWithDataLinkId = {}
     newStateWithDataLinkId[dataLink] = imgNodes
@@ -226,7 +260,7 @@ class MapBoxContainer extends Component<{}> {
       });
   }
   downloadImageLocally = (title, imageSource, dataLink) => {
-    // console.log('entra al download image locally?')
+    // console.log('entra al download image locally?: dataLink, imageSource', dataLink, imageSource)
     // si falla este rn fetch blob, ver que se hace
     return RNFetchBlob
       .config({
@@ -240,7 +274,7 @@ class MapBoxContainer extends Component<{}> {
       .then((res) => {
         // console.log('res del rn fetch blob es', res)
         // the temp file path with file extension `png`
-        console.log('The file saved to ', res.path())
+        // console.log('The file saved to ', res.path())
         // Beware that when using a file path as Image source on Android,
         // you must prepend "file://"" before the file path
         // imageView = <Image source={{ uri :  }}/>
@@ -299,6 +333,7 @@ class MapBoxContainer extends Component<{}> {
         }
 
       })
+      .catch(err => console.log('entra al error del rn fetch blob', err))
   }
   pushImageToAsyncStorageArray = (title, imgArray, dataLink) => {
     return AsyncStorage.setItem(`${dataLink}_imageArray`, JSON.stringify(imgArray))
@@ -405,6 +440,7 @@ class MapBoxContainer extends Component<{}> {
     );
   }
   checkIfContentIsDownloadedOrNot = (id, coords, dataLink) => {
+    // console.log('entra al check if content is downloaded or not')
     /* const findOrCreateArray = [this.findOrCreateImageStorageFolder(), this.findOrCreateHtmlStorageFolder(), this.findOrCreateTitleStorageFolder()]
    */
     const findOrCreateArray = [this.findOrCreateHtmlStorageFolder(dataLink), this.findOrCreateTitleStorageFolder(dataLink), this.findOrCreateImageStorageFolder(dataLink)]
@@ -456,7 +492,7 @@ class MapBoxContainer extends Component<{}> {
       .get(`https://public-api.wordpress.com/rest/v1.1/sites/aireapp.wordpress.com/posts/${dataLink}`)
       .then(response => {
 
-        console.log('response', response)
+        // console.log('resuelve el axios get')
 
         let content = response.data.content
         let title = response.data.title        
@@ -491,7 +527,7 @@ class MapBoxContainer extends Component<{}> {
                 };
               }, ()=> {
                 // ACA ESTA EL CONTADOR DE COSAS YA BAJADAS
-                // console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -526,7 +562,7 @@ class MapBoxContainer extends Component<{}> {
                 downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
               };
             }, ()=> {
-              // console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+              console.log('setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
             });
 
             return downloadedSkyspotObj
@@ -564,7 +600,7 @@ class MapBoxContainer extends Component<{}> {
                   downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
                 };
               }, ()=> {
-                // console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
@@ -600,7 +636,7 @@ class MapBoxContainer extends Component<{}> {
                   downloadedSkyspotsArray: [...previousState.downloadedSkyspotsArray, downloadedSkyspotObj]
                 };
               }, ()=> {
-                // console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
+                console.log('CATCH CATCH setea el estado con lo que bajo de wordpress con internet y this.state.downloadedSkyspotsArray es', this.state.downloadedSkyspotsArray)
               });
 
               return downloadedSkyspotObj
