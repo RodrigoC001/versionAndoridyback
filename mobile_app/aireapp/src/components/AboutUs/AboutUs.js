@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import {Platform, StyleSheet, Text, View, Image,TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default (props) => (
@@ -32,13 +32,13 @@ export default (props) => (
           </View>
 
           <View style={s.buttonPosition}>
-            <View style={s.buttonShape}>
+            <TouchableOpacity onPress={()=>props.navigation.navigate('Acelera')} style={s.buttonShape}>
               <View style={s.buttonTextContainer}>
                 <Text style={s.buttonText}>
                   Acelerá
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
 
         </LinearGradient>
@@ -58,12 +58,12 @@ const s = StyleSheet.create({
   },
   titleText: {
     fontSize: 19,
-    fontFamily: 'HouschkaRoundedAltExtraBold',
+    fontFamily: 'HouschkaRoundedAlt',
     color: 'rgb(255,255,255)',
     letterSpacing: 1.9
   },
   boldText: {
-    fontFamily: 'HouschkaRoundedAltExtraBold'
+    fontFamily: 'HouschkaRoundedAlt'
   },
   paragraphContainer: {
     marginBottom: 20,
@@ -71,7 +71,7 @@ const s = StyleSheet.create({
   },
   textContainer: {
     color: 'rgb(255,255,255)',
-    fontFamily: 'HouschkaRoundedAltLight',
+    fontFamily: 'HouschkaRoundedAlt',
     fontSize: 15,
     lineHeight: 19,
     textAlign: 'justify'
@@ -97,7 +97,7 @@ const s = StyleSheet.create({
   },
   buttonText: {
     fontSize: 17,
-    fontFamily: 'HouschkaRoundedAltDemiBold',
+    fontFamily: 'HouschkaRoundedAlt',
     color: 'rgb(64,76,155)'
   }
 });

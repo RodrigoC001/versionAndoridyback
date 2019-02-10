@@ -11,12 +11,12 @@ const nubesData = [{
   id: 2,
   title: 'Atlas de Nubes',
   icon: require('../../assets/nubes_photos/atlas_de_nubes.jpg'),
-  onPress: ()=> console.log('navigate')
+  onPress: (props)=> props.navigation.navigate('AtlasNubes')
 }, {
   id: 3,
   title: 'Dibujá sobre una nube',
   icon: require('../../assets/nubes_photos/dibuja_sobre_una_nube.jpg'),
-  onPress: ()=> console.log('navigate')
+  onPress: (props)=> props.navigation.navigate('DibujaNube')
 }]
 
 export default class NubesIndex extends React.Component {
@@ -60,7 +60,7 @@ const s = StyleSheet.create({
   },
   nubesText: {
     fontSize: 19,
-    fontFamily: 'HouschkaRoundedAltExtraBold',
+    fontFamily: 'HouschkaRoundedAlt',
     color: 'white',
     letterSpacing: 1.9
   }

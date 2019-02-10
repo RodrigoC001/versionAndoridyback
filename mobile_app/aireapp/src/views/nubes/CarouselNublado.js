@@ -54,9 +54,6 @@ const nubladoImages = [{
 }, {
   id: 4,
   image: require('../../assets/nublado/4.png'),
-}, {
-  id: 5,
-  image: require('../../assets/nublado/5.png'),
 }]
 
 class CarouselNublado extends React.Component {
