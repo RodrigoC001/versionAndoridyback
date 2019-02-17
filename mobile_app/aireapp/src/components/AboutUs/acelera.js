@@ -12,19 +12,7 @@ export default (props) => (
                     </View>
                   </TouchableOpacity>
                 </View>
-                <View style={s.paragraphContainer}>
-            <Text style={s.textContainer}>
-              
-            </Text>
-            <Text style={s.textContainer}>
-              
-              </Text>
-          </View>
-          <View style={s.paragraphContainer}>
-            <Text style={s.textContainer}>
-              
-            </Text>
-          </View>
+      
           <View style={s.paragraphContainer}>
             <Text style={s.textContainer}>
               Te necesitamos 
@@ -45,12 +33,7 @@ export default (props) => (
             <Text style={s.textContainerBold}>
               de la tierra.
             </Text>
-          </View>
-          <View style={s.paragraphContainer}>
-            <Text style={s.textInfo}>
-              
-            </Text>
-          </View>
+          </View>        
 
           <View style={s.paragraphContainer}>
             <Text style={s.textInfo}>
@@ -84,24 +67,11 @@ export default (props) => (
             </Text>
           </View>
 
-          <View style={s.paragraphContainer}>
-            <Text style={s.textInfo}>
-              
-            </Text>
-          </View>
-          <View style={s.paragraphContainer}>
-            <Text style={s.textInfo}>
-              
-            </Text>
-          </View>
+       
           <View style={s.inputContainer}>
             <TextInput placeholder="Email" style={{color:'#BDBDBD',marginBottom:20}}/>
           </View>
-          <View style={s.paragraphContainer}>
-            <Text style={s.textInfo}>
-              
-            </Text>
-          </View>
+     
 
           <View style={s.buttonPosition}>
             <TouchableOpacity style={s.buttonShape}>
@@ -120,12 +90,12 @@ export default (props) => (
 
 const s = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 0.95
   },
   titleContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 41,
+    marginTop: 30,
     marginBottom: 44
   },
   titleText: {
@@ -177,14 +147,14 @@ const s = StyleSheet.create({
   buttonPosition: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 20
+    marginTop: 10
   },
   buttonShape: {
     borderRadius: 26,
     backgroundColor: 'rgb(255,255,255)',
     borderWidth: 2,
     borderColor: 'rgb(212,220,241)',
-    height: 52,
+    height: 45,
     width: 187
   },
   buttonTextContainer: {
